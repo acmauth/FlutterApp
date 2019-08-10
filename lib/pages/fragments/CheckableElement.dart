@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/pages/fragments/IconLabelPair.dart';
 
 class CheckableElement extends StatefulWidget {
-  CheckableElement({
+  const CheckableElement({
     Key key,
     @required this.name,
     @required this.icon,
@@ -15,13 +15,14 @@ class CheckableElement extends StatefulWidget {
   final dynamic toggle;
   final bool isOn;
 
+  @override
   _CheckableElementState createState() => _CheckableElementState();
 }
 
 class _CheckableElementState extends State<CheckableElement> {
   @override
   Widget build(BuildContext context) {
-    var checkObj = Checkbox(
+    final Checkbox checkObj = Checkbox(
       activeColor: Theme.of(context).accentColor,
       value: widget.isOn,
       onChanged: widget.toggle,

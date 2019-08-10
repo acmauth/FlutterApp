@@ -7,11 +7,12 @@ class SectionHeader extends Row {
     @required IconData icon,
   }) : super(
           key: key,
-          children: [
+          children: <Expanded>[
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                color: Color.fromARGB(90, 33, 150, 243),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                color: const Color.fromARGB(90, 33, 150, 243),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[

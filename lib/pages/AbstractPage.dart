@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 abstract class AbstractPage extends StatefulWidget {
-  AbstractPage({
+  const AbstractPage({
     Key key,
     @required this.appBarTitle,
     @required this.content,
@@ -12,6 +12,7 @@ abstract class AbstractPage extends StatefulWidget {
   final Widget content;
   final BottomNavigationBarItem navItem;
 
+  @override
   _AbstractPageState createState() => _AbstractPageState();
 }
 

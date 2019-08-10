@@ -1,12 +1,28 @@
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class NotifState {}
+abstract class NotifState {
+  const NotifState({
+    @required this.hasSemester,
+    @required this.hasGrades,
+  });
 
-class NoSubs extends NotifState {}
+  final bool hasSemester;
+  final bool hasGrades;
+}
 
-class SubbedToSemester extends NotifState {}
+class NoSubs extends NotifState {
+  const NoSubs() : super(hasSemester: false, hasGrades: false);
+}
 
-class SubbedToGrades extends NotifState {}
+class SubbedToSemester extends NotifState {
+  const SubbedToSemester() : super(hasSemester: true, hasGrades: false);
+}
 
-class SubbedToBoth extends NotifState {}
+class SubbedToGrades extends NotifState {
+  const SubbedToGrades() : super(hasSemester: false, hasGrades: true);
+}
+
+class SubbedToBoth extends NotifState {
+  const SubbedToBoth() : super(hasSemester: true, hasGrades: true);
+}

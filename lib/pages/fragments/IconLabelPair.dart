@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
 
 class IconLabelPair extends Row {
   IconLabelPair({
@@ -10,13 +11,11 @@ class IconLabelPair extends Row {
           key: key,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
               child: Row(
                 children: <Widget>[
                   Icon(icon),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                  ),
+                  const BlankPadding(),
                   Text(
                     label,
                     style: TextStyle(
