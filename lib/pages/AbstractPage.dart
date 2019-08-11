@@ -19,6 +19,9 @@ abstract class AbstractPage extends StatefulWidget {
 class _AbstractPageState extends State<AbstractPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(child: widget.content);
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.appBarTitle)),
+      body: SingleChildScrollView(child: Center(child: widget.content)),
+    );
   }
 }

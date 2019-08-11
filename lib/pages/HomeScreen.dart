@@ -18,22 +18,19 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsPage(),
   ];
 
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    final AbstractPage page = pages[_currentIndex];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(page.appBarTitle),
-      ),
-      body: SingleChildScrollView(child: page),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (int index) => setState(() => _currentIndex = index),
-        items: pages.map((AbstractPage p) => p.navItem).toList(),
+    return DefaultTabController(
+      length: pages.length,
+      child: Scaffold(
+        body: TabBarView(children: pages),
+        bottomNavigationBar: TabBar(
+          tabs: // TODO(dinos): Remove navItem from AbstractPage to map without this hack.
+              pages.map((AbstractPage p) => Tab(icon: p.navItem.icon)).toList(),
+          unselectedLabelColor: Theme.of(context).bottomAppBarColor,
+          labelColor: Colors.blue,
+          indicatorColor: Colors.blue,
+        ),
       ),
     );
   }
