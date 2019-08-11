@@ -1,11 +1,12 @@
 import 'package:meta/meta.dart';
 
+@immutable
 class NotifState {
-  NotifState({
+  const NotifState({
     @required this.hasSemester,
     @required this.hasGrades,
   });
 
-  bool hasSemester;
-  bool hasGrades;
+  final bool hasSemester;
+  final bool hasGrades;
 }
