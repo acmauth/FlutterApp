@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/IconLabelPair.dart';
+import 'package:grade_plus_plus/pages/fragments/exports.dart';
 
 class ExpandableElement extends StatefulWidget {
-  ExpandableElement({
+  const ExpandableElement({
     Key key,
     @required this.name,
     @required this.icon,
@@ -13,30 +13,27 @@ class ExpandableElement extends StatefulWidget {
   final IconData icon;
   final Column column;
 
+  @override
   _ExpandableElementState createState() => _ExpandableElementState();
 }
 
 class _ExpandableElementState extends State<ExpandableElement> {
-  IconData arrow;
+  IconData arrow = Icons.arrow_drop_down;
   bool expanded = false;
 
-  _setArrow() {
-    arrow = expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down;
+  void _toggleExpand() {
+    setState(() {
+      expanded = !expanded;
+      arrow = expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _setArrow();
-
     return Column(
       children: <Widget>[
         FlatButton(
-          onPressed: () {
-            setState(() {
-              expanded = !expanded;
-              _setArrow();
-            });
-          },
+          onPressed: _toggleExpand,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -47,14 +44,14 @@ class _ExpandableElementState extends State<ExpandableElement> {
               Row(
                 children: <Widget>[
                   Icon(arrow),
-                  Padding(padding: EdgeInsets.all(10)),
+                  const BlankPadding(),
                 ],
               ),
             ],
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: expanded ? widget.column : null,
         ),
       ],

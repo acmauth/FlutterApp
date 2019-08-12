@@ -7,16 +7,16 @@ class SettingsPage extends AbstractPage {
   SettingsPage({Key key})
       : super(
           key: key,
-          appBarTitle: "Settings",
+          appBarTitle: 'Settings',
           content: Column(
-            children: <Widget>[
+            children: const <Widget>[
               ProfileInfo(),
               AppOptions(),
             ],
           ),
           navItem: BottomNavigationBarItem(
-            icon: new Icon(Icons.settings),
-            title: Text("Settings"),
+            icon: Icon(Icons.settings),
+            title: const Text('Settings'),
           ),
         );
 }

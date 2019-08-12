@@ -5,35 +5,45 @@ import 'package:grade_plus_plus/bloc/notifications/exports.dart';
 
 class NotifBloc extends Bloc<NotifEvent, NotifState> {
   @override
-  NotifState get initialState => SubbedToBoth();
+  NotifState get initialState => NotifState(
+        hasSemester: true,
+        hasGrades: true,
+      );
 
   @override
   Stream<NotifState> mapEventToState(NotifEvent event) async* {
     if (event is SubToGrades) {
       _subToGrades();
-      yield currentState is SubbedToSemester
-          ? SubbedToBoth()
-          : SubbedToGrades();
+      yield NotifState(
+        hasSemester: currentState.hasSemester,
+        hasGrades: true,
+      );
     } else if (event is UnsubFromGrades) {
       _unsubFromGrades();
-      yield currentState is SubbedToBoth ? SubbedToSemester() : NoSubs();
+      yield NotifState(
+        hasSemester: currentState.hasSemester,
+        hasGrades: false,
+      );
     } else if (event is SubToSemester) {
       _subToSemester();
-      yield currentState is SubbedToGrades
-          ? SubbedToBoth()
-          : SubbedToSemester();
-    } else {
-      // event is UnsubFromSemester
+      yield NotifState(
+        hasSemester: true,
+        hasGrades: currentState.hasGrades,
+      );
+    } else if (event is UnsubFromSemester) {
       _unsubFromSemester();
-      yield currentState is SubbedToBoth ? SubbedToGrades() : NoSubs();
+      yield NotifState(
+        hasSemester: false,
+        hasGrades: currentState.hasGrades,
+      );
     }
   }
 
-  _subToGrades() async {}
+  void _subToGrades() {}
 
-  _unsubFromGrades() async {}
+  void _unsubFromGrades() {}
 
-  _subToSemester() async {}
+  void _subToSemester() {}
 
-  _unsubFromSemester() async {}
+  void _unsubFromSemester() {}
 }

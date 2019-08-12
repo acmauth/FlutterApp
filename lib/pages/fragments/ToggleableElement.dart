@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/pages/fragments/IconLabelPair.dart';
 
 class ToggleableElement extends StatefulWidget {
-  ToggleableElement({
+  const ToggleableElement({
     Key key,
     @required this.name,
     @required this.icon,
@@ -15,13 +15,14 @@ class ToggleableElement extends StatefulWidget {
   final dynamic toggle;
   final bool isOn;
 
+  @override
   _ToggleableElementState createState() => _ToggleableElementState();
 }
 
 class _ToggleableElementState extends State<ToggleableElement> {
   @override
   Widget build(BuildContext context) {
-    var switchObj = Switch.adaptive(
+    final Switch switchObj = Switch.adaptive(
       activeColor: Theme.of(context).accentColor,
       value: widget.isOn,
       onChanged: widget.toggle,

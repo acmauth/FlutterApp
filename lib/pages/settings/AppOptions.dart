@@ -10,58 +10,54 @@ import 'package:grade_plus_plus/pages/fragments/exports.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppOptions extends StatelessWidget {
-  AppOptions({Key key}) : super(key: key);
-
-  final platform = Platform.isAndroid ? "Google Play Store" : "App Store";
-  final storeUrl =
-      Platform.isAndroid ? "https://google.com" : "https://apple.com";
+  const AppOptions({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ThemeBloc themeBloc = BlocProvider.of<ThemeBloc>(context);
-    NotifBloc notifBloc = BlocProvider.of<NotifBloc>(context);
+    final ThemeBloc themeBloc = BlocProvider.of<ThemeBloc>(context);
+    final NotifBloc notifBloc = BlocProvider.of<NotifBloc>(context);
 
     return Column(
       children: <Widget>[
         SectionHeader(
-          title: "App Options",
+          title: 'App Options',
           icon: Icons.settings_applications,
         ),
         BlocBuilder<ThemeBloc, ThemeState>(
           bloc: themeBloc,
-          builder: (context, themeState) {
+          builder: (BuildContext context, ThemeState themeState) {
             return ToggleableElement(
-              name: "Dark Mode",
+              name: 'Dark Mode',
               icon: Icons.phone_android,
-              toggle: (toggleDark) =>
-                  themeBloc.dispatch(toggleDark ? ToggleDark() : ToggleLight()),
+              toggle: (bool toggleDark) => themeBloc.dispatch(
+                toggleDark ? ToggleDark() : ToggleLight(),
+              ),
               isOn: themeState is DarkTheme,
             );
           },
         ),
         BlocBuilder<NotifBloc, NotifState>(
           bloc: notifBloc,
-          builder: (context, notifState) {
+          builder: (BuildContext context, NotifState notifState) {
             return ExpandableElement(
-              name: "Notifications",
+              name: 'Notifications',
               icon: Icons.alarm,
               column: Column(
                 children: <Widget>[
                   CheckableElement(
-                    name: "New Semester",
+                    name: 'New Semester',
                     icon: Icons.calendar_today,
-                    toggle: (semesterOn) => notifBloc.dispatch(
-                        semesterOn ? SubToSemester() : UnsubFromSemester()),
-                    isOn: notifState is SubbedToSemester ||
-                        notifState is SubbedToBoth,
+                    toggle: (bool semesterOn) => notifBloc.dispatch(
+                      semesterOn ? SubToSemester() : UnsubFromSemester(),
+                    ),
+                    isOn: notifState.hasSemester,
                   ),
                   CheckableElement(
-                    name: "Missing Grades",
+                    name: 'Missing Grades',
                     icon: Icons.warning,
-                    toggle: (gradesOn) => notifBloc
+                    toggle: (bool gradesOn) => notifBloc
                         .dispatch(gradesOn ? SubToGrades() : UnsubFromGrades()),
-                    isOn: notifState is SubbedToGrades ||
-                        notifState is SubbedToBoth,
+                    isOn: notifState.hasGrades,
                   ),
                 ],
               ),
@@ -69,19 +65,18 @@ class AppOptions extends StatelessWidget {
           },
         ),
         TappableElement(
-          label: "Rate us on $platform",
+          label:
+              'Rate us on ${Platform.isAndroid ? 'Google Play Store' : 'App Store'}',
           icon: Icons.thumb_up,
-          onTap: () async {
-            await launch(storeUrl);
-          },
+          onTap: () async => await launch(
+            Platform.isAndroid ? 'https://google.com' : 'https://apple.com',
+          ),
         ),
         TappableElement(
-          label: "Log Out",
+          label: 'Log Out',
           icon: Icons.exit_to_app,
           color: Colors.red.shade500,
-          onTap: () async {
-            BlocProvider.of<AuthBloc>(context).dispatch(LogOut());
-          },
+          onTap: () => BlocProvider.of<AuthBloc>(context).dispatch(LogOut()),
         ),
       ],
     );

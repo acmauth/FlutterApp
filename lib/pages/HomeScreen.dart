@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/pages/AbstractPage.dart';
 import 'package:grade_plus_plus/pages/exports.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
+  const HomeScreen({Key key}) : super(key: key);
 
+  @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final pages = [
+  final List<AbstractPage> pages = <AbstractPage>[
     GradePredict(),
     CourseSuggest(),
     Search(),
@@ -16,26 +18,19 @@ class _HomeScreenState extends State<HomeScreen> {
     SettingsPage(),
   ];
 
-  int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
-    final page = pages[_currentIndex];
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(page.appBarTitle),
-      ),
-      body: SingleChildScrollView(child: page),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: pages.map((p) => p.navItem).toList(),
+    return DefaultTabController(
+      length: pages.length,
+      child: Scaffold(
+        body: TabBarView(children: pages),
+        bottomNavigationBar: TabBar(
+          tabs: // TODO(dinos): Remove navItem from AbstractPage to map without this hack.
+              pages.map((AbstractPage p) => Tab(icon: p.navItem.icon)).toList(),
+          unselectedLabelColor: Theme.of(context).bottomAppBarColor,
+          labelColor: Colors.blue,
+          indicatorColor: Colors.blue,
+        ),
       ),
     );
   }
