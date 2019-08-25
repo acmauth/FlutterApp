@@ -14,12 +14,23 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
+  final RegExp emailRegex = RegExp(
+      r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
+
   final GlobalKey<ScaffoldState> _scfKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String _email, _pwd;
+  final GlobalKey<FormFieldState<dynamic>> _emailKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdConfirmKey =
+      GlobalKey<FormFieldState<dynamic>>();
+
+  String _email, _pwd, _pwdConfirm;
   final FocusNode _emailNode = FocusNode();
   final FocusNode _pwdNode = FocusNode();
+  final FocusNode _pwdConfirmNode = FocusNode();
 
   final SnackBar error = SnackBar(
     content: const Text('Invalid Credentials!'),
@@ -44,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
               const BlankPadding(),
               _buildEmailField(),
               const BlankPadding(),
-              _buildPasswordField(),
+              _buildPasswordFields(),
               const BlankPadding(),
               Container(
                 constraints: const BoxConstraints(maxWidth: 250),
@@ -68,6 +79,16 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
+  String _doCheckEmail(String email) {
+    return !emailRegex.hasMatch(email) ? 'Please enter a valid email!' : null;
+  }
+
+  String _doCheckPassword(String password) {
+    return password.length < 5
+        ? 'Please enter a password longer than 5 characters!'
+        : null;
+  }
+
   void _unfocus() {
     _emailNode.unfocus();
     _pwdNode.unfocus();
@@ -86,8 +107,8 @@ class _AuthPageState extends State<AuthPage> {
     _unfocus();
 
     final FormState form = _formKey.currentState;
+    form.save();
     if (form.validate()) {
-      form.save();
       if (_doAuth()) {
         if (widget.isLogIn) {
           Router.replace(context, '/home');
@@ -124,36 +145,56 @@ class _AuthPageState extends State<AuthPage> {
 
   TextFormField _buildEmailField() {
     return TextFormField(
+      key: _emailKey,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onSaved: (String value) => _email = value,
       focusNode: _emailNode,
-      validator: (String value) =>
-          value.length < 3 ? 'Please enter an email!' : null,
+      validator: _doCheckEmail,
       decoration: InputDecoration(
         hintText: 'me@auth.gr',
         icon: Icon(Icons.email),
       ),
-      onFieldSubmitted: (_) => _pwdNode.requestFocus(),
+      onFieldSubmitted: (_) {
+        if (_emailKey.currentState.validate()) {
+          _pwdNode.requestFocus();
+        }
+      },
     );
   }
 
-  TextFormField _buildPasswordField() {
-    return TextFormField(
-      obscureText: true,
-      keyboardType: TextInputType.text,
-      textInputAction: TextInputAction.done,
+  Widget _buildPasswordFields() {
+    final PasswordField pwdField = PasswordField(
+      key: _pwdKey,
+      textInputAction: TextInputAction.next,
       onSaved: (String value) => _pwd = value,
       focusNode: _pwdNode,
-      validator: (String value) => value.length < 5
-          ? 'Please enter a password longer than 5 characters!'
-          : null,
-      decoration: InputDecoration(
-        hintText: 'password',
-        icon: Icon(Icons.lock),
-      ),
-      onFieldSubmitted: (_) => _doValidate(),
+      validator: _doCheckPassword,
+      hintText: 'password',
+      onFieldSubmitted: () =>
+          widget.isLogIn ? _doValidate() : _pwdConfirmNode.requestFocus(),
     );
+
+    final PasswordField pwdConfirmField = PasswordField(
+      key: _pwdConfirmKey,
+      textInputAction: TextInputAction.done,
+      onSaved: (String value) => _pwdConfirm = value,
+      focusNode: _pwdConfirmNode,
+      validator: (String value) =>
+          _pwdConfirm != _pwd ? "The passwords you entered don't match!" : null,
+      hintText: 'confirm password',
+      onFieldSubmitted: _doValidate,
+    );
+
+    return widget.isLogIn
+        ? pwdField
+        : Column(
+            children: <Widget>[
+              pwdField,
+              const BlankPadding(),
+              pwdConfirmField,
+            ],
+          );
   }
 
   FlatButton _buildContinueButton() {
