@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
+import 'package:grade_plus_plus/pages/fragments/exports.dart';
 
 class IconLabelPair extends Row {
   IconLabelPair({
@@ -16,12 +16,9 @@ class IconLabelPair extends Row {
                 children: <Widget>[
                   Icon(icon),
                   const BlankPadding(),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: color == null ? Colors.lightBlue.shade300 : color,
-                    ),
+                  StyledText(
+                    text: label,
+                    color: color == null ? Colors.lightBlueAccent : color,
                   ),
                 ],
               ),
