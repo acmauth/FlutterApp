@@ -15,6 +15,7 @@ dependencies:
   # cupertino_icons: ^0.1.2
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.7.2"
   flutter_test:
     sdk: flutter
 
@@ -22,3 +23,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+
+# Run 'flutter pub run flutter_launcher_icons:main'
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo_square.png"
