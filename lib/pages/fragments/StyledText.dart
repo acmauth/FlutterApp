@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class StyledText extends Text {
-  StyledText({
+  StyledText(
+    String text, {
     Key key,
-    @required String text,
-    Color color = Colors.blueAccent,
+    Color color = Colors.blue,
     FontWeight weight = FontWeight.normal,
     double size = 14,
   }) : super(

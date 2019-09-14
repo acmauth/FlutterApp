@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/exports.dart';
+
+import 'SectionHeader.dart';
 
 class ExpandableSection extends StatefulWidget {
   const ExpandableSection({
     Key key,
     @required this.title,
-    @required this.subtitle,
+    this.subtitle,
+    this.barColor,
     @required this.content,
-    this.extras,
+    this.fillContentBg = true,
+    this.padding = const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
+    this.extras = const Center(),
   }) : super(key: key);
 
   final String title;
   final String subtitle;
+  final Color barColor;
   final Widget content;
+  final bool fillContentBg;
+  final EdgeInsets padding;
   final Widget extras;
 
   @override
@@ -38,19 +45,16 @@ class _ExpandableSectionState extends State<ExpandableSection> {
           child: SectionHeader(
             title: widget.title,
             subtitle: widget.subtitle,
+            barColor: widget.barColor,
             extras: widget.extras,
           ),
         ),
-        Container(
-          child: expanded
-              ? Container(
-                  child: widget.content,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 25, horizontal: 50),
-                  color: Colors.grey.withOpacity(0.05),
-                )
-              : null,
-        ),
+        if (expanded)
+          Container(
+            child: widget.content,
+            padding: widget.padding,
+            color: widget.fillContentBg ? Colors.grey.withOpacity(0.05) : null,
+          ),
       ],
     );
   }

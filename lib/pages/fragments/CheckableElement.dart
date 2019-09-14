@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/IconLabelPair.dart';
+
+import 'IconLabelPair.dart';
 
 class CheckableElement extends StatefulWidget {
   const CheckableElement({

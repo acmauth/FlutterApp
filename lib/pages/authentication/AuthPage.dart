@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/bloc/auth/exports.dart';
-import 'package:grade_plus_plus/pages/fragments/exports.dart';
-import 'package:grade_plus_plus/Router.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({Key key, this.isLogIn = true}) : super(key: key);
+import '../../Router.dart';
+import '../../bloc/auth/exports.dart';
+import '../AbstractPage.dart';
+import '../fragments/BlankPadding.dart';
+import '../fragments/PasswordField.dart';
+import '../fragments/StyledText.dart';
+
+class AuthPage extends AbstractPage {
+  const AuthPage({
+    Key key,
+    this.isLogIn = true,
+  }) : super(
+          key: key,
+          appBarColorBg: Colors.lightBlue,
+          appBarColorTxt: Colors.white,
+          appBarTitle: isLogIn ? 'Log In' : 'Sign Up',
+          hideBackArrow: true,
+        );
 
   final bool isLogIn;
 
@@ -13,12 +26,12 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class _AuthPageState extends PageState<AuthPage> {
   final RegExp emailRegex = RegExp(
     r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
   );
 
-  final GlobalKey<ScaffoldState> _scfKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> _scfKey;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final GlobalKey<FormFieldState<dynamic>> _emailKey =
@@ -28,7 +41,7 @@ class _AuthPageState extends State<AuthPage> {
   final GlobalKey<FormFieldState<dynamic>> _pwdConfirmKey =
       GlobalKey<FormFieldState<dynamic>>();
 
-  String _email, _pwd, _pwdConfirm;
+  static String _email, _pwd, _pwdConfirm;
   final FocusNode _emailNode = FocusNode();
   final FocusNode _pwdNode = FocusNode();
   final FocusNode _pwdConfirmNode = FocusNode();
@@ -39,14 +52,10 @@ class _AuthPageState extends State<AuthPage> {
   );
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scfKey,
-      appBar: AppBar(
-        title: Text(widget.isLogIn ? 'Log In' : 'Sign Up'),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    _scfKey = scfKey;
+    return Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(30),
         child: Form(
           key: _formKey,
@@ -70,6 +79,12 @@ class _AuthPageState extends State<AuthPage> {
                     _buildSsoButton(),
                     const BlankPadding(),
                     _buildSwitchPageButton(),
+                    if (widget.isLogIn)
+                      FlatButton(
+                        onPressed: () => BlocProvider.of<AuthBloc>(context)
+                            .dispatch(AuthSuccess()),
+                        child: Text('Skip (dev only)'),
+                      ),
                   ],
                 ),
               ),
@@ -111,12 +126,10 @@ class _AuthPageState extends State<AuthPage> {
     form.save();
     if (form.validate()) {
       if (_doAuth()) {
-        if (widget.isLogIn) {
-          Router.replace(context, '/home');
-        } else {
+        BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
+        if (!widget.isLogIn) {
           Router.pop(context);
         }
-        BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
       } else {
         _scfKey.currentState.hideCurrentSnackBar();
         _scfKey.currentState.showSnackBar(error);
@@ -134,7 +147,7 @@ class _AuthPageState extends State<AuthPage> {
         ),
         const BlankPadding(),
         StyledText(
-          text: 'Grade++',
+          'Grade++',
           size: 24,
           weight: FontWeight.bold,
         ),
@@ -163,37 +176,38 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _buildPasswordFields() {
-    final PasswordField pwdField = PasswordField(
-      key: _pwdKey,
-      textInputAction: TextInputAction.next,
-      onSaved: (String value) => _pwd = value,
-      focusNode: _pwdNode,
-      validator: _doCheckPassword,
-      hintText: 'password',
-      onFieldSubmitted: () =>
-          widget.isLogIn ? _doValidate() : _pwdConfirmNode.requestFocus(),
-    );
-
-    final PasswordField pwdConfirmField = PasswordField(
-      key: _pwdConfirmKey,
-      textInputAction: TextInputAction.done,
-      onSaved: (String value) => _pwdConfirm = value,
-      focusNode: _pwdConfirmNode,
-      validator: (String value) =>
-          _pwdConfirm != _pwd ? "The passwords you entered don't match!" : null,
-      hintText: 'confirm password',
-      onFieldSubmitted: _doValidate,
-    );
-
-    return widget.isLogIn
-        ? pwdField
-        : Column(
+    return Column(
+      children: <Widget>[
+        PasswordField(
+          key: _pwdKey,
+          textInputAction:
+              widget.isLogIn ? TextInputAction.done : TextInputAction.next,
+          onSaved: (String value) => _pwd = value,
+          focusNode: _pwdNode,
+          validator: _doCheckPassword,
+          hintText: 'password',
+          onFieldSubmitted: () =>
+              widget.isLogIn ? _doValidate() : _pwdConfirmNode.requestFocus(),
+        ),
+        if (!widget.isLogIn)
+          Column(
             children: <Widget>[
-              pwdField,
-              const BlankPadding(),
-              pwdConfirmField,
+              BlankPadding(),
+              PasswordField(
+                key: _pwdConfirmKey,
+                textInputAction: TextInputAction.done,
+                onSaved: (String value) => _pwdConfirm = value,
+                focusNode: _pwdConfirmNode,
+                validator: (String value) => _pwdConfirm != _pwd
+                    ? "The passwords you entered don't match!"
+                    : null,
+                hintText: 'confirm password',
+                onFieldSubmitted: _doValidate,
+              ),
             ],
-          );
+          ),
+      ],
+    );
   }
 
   FlatButton _buildContinueButton() {
@@ -213,8 +227,7 @@ class _AuthPageState extends State<AuthPage> {
         _formKey.currentState.reset();
         Router.push(context, '/sso');
       },
-      child: Text(
-          '${widget.isLogIn ? 'Log In' : 'Sign Up'} with university account'),
+      child: Text('${widget.appBarTitle} with university account'),
     );
   }
 

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
-class SsoScreen extends StatelessWidget {
-  const SsoScreen({Key key}) : super(key: key);
+import '../AbstractPage.dart';
+
+class SsoScreen extends AbstractPage {
+  SsoScreen({Key key})
+      : super(
+          key: key,
+          appBarTitle: 'Single Sign-On',
+          appBarColorBg: Colors.amber,
+          appBarColorTxt: Colors.white,
+        );
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Single Sign-On'),
-        backgroundColor: Colors.amber,
-      ),
-      body: Center(/* TODO */),
-    );
+  _SsoScreenState createState() => _SsoScreenState();
+}
+
+class _SsoScreenState extends PageState {
+  @override
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    return Center(/* TODO(dinos): Implement SSO Auth */);
   }
 }

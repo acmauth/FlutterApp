@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/Router.dart';
-import 'package:grade_plus_plus/bloc/auth/exports.dart';
-import 'package:grade_plus_plus/bloc/notifications/exports.dart';
-import 'package:grade_plus_plus/bloc/theme/exports.dart';
-import 'package:grade_plus_plus/pages/exports.dart';
+
+import 'Router.dart';
+import 'bloc/auth/exports.dart';
+import 'bloc/notifications/exports.dart';
+import 'bloc/theme/exports.dart';
+import 'pages/LandingPage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -19,15 +20,37 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final ThemeData lightTheme = ThemeData(
     accentColor: Colors.lightBlue,
+    appBarTheme: AppBarTheme(
+      color: Colors.white.withOpacity(0.95),
+      elevation: 0.15,
+      textTheme: TextTheme(
+        title: TextStyle(
+          color: Colors.blue,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+    ),
     backgroundColor: Colors.white,
-    bottomAppBarColor: Colors.black45,
+    bottomAppBarColor: Colors.lightBlue.shade600,
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
   );
   final ThemeData darkTheme = ThemeData(
     accentColor: Colors.lightBlue,
+    appBarTheme: AppBarTheme(
+      color: Colors.black,
+      elevation: 0.15,
+      textTheme: TextTheme(
+        title: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+      ),
+    ),
+    bottomAppBarColor: Colors.black,
     brightness: Brightness.dark,
-    bottomAppBarColor: Colors.white54,
     primarySwatch: Colors.red,
     textSelectionHandleColor: Colors.lightBlue,
   );
@@ -58,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                 child: child,
               );
             },
-            home: const LandingPage(),
+            home: LandingPage(),
           );
         },
       ),

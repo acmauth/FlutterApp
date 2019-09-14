@@ -1,100 +1,111 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/AbstractPage.dart';
-import 'package:grade_plus_plus/pages/course_suggest/exports.dart';
-import 'package:grade_plus_plus/pages/fragments/exports.dart';
+
+import '../../entities/course/BaseCourseData.dart';
+import '../../entities/course/SuggestedCourseData.dart';
+import '../../entities/user/SchoolData.dart';
+import '../AbstractPage.dart';
+import '../fragments/BlankPadding.dart';
+import '../fragments/ExpandableSection.dart';
+import '../fragments/StyledText.dart';
 
 class CourseSuggest extends AbstractPage {
   CourseSuggest({
     Key key,
-    SemesterData semester,
-    List<CourseData> courses,
+    @required this.schoolData,
+    @required this.suggestedCourses,
   }) : super(
           key: key,
-          appBarTitle: "Course Suggestion",
-          content: Column(
-            children: <Widget>[
-              _buildSchoolInfo(semester),
-              _buildSuggestionList(courses),
-            ],
-          ),
-          navItem: BottomNavigationBarItem(
-            icon: new Icon(Icons.check_circle),
-            title: Text("Courses"),
-          ),
+          appBarTitle: 'Course Suggestion',
+          navIcon: Icons.event_note,
         );
+
+  final SchoolData schoolData;
+  final List<SuggestedCourseData> suggestedCourses;
+
+  _CourseSuggestState createState() => _CourseSuggestState();
 }
 
-Column _buildSchoolInfo(SemesterData data) {
+class _CourseSuggestState extends PageState<CourseSuggest> {
+  @override
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    return Column(
+      children: <Widget>[
+        _buildSchoolInfo(widget.schoolData),
+        _buildSuggestionList(widget.suggestedCourses),
+      ],
+    );
+  }
+}
+
+Column _buildSchoolInfo(SchoolData data) {
   return Column(
     children: <Widget>[
       BlankPadding(),
       StyledText(
-        text: data.school,
+        data.department,
         size: 18,
       ),
       StyledText(
-        text: "${data.semester}th Semester",
+        "${data.semester}th Semester",
         size: 16,
       ),
       BlankPadding(),
       StyledText(
-        text: 'We suggest to you:',
-        color: Colors.blueAccent.withOpacity(0.75),
+        'We suggest to you:',
+        color: Colors.blue.withOpacity(0.75),
       ),
       BlankPadding(),
     ],
   );
 }
 
-Widget _buildSuggestionList(List<CourseData> data) {
+Widget _buildSuggestionList(List<SuggestedCourseData> data) {
   final Iterable<Column> courses = data.map(
-    (CourseData course) => Column(
+    (SuggestedCourseData course) => Column(
       children: <Widget>[
         ExpandableSection(
-          title: course.title,
-          subtitle: course.code,
+          title: course.baseData.title,
+          subtitle: course.baseData.code,
           extras: StyledText(
-            text: "${course.match}%",
+            "${course.match}%",
             size: 16,
             weight: FontWeight.bold,
-            color: Colors.blue, // _getMatchColor(course.match),
+            color: _getMatchColor(course.match),
           ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              StyledText(text: 'Taught by:'),
+              StyledText('Taught by:'),
               StyledText(
-                text: course.teacher,
+                course.baseData.teacher,
                 size: 12,
               ),
               BlankPadding(),
-              StyledText(text: "Average Grade: ${course.averageGrade}"),
+              StyledText(
+                "Average Grade: ${course.baseData.averageGrade}",
+              ),
               Row(
                 children: <Widget>[
-                  StyledText(text: 'Difficulty: '),
+                  StyledText('Difficulty: '),
                   StyledText(
-                    text: _getDifficultyText(course.difficulty),
-                    color: _getDifficultyColor(course.difficulty),
+                    _getDifficultyText(course.baseData.difficulty),
+                    color: _getDifficultyColor(course.baseData.difficulty),
                   ),
                 ],
               ),
-              Container(
-                child: course.favTeacher
-                    ? Column(
-                        children: <Widget>[
-                          BlankPadding(),
-                          Divider(),
-                          BlankPadding(),
-                          StyledText(
-                            text:
-                                "${course.teacher} is in your list of favorite teachers!",
-                            size: 12,
-                            color: Colors.blueAccent,
-                          ),
-                        ],
-                      )
-                    : null,
-              ),
+              if (course.favTeacher)
+                Column(
+                  children: <Widget>[
+                    BlankPadding(),
+                    Divider(),
+                    BlankPadding(),
+                    StyledText(
+                      "${course.baseData.teacher} is in your list of favorite teachers!",
+                      size: 12,
+                      color: Colors.blueAccent,
+                    ),
+                  ],
+                ),
             ],
           ),
         ),
@@ -109,12 +120,17 @@ Widget _buildSuggestionList(List<CourseData> data) {
 }
 
 Color _getMatchColor(int match) {
-  if (match > 80) {
-    return Colors.greenAccent;
-  } else if (match > 60) {
-    return Colors.orangeAccent;
-  }
-  return Colors.redAccent;
+  /* 
+   * Disabled mutliple text colors for aesthetic reasons.
+   * If it seems better to you, feel free to re-enable.
+   */
+  return Colors.blue;
+  // if (match > 80) {
+  //   return Colors.greenAccent;
+  // } else if (match > 60) {
+  //   return Colors.orangeAccent;
+  // }
+  // return Colors.redAccent;
 }
 
 String _getDifficultyText(CourseDifficulty difficulty) {
@@ -123,8 +139,10 @@ String _getDifficultyText(CourseDifficulty difficulty) {
       return "Easy";
     case CourseDifficulty.MEDIUM:
       return "Medium";
-    default:
+    case CourseDifficulty.HARD:
       return "Hard";
+    default:
+      return "Unmapped value";
   }
 }
 
@@ -134,7 +152,9 @@ Color _getDifficultyColor(CourseDifficulty difficulty) {
       return Colors.green;
     case CourseDifficulty.MEDIUM:
       return Colors.orange;
-    default:
+    case CourseDifficulty.HARD:
       return Colors.red;
+    default:
+      return Colors.black;
   }
 }

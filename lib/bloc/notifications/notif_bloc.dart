@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:grade_plus_plus/bloc/notifications/exports.dart';
+
+import 'exports.dart';
 
 class NotifBloc extends Bloc<NotifEvent, NotifState> {
   @override
@@ -38,6 +39,8 @@ class NotifBloc extends Bloc<NotifEvent, NotifState> {
       );
     }
   }
+
+  // TODO(dinos): Implement notifications
 
   void _subToGrades() {}
 

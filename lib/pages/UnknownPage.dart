@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
-class UnknownPage extends StatelessWidget {
-  const UnknownPage({Key key}) : super(key: key);
+import 'AbstractPage.dart';
 
+class UnknownPage extends AbstractPage {
+  UnknownPage({Key key})
+      : super(
+          key: key,
+          appBarTitle: 'Unknown',
+          appBarColorBg: Colors.red,
+          appBarColorTxt: Colors.white,
+        );
+
+  _UnknownPageState createState() => _UnknownPageState();
+}
+
+class _UnknownPageState extends PageState<UnknownPage> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Unkown Page'),
-        backgroundColor: Colors.black,
-      ),
-      body: Center(/* TODO */),
-    );
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    return Center(/* TODO */);
   }
 }

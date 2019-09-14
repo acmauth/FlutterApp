@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:grade_plus_plus/bloc/theme/exports.dart';
+
+import 'exports.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   @override
