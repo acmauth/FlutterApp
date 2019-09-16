@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'StyledText.dart';
+
 class SectionHeader extends Row {
   SectionHeader({
     Key key,
     @required String title,
-    @required IconData icon,
+    Color barColor,
+    Color textColor = Colors.blue,
+    String subtitle,
+    Widget extras,
   }) : super(
           key: key,
           children: <Expanded>[
@@ -12,16 +17,36 @@ class SectionHeader extends Row {
               child: Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                color: const Color.fromARGB(90, 33, 150, 243),
+                color: barColor == null
+                    ? Colors.lightBlue.withOpacity(0.25)
+                    : barColor,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(title),
-                    Icon(icon),
+                    _buildTitle(title, subtitle, textColor),
+                    extras,
                   ],
                 ),
               ),
             ),
           ],
         );
+}
+
+Widget _buildTitle(String title, String subtitle, Color color) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      StyledText(
+        title,
+        color: color,
+        weight: FontWeight.bold,
+      ),
+      if (subtitle != null)
+        StyledText(
+          subtitle,
+          color: Colors.lightBlue,
+        ),
+    ],
+  );
 }

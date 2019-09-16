@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/bloc/auth/exports.dart';
-import 'package:grade_plus_plus/pages/fragments/exports.dart';
-import 'package:grade_plus_plus/Router.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({Key key, this.isLogIn = true}) : super(key: key);
+import '../../Router.dart';
+import '../../bloc/auth/exports.dart';
+import '../AbstractPage.dart';
+import '../fragments/BlankPadding.dart';
+import '../fragments/PasswordField.dart';
+import '../fragments/StyledText.dart';
+
+class AuthPage extends AbstractPage {
+  const AuthPage({
+    Key key,
+    this.isLogIn = true,
+  }) : super(
+          key: key,
+          appBarColorBg: Colors.lightBlue,
+          appBarColorTxt: Colors.white,
+          appBarTitle: isLogIn ? 'Log In' : 'Sign Up',
+          hideBackArrow: true,
+        );
 
   final bool isLogIn;
 
@@ -13,13 +26,25 @@ class AuthPage extends StatefulWidget {
   _AuthPageState createState() => _AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  final GlobalKey<ScaffoldState> _scfKey = GlobalKey<ScaffoldState>();
+class _AuthPageState extends PageState<AuthPage> {
+  final RegExp emailRegex = RegExp(
+    r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+  );
+
+  GlobalKey<ScaffoldState> _scfKey;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String _email, _pwd;
+  final GlobalKey<FormFieldState<dynamic>> _emailKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdConfirmKey =
+      GlobalKey<FormFieldState<dynamic>>();
+
+  static String _email, _pwd, _pwdConfirm;
   final FocusNode _emailNode = FocusNode();
   final FocusNode _pwdNode = FocusNode();
+  final FocusNode _pwdConfirmNode = FocusNode();
 
   final SnackBar error = SnackBar(
     content: const Text('Invalid Credentials!'),
@@ -27,14 +52,10 @@ class _AuthPageState extends State<AuthPage> {
   );
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scfKey,
-      appBar: AppBar(
-        title: Text(widget.isLogIn ? 'Log In' : 'Sign Up'),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    _scfKey = scfKey;
+    return Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(30),
         child: Form(
           key: _formKey,
@@ -44,7 +65,7 @@ class _AuthPageState extends State<AuthPage> {
               const BlankPadding(),
               _buildEmailField(),
               const BlankPadding(),
-              _buildPasswordField(),
+              _buildPasswordFields(),
               const BlankPadding(),
               Container(
                 constraints: const BoxConstraints(maxWidth: 250),
@@ -58,6 +79,12 @@ class _AuthPageState extends State<AuthPage> {
                     _buildSsoButton(),
                     const BlankPadding(),
                     _buildSwitchPageButton(),
+                    if (widget.isLogIn)
+                      FlatButton(
+                        onPressed: () => BlocProvider.of<AuthBloc>(context)
+                            .dispatch(AuthSuccess()),
+                        child: Text('Skip (dev only)'),
+                      ),
                   ],
                 ),
               ),
@@ -66,6 +93,16 @@ class _AuthPageState extends State<AuthPage> {
         ),
       ),
     );
+  }
+
+  String _doCheckEmail(String email) {
+    return !emailRegex.hasMatch(email) ? 'Please enter a valid email!' : null;
+  }
+
+  String _doCheckPassword(String password) {
+    return password.length < 5
+        ? 'Please enter a password longer than 5 characters!'
+        : null;
   }
 
   void _unfocus() {
@@ -86,15 +123,13 @@ class _AuthPageState extends State<AuthPage> {
     _unfocus();
 
     final FormState form = _formKey.currentState;
+    form.save();
     if (form.validate()) {
-      form.save();
       if (_doAuth()) {
-        if (widget.isLogIn) {
-          Router.replace(context, '/home');
-        } else {
+        BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
+        if (!widget.isLogIn) {
           Router.pop(context);
         }
-        BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
       } else {
         _scfKey.currentState.hideCurrentSnackBar();
         _scfKey.currentState.showSnackBar(error);
@@ -111,12 +146,10 @@ class _AuthPageState extends State<AuthPage> {
           width: 100,
         ),
         const BlankPadding(),
-        const Text(
+        StyledText(
           'Grade++',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+          size: 24,
+          weight: FontWeight.bold,
         ),
       ],
     );
@@ -124,35 +157,56 @@ class _AuthPageState extends State<AuthPage> {
 
   TextFormField _buildEmailField() {
     return TextFormField(
+      key: _emailKey,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       onSaved: (String value) => _email = value,
       focusNode: _emailNode,
-      validator: (String value) =>
-          value.length < 3 ? 'Please enter an email!' : null,
+      validator: _doCheckEmail,
       decoration: InputDecoration(
         hintText: 'me@auth.gr',
         icon: Icon(Icons.email),
       ),
-      onFieldSubmitted: (_) => _pwdNode.requestFocus(),
+      onFieldSubmitted: (_) {
+        if (_emailKey.currentState.validate()) {
+          _pwdNode.requestFocus();
+        }
+      },
     );
   }
 
-  TextFormField _buildPasswordField() {
-    return TextFormField(
-      obscureText: true,
-      keyboardType: TextInputType.text,
-      textInputAction: TextInputAction.done,
-      onSaved: (String value) => _pwd = value,
-      focusNode: _pwdNode,
-      validator: (String value) => value.length < 5
-          ? 'Please enter a password longer than 5 characters!'
-          : null,
-      decoration: InputDecoration(
-        hintText: 'password',
-        icon: Icon(Icons.lock),
-      ),
-      onFieldSubmitted: (_) => _doValidate(),
+  Widget _buildPasswordFields() {
+    return Column(
+      children: <Widget>[
+        PasswordField(
+          key: _pwdKey,
+          textInputAction:
+              widget.isLogIn ? TextInputAction.done : TextInputAction.next,
+          onSaved: (String value) => _pwd = value,
+          focusNode: _pwdNode,
+          validator: _doCheckPassword,
+          hintText: 'password',
+          onFieldSubmitted: () =>
+              widget.isLogIn ? _doValidate() : _pwdConfirmNode.requestFocus(),
+        ),
+        if (!widget.isLogIn)
+          Column(
+            children: <Widget>[
+              BlankPadding(),
+              PasswordField(
+                key: _pwdConfirmKey,
+                textInputAction: TextInputAction.done,
+                onSaved: (String value) => _pwdConfirm = value,
+                focusNode: _pwdConfirmNode,
+                validator: (String value) => _pwdConfirm != _pwd
+                    ? "The passwords you entered don't match!"
+                    : null,
+                hintText: 'confirm password',
+                onFieldSubmitted: _doValidate,
+              ),
+            ],
+          ),
+      ],
     );
   }
 
@@ -173,8 +227,7 @@ class _AuthPageState extends State<AuthPage> {
         _formKey.currentState.reset();
         Router.push(context, '/sso');
       },
-      child: Text(
-          '${widget.isLogIn ? 'Log In' : 'Sign Up'} with university account'),
+      child: Text('${widget.appBarTitle} with university account'),
     );
   }
 

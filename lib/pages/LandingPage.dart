@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/bloc/auth/exports.dart';
-import 'package:grade_plus_plus/pages/exports.dart';
+
+import '../bloc/auth/exports.dart';
+import 'HomeScreen.dart';
+import 'authentication/AuthPage.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({Key key}) : super(key: key);

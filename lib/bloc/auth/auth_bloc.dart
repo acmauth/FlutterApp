@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
-import 'package:grade_plus_plus/bloc/auth/exports.dart';
+
+import 'exports.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override

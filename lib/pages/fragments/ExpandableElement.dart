@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/exports.dart';
+
+import 'BlankPadding.dart';
+import 'IconLabelPair.dart';
 
 class ExpandableElement extends StatefulWidget {
   const ExpandableElement({
@@ -50,10 +52,11 @@ class _ExpandableElementState extends State<ExpandableElement> {
             ],
           ),
         ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: expanded ? widget.column : null,
-        ),
+        if (expanded)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: widget.column,
+          ),
       ],
     );
   }
