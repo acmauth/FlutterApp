@@ -5,11 +5,12 @@ import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
 import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
+import 'pages/search/CoursePage.dart';
 
 class Router {
   static Route<PageRoute<Object>> generateRoute(
-    RouteSettings settings,
-  ) {
+      RouteSettings settings,
+      ) {
     final Object args = settings.arguments;
     switch (settings.name) {
       case '/':
@@ -28,6 +29,10 @@ class Router {
       case '/sso':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => SsoScreen(),
+        );
+      case '/CoursePage':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => CoursePage(),
         );
     }
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
