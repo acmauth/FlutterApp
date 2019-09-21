@@ -5,7 +5,7 @@ import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
 import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
-import 'pages/search/CoursePage.Dart';
+import 'pages/search/CoursePage.dart';
 
 class Router {
   static Route<PageRoute<Object>> generateRoute(
