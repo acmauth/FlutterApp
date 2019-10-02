@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
+import '../../models/contact_page.dart';
+import '../../models/contact.dart';
 import '../../Router.dart';
 import '../../bloc/auth/exports.dart';
 import '../AbstractPage.dart';
@@ -53,6 +56,9 @@ class _AuthPageState extends PageState<AuthPage> {
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
+    if(_checkUser()){
+      BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
+    }
     _scfKey = scfKey;
     return Container(
       child: SingleChildScrollView(
@@ -81,9 +87,20 @@ class _AuthPageState extends PageState<AuthPage> {
                     _buildSwitchPageButton(),
                     if (widget.isLogIn)
                       FlatButton(
-                        onPressed: () => BlocProvider.of<AuthBloc>(context)
-                            .dispatch(AuthSuccess()),
+                        onPressed: () {
+                          BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
+                        },
                         child: Text('Skip (dev only)'),
+                      ),
+                    if (widget.isLogIn)
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ContactPage()),
+                          );
+                        },
+                        child: Text('Admin'),
                       ),
                   ],
                 ),
@@ -214,9 +231,31 @@ class _AuthPageState extends PageState<AuthPage> {
     return FlatButton(
       color: Theme.of(context).accentColor,
       textColor: Colors.white,
-      onPressed: () => _doValidate(),
+      onPressed: () {
+        _doValidate();
+        if(_doAuth() && (_doCheckEmail(_email) == null) && (_doCheckPassword(_pwd) == null)) {
+          _formKey.currentState.save();
+          final newContact = Contact(_email, int.parse(_pwd));
+          _addContact(newContact);
+        }
+      },
       child: const Text('Continue'),
     );
+  }
+
+  void _addContact(Contact contact) {
+    final contactsBox = Hive.box('contacts');
+    contactsBox.add(contact);
+  }
+
+  bool _checkUser() {
+    final contactsBox = Hive.box('contacts');
+    if(contactsBox.isNotEmpty) {
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 
   RaisedButton _buildSsoButton() {

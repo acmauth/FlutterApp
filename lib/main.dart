@@ -1,14 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
 import 'bloc/notifications/exports.dart';
 import 'bloc/theme/exports.dart';
 import 'pages/LandingPage.dart';
+import 'models/contact.dart';
 
-void main() => runApp(const MyApp());
+
+void main() async{
+  final appDocumentDirectory =
+  await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
+  Hive.registerAdapter(ContactAdapter(), 0);
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key key}) : super(key: key);
@@ -81,11 +91,34 @@ class _MyAppState extends State<MyApp> {
                 child: child,
               );
             },
-            home: LandingPage(),
+            home: FutureBuilder(
+              future: Hive.openBox(
+                'contacts',
+                compactionStrategy: (int total, int deleted) {
+                  return deleted > 20;
+                },
+              ),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError)
+                    return Text(snapshot.error.toString());
+                  else
+                    return LandingPage();
+                } else
+                  return Scaffold();
+              },
+            ),
           );
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    Hive.box('contacts').compact();
+    Hive.close();
+    super.dispose();
   }
 }
 

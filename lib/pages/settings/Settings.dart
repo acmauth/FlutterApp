@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hive/hive.dart';
 
+import '../../pages/authentication/AuthPage.dart';
 import '../../Router.dart';
 import '../../bloc/auth/exports.dart';
 import '../../bloc/notifications/exports.dart';
@@ -28,6 +31,7 @@ class Settings extends AbstractPage {
 
 class _SettingsState extends PageState<Settings> {
   bool aa = false;
+  final contactsBox = Hive.box('contacts');
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
@@ -136,7 +140,12 @@ class _SettingsState extends PageState<Settings> {
           label: 'Log Out',
           icon: Icons.exit_to_app,
           color: Colors.red.shade500,
-          onTap: () => BlocProvider.of<AuthBloc>(context).dispatch(LogOut()),
+          onTap: () {
+            if(contactsBox.isNotEmpty){
+              contactsBox.deleteFromDisk();
+              SystemNavigator.pop();
+            }
+          },
         ),
       ],
     );
