@@ -20,23 +20,26 @@ class _SearchState extends PageState<Search> {
 
   Icon actionIcon = new Icon(Icons.search, color: Colors.white,);
   final key = new GlobalKey<ScaffoldState>();
-  static TextEditingController _searchQuery = new TextEditingController();
+ // static TextEditingController _searchQuery = new TextEditingController();
 
   List<String> courseList = List();
   List<String> historyList = new List();
+
+  _SearchState() {
+    initCourseList();
+  }
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return SearchList(
       mapTile: (contact) => new ChildItem(contact, false, historyList),
-      courselist: initCourseList(),
+      courselist: courseList,
       onEmpty: buildhistoryList,
     );
+
   }
 
-
-
-  List<String> initCourseList() {
+   void initCourseList() {
     courseList.add("ΜΑΘΗΜΑΤΙΚΗ ΑΝΑΛΥΣΗ Ι");
     courseList.add("ΕΙΣΑΓΩΓΗ ΣΤΗΝ ΠΛΗΡΟΦΟΡΙΚΗ");
     courseList.add("ΓΡΑΜΜΙΚΗ ΑΛΓΕΒΡΑ");
@@ -47,14 +50,19 @@ class _SearchState extends PageState<Search> {
     courseList.add("ΔΟΜΕΣ ΔΕΔΟΜΕΝΩΝ");
     courseList.add("ΨΗΦΙΑΚΗ ΣΧΕΔΙΑΣΗ");
     courseList.add("ΘΕΩΡΙΑ ΥΠΟΛΟΓΙΣΜΟΥ");
-
-    return courseList;
   }
 
   List<ChildItem> buildhistoryList(){
     return historyList.map(
             (contact) => new ChildItem(contact,
             true,
+            historyList,
+            onDelete: () => removeItem(contact))).toList();
+  }
+  List<ChildItem> buildFullList(){
+    return courseList.map(
+            (contact) => new ChildItem(contact,
+            false,
             historyList,
             onDelete: () => removeItem(contact))).toList();
   }
@@ -84,10 +92,11 @@ class ChildItem extends StatelessWidget {
             padding: EdgeInsets.only(right: 12.0),
             decoration: new BoxDecoration(
                 border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.blueAccent))),
+                    right: new BorderSide(width: 1.0, color: Colors.lightBlueAccent))),
             child: Icon(wasClicked ? Icons.history : Icons.library_books)
         ),
         title: new Text(this.name),
+        subtitle: new Text("1st Semester"),
         onTap: () {
           if(!history.contains(this.name)){
             history.add(this.name);
@@ -96,7 +105,7 @@ class ChildItem extends StatelessWidget {
         },
 
         trailing: IconButton(
-          icon: Icon(wasClicked ? Icons.close : Icons.keyboard_arrow_right),
+          icon: Icon(wasClicked ? Icons.close : Icons.keyboard_arrow_right,),
           onPressed: this.onDelete,
         )
     );
