@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/pages/formScreens/screen1.dart';
 
 import '../AbstractPage.dart';
+
 
 class SsoScreen extends AbstractPage {
   SsoScreen({Key key})
@@ -8,7 +10,7 @@ class SsoScreen extends AbstractPage {
           key: key,
           appBarTitle: 'Single Sign-On',
           appBarColorBg: Colors.amber,
-          appBarColorTxt: Colors.white,
+          appBarColorTxt: Colors.white
         );
 
   @override
@@ -18,6 +20,17 @@ class SsoScreen extends AbstractPage {
 class _SsoScreenState extends PageState {
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
-    return Center(/* TODO(dinos): Implement SSO Auth */);
+    return Center(
+      child: RaisedButton(
+        child: Text("Show Form"),
+        onPressed: (){
+          Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (__) => new screen1()
+            ));
+          },
+      )
+    );
   }
 }
