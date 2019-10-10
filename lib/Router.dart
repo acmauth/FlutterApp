@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -55,3 +54,4 @@ class Router {
     Navigator.of(context).pushReplacementNamed(route, arguments: args);
   }
 }
+

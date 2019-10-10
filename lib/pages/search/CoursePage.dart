@@ -86,9 +86,7 @@ class _CoursePageState extends PageState<CoursePage>{
             ),
         ),
         )//Minor info
-
       ],
     );
   }
-
 }
