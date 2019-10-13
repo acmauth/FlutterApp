@@ -4,8 +4,9 @@ import 'SchoolData.dart';
 import 'SemesterData.dart';
 
 class UserData {
-  const UserData({
-    @required this.name,
+   UserData({
+
+     this.name,
     @required this.estYear,
     @required this.schoolData,
     @required this.favSubjects,
@@ -13,7 +14,7 @@ class UserData {
     @required this.semesterDataList,
   });
 
-  final String name;
+   String name;
   final int estYear;
   final SchoolData schoolData;
   final List<String> favSubjects;

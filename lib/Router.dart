@@ -7,6 +7,7 @@ import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
 import 'pages/search/CoursePage.dart';
 
+
 class Router {
   static Route<PageRoute<Object>> generateRoute(
       RouteSettings settings,
@@ -34,6 +35,7 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => CoursePage(),
         );
+
     }
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
       builder: (_) => UnknownPage(),
@@ -52,3 +54,4 @@ class Router {
     Navigator.of(context).pushReplacementNamed(route, arguments: args);
   }
 }
+

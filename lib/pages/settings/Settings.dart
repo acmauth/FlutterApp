@@ -49,9 +49,9 @@ class _SettingsState extends PageState<Settings> {
           extras: Icon(Icons.person_outline),
         ),
         TappableElement(
-          label: 'Edit Account',
-          icon: Icons.person_pin_circle,
-          onTap: () => Router.push(context, '/edit_account'),
+          label: 'Change Password',
+          icon: Icons.lock,
+          onTap: () => Router.push(context, '/change_password'),
         ),
         TappableElement(
           label: 'Update Grades',

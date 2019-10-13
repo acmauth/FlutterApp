@@ -65,7 +65,6 @@ class _SearchState extends State<SearchList>{
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -80,20 +79,20 @@ class _SearchState extends State<SearchList>{
                 fontSize: 18,
               ),
               decoration: new InputDecoration(
-                  suffixIcon: new Icon(Icons.search),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      borderSide: const BorderSide(color: Colors.grey, width: 0.0)
+                  border: InputBorder.none,
+                  suffixIcon: new Icon(Icons.search, color: Colors.black,),
+                  enabledBorder:  OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey[200], width: 2.0),
+                    borderRadius: BorderRadius.circular(50)
                   ),
                   filled: true,
                   fillColor: Colors.grey[200],
-                  contentPadding: EdgeInsets.only(left:15),
+                  contentPadding: EdgeInsets.only(left:15,top: 7),
                   hintText: "Search...",
-                  hintStyle: new TextStyle(color: Colors.black.withOpacity(0.5), fontSize: 18)
+                  hintStyle: new TextStyle(color: Colors.black.withOpacity(0.4), fontSize: 18)
               ),
             ),
-          ),
-          ListView(
+          ), ListView(
             shrinkWrap: true,
             children: _buildSearchList(),// use it
           )
