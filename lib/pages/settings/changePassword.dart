@@ -1,176 +1,132 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/entities/user/UserCredentials.dart';
+import '../fragments/PasswordField.dart';
 
-class ChangePassword extends StatefulWidget{
+class changePassword extends StatefulWidget{
 
   @override
-  State<StatefulWidget> createState() => ChangePasswordState();
+  State<StatefulWidget> createState() => changePasswordState();
 
 }
 
-class ChangePasswordState extends State<ChangePassword>{
-  final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
-  static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+class changePasswordState extends State<changePassword>{
 
-  final TextEditingController newPass = new TextEditingController();
-  final TextEditingController oldPass = new TextEditingController();
 
-  final FocusNode newPassNode = FocusNode();
-  final FocusNode verPassNode = FocusNode();
 
-  //For Testing
+  final GlobalKey<FormFieldState<dynamic>> oldPwdKey =
+  GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdKey =
+  GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> _pwdConfirmKey =
+  GlobalKey<FormFieldState<dynamic>>();
 
-  UserCredentials userCred = new UserCredentials();
-  ChangePasswordState(){
-    userCred.password = "qwerty";
-  }
+  static String _pwd, _pwdConfirm;
+
+  final FocusNode _pwdNode = FocusNode();
+  final FocusNode _pwdConfirmNode = FocusNode();
 
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        home: Scaffold(
-          key: scKey,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("Edit Profile"),
-            backgroundColor: Colors.blue,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          body: Form(
-            key: formKey,
-            child: ListView(
-                padding: EdgeInsets.all(30),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      curPassField(),
-                      SizedBox(height: 20),
-                      newPassField(),
-                      SizedBox(height: 20),
-                      verPassField(),
-                      SizedBox(height: 20),
-                      SaveButton()
-                    ],
-                  ),
-                ]
-            ),
-          ),
-        )
-    );
-  }
-
-  Container curPassField(){
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
-      ),
-      child: TextFormField(
-        controller: oldPass,
-        textInputAction: TextInputAction.next,
-        obscureText: true,
-        autofocus: true,
-        onFieldSubmitted: (_) {newPassNode.requestFocus();},
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
-          hintText: "Current password",
-          //border: InputBorder.none
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+        centerTitle: true,
+        title: Text("Edit Password"),
+        backgroundColor: Colors.blue,
+        ),
+      body: Padding(
+        padding: EdgeInsets.all(30),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(height: 25),
+            buildPassField(),
+            SizedBox(height: 25),
+            buildPassConfField(),
+            SizedBox(height: 25),
+            //actionButton("Save changes", Colors.blue, Colors.white, o),
+            SizedBox(height: 25),
+           // actionButton("Cancel", Colors.grey[100], Colors.blue, onTap: cancel)
+          ],
         ),
       ),
+      )
     );
   }
 
-  Container newPassField(){
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
-      ),
-      child: TextFormField(
-        controller: newPass,
-        focusNode: newPassNode,
-        textInputAction: TextInputAction.next,
-        validator: checkPass,
-        obscureText: true,
-        onFieldSubmitted: (val) {verPassNode.requestFocus();},
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
-          hintText: "New password",
-          //border: InputBorder.none
-        ),
-      ),
+  Widget buildPassField(){
+    return  PasswordField(
+      key: _pwdKey,
+      textInputAction: TextInputAction.next,
+      onSaved: (String value) => _pwd = value,
+      focusNode: _pwdNode,
+      validator: _doCheckPassword,
+      hintText: 'New Password',
+      onFieldSubmitted: () => _pwdConfirmNode.requestFocus(),
     );
   }
 
-  Container verPassField(){
+  String _doCheckPassword(String password) {
+    return password.length < 5
+        ? 'Please enter a password longer than 5 characters!'
+        : null;
+  }
+
+  Widget buildPassConfField(){
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.blue),
       ),
-      child: TextFormField(
-        focusNode: verPassNode,
+      child: PasswordField(
+        key: _pwdConfirmKey,
         textInputAction: TextInputAction.done,
-        obscureText: true,
-        validator: checkMatch,
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
-          hintText: "New password, again",
-          //border: InputBorder.none
-        ),
+        onSaved: (String value) => _pwdConfirm = value,
+        focusNode: _pwdConfirmNode,
+        validator: (String value) => _pwdConfirm != _pwd  ? "The passwords you entered don't match!" : null,
+        hintText: 'Confirm Password',
+        onFieldSubmitted: null,
       ),
     );
   }
 
-  Padding SaveButton(){
+
+}
+
+class actionButton extends StatelessWidget{
+  final String title;
+  final Color bgColor;
+  final Color txtColor;
+  final VoidCallback onTap;
+
+  actionButton(this.title, this.bgColor, this.txtColor, {this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
     return Padding(
-      padding: EdgeInsets.only(top:30, left: 60, right: 60),
+      padding: EdgeInsets.only(left: 20, right: 20),
       child: Container(
-        color: Colors.blue,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue),
+          color: this.bgColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: FlatButton(
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent,
             child: SizedBox(
               width: double.infinity,
-              child: Text("SAVE CHANGES",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
+              child: Text(
+                this.title,
+                style: TextStyle(
+                    color: this.txtColor),
+                    textAlign: TextAlign.center,
               ),
             ),
-            onPressed: (){
-              if(formKey.currentState.validate()){
-                formKey.currentState.save();
-                if(oldPass.text == userCred.password) {
-                  showSnackBar("Password successfully changed!");
-                  userCred.password = newPass.text;
-                }
-                else
-                  showSnackBar("Old Password not correct! Please retry.");
-              }
-            }
+            onPressed: this.onTap
         ),
       ) ,
     );
-  }
-
-  String checkPass(String val){
-    return val.length < 5 ? "Password can't be less than 5 characters!" :  null;
-  }
-
-  String checkMatch(String val){
-    return val != newPass.text ? "Passwords don't match!" : null;
-  }
-
-  void showSnackBar(message) {
-    final snackBar = new SnackBar(
-      content: new Text(message),
-      duration: Duration(milliseconds: 1000),
-    );
-    scKey.currentState.showSnackBar(snackBar);
   }
 
 }
