@@ -2,10 +2,12 @@ import 'package:meta/meta.dart';
 
 import 'SchoolData.dart';
 import 'SemesterData.dart';
+import 'UserCredentials.dart';
 
 class UserData {
   UserData({
 
+    this.userCreds,
     this.name,
     @required this.estYear,
     @required this.schoolData,
@@ -15,6 +17,7 @@ class UserData {
   });
 
   String name;
+  UserCredentials userCreds;
   final int estYear;
   final SchoolData schoolData;
   final List<String> favSubjects;
