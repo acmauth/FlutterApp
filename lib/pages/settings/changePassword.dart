@@ -1,132 +1,176 @@
 import 'package:flutter/material.dart';
-import '../fragments/PasswordField.dart';
+import 'package:grade_plus_plus/entities/user/UserCredentials.dart';
 
-class changePassword extends StatefulWidget{
+class ChangePassword extends StatefulWidget{
 
   @override
-  State<StatefulWidget> createState() => changePasswordState();
+  State<StatefulWidget> createState() => ChangePasswordState();
 
 }
 
-class changePasswordState extends State<changePassword>{
+class ChangePasswordState extends State<ChangePassword>{
+  final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
+  static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
+  final TextEditingController newPass = new TextEditingController();
+  final TextEditingController oldPass = new TextEditingController();
 
+  final FocusNode newPassNode = FocusNode();
+  final FocusNode verPassNode = FocusNode();
 
-  final GlobalKey<FormFieldState<dynamic>> oldPwdKey =
-  GlobalKey<FormFieldState<dynamic>>();
-  final GlobalKey<FormFieldState<dynamic>> _pwdKey =
-  GlobalKey<FormFieldState<dynamic>>();
-  final GlobalKey<FormFieldState<dynamic>> _pwdConfirmKey =
-  GlobalKey<FormFieldState<dynamic>>();
+  //For Testing
 
-  static String _pwd, _pwdConfirm;
-
-  final FocusNode _pwdNode = FocusNode();
-  final FocusNode _pwdConfirmNode = FocusNode();
+  UserCredentials userCred = new UserCredentials();
+  ChangePasswordState(){
+    userCred.password = "qwerty";
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-        centerTitle: true,
-        title: Text("Edit Password"),
-        backgroundColor: Colors.blue,
-        ),
-      body: Padding(
-        padding: EdgeInsets.all(30),
-        child: ListView(
-          children: <Widget>[
-            SizedBox(height: 25),
-            buildPassField(),
-            SizedBox(height: 25),
-            buildPassConfField(),
-            SizedBox(height: 25),
-            //actionButton("Save changes", Colors.blue, Colors.white, o),
-            SizedBox(height: 25),
-           // actionButton("Cancel", Colors.grey[100], Colors.blue, onTap: cancel)
-          ],
-        ),
-      ),
-      )
+    return new MaterialApp(
+        home: Scaffold(
+          key: scKey,
+          appBar: AppBar(
+            centerTitle: true,
+            title: Text("Edit Profile"),
+            backgroundColor: Colors.blue,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          body: Form(
+            key: formKey,
+            child: ListView(
+                padding: EdgeInsets.all(30),
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      curPassField(),
+                      SizedBox(height: 20),
+                      newPassField(),
+                      SizedBox(height: 20),
+                      verPassField(),
+                      SizedBox(height: 20),
+                      SaveButton()
+                    ],
+                  ),
+                ]
+            ),
+          ),
+        )
     );
   }
 
-  Widget buildPassField(){
-    return  PasswordField(
-      key: _pwdKey,
-      textInputAction: TextInputAction.next,
-      onSaved: (String value) => _pwd = value,
-      focusNode: _pwdNode,
-      validator: _doCheckPassword,
-      hintText: 'New Password',
-      onFieldSubmitted: () => _pwdConfirmNode.requestFocus(),
-    );
-  }
-
-  String _doCheckPassword(String password) {
-    return password.length < 5
-        ? 'Please enter a password longer than 5 characters!'
-        : null;
-  }
-
-  Widget buildPassConfField(){
+  Container curPassField(){
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.blue),
+          border: Border.all(color: Colors.blue)
       ),
-      child: PasswordField(
-        key: _pwdConfirmKey,
-        textInputAction: TextInputAction.done,
-        onSaved: (String value) => _pwdConfirm = value,
-        focusNode: _pwdConfirmNode,
-        validator: (String value) => _pwdConfirm != _pwd  ? "The passwords you entered don't match!" : null,
-        hintText: 'Confirm Password',
-        onFieldSubmitted: null,
+      child: TextFormField(
+        controller: oldPass,
+        textInputAction: TextInputAction.next,
+        obscureText: true,
+        autofocus: true,
+        onFieldSubmitted: (_) {newPassNode.requestFocus();},
+        decoration: new InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          hintText: "Current password",
+          //border: InputBorder.none
+        ),
       ),
     );
   }
 
-
-}
-
-class actionButton extends StatelessWidget{
-  final String title;
-  final Color bgColor;
-  final Color txtColor;
-  final VoidCallback onTap;
-
-  actionButton(this.title, this.bgColor, this.txtColor, {this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue),
-          color: this.bgColor,
-          borderRadius: BorderRadius.circular(10),
+  Container newPassField(){
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue)
+      ),
+      child: TextFormField(
+        controller: newPass,
+        focusNode: newPassNode,
+        textInputAction: TextInputAction.next,
+        validator: checkPass,
+        obscureText: true,
+        onFieldSubmitted: (val) {verPassNode.requestFocus();},
+        decoration: new InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          hintText: "New password",
+          //border: InputBorder.none
         ),
+      ),
+    );
+  }
+
+  Container verPassField(){
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue)
+      ),
+      child: TextFormField(
+        focusNode: verPassNode,
+        textInputAction: TextInputAction.done,
+        obscureText: true,
+        validator: checkMatch,
+        decoration: new InputDecoration(
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          hintText: "New password, again",
+          //border: InputBorder.none
+        ),
+      ),
+    );
+  }
+
+  Padding SaveButton(){
+    return Padding(
+      padding: EdgeInsets.only(top:30, left: 60, right: 60),
+      child: Container(
+        color: Colors.blue,
         child: FlatButton(
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent,
             child: SizedBox(
               width: double.infinity,
-              child: Text(
-                this.title,
-                style: TextStyle(
-                    color: this.txtColor),
-                    textAlign: TextAlign.center,
+              child: Text("SAVE CHANGES",
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
               ),
             ),
-            onPressed: this.onTap
+            onPressed: (){
+              if(formKey.currentState.validate()){
+                formKey.currentState.save();
+                if(oldPass.text == userCred.password) {
+                  showSnackBar("Password successfully changed!");
+                  userCred.password = newPass.text;
+                }
+                else
+                  showSnackBar("Old Password not correct! Please retry.");
+              }
+            }
         ),
       ) ,
     );
+  }
+
+  String checkPass(String val){
+    return val.length < 5 ? "Password can't be less than 5 characters!" :  null;
+  }
+
+  String checkMatch(String val){
+    return val != newPass.text ? "Passwords don't match!" : null;
+  }
+
+  void showSnackBar(message) {
+    final snackBar = new SnackBar(
+      content: new Text(message),
+      duration: Duration(milliseconds: 1000),
+    );
+    scKey.currentState.showSnackBar(snackBar);
   }
 
 }
