@@ -35,6 +35,10 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => CoursePage(),
         );
+      case '/change_password':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+            builder: (_) => ChangePassword(),
+        );
 
     }
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
