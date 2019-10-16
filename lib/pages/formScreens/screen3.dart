@@ -16,9 +16,18 @@ class screen3State extends State<screen3> {
 
   bool inputIsOk = false;
 
+  static bool sportSelect = false;
+  static bool gameSelect = false;
+  static bool langSelect = false;
+  static bool movieSelect = false;
+  static bool volSelect = false;
+  String currentSemester = "1";
 
   int houseGroup = -1;
   int distanceGroup = -1;
+
+  List<String> formHobbies = new List();
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +54,8 @@ class screen3State extends State<screen3> {
                       getSchoolDistance(),
                       SizedBox(height: 20),
                       getFavSubjects(),
+                      SizedBox(height: 20,),
+                      getSemester(),
                       nextButton(),
                     ],
                   ),
@@ -57,7 +68,7 @@ class screen3State extends State<screen3> {
 
   Row Header(String title){
     return Row(children: <Widget>[
-      Text(title, style: TextStyle(color: Colors.blue),)]
+      Text(title, style: TextStyle(color: Colors.blue, fontSize: 16),)]
     );
   }
 
@@ -134,41 +145,73 @@ class screen3State extends State<screen3> {
   }
 
   Column getFavSubjects(){
-
-    bool isSelected = false;
     return Column(
       children: <Widget>[
         Header("How do you spent your free time? "),
         Column(
           children: <Widget>[
             CheckboxListTile(
-              value: isSelected,
+              value: sportSelect,
               title: Text("Sports", style: TextStyle(color: Colors.black),),
-              onChanged: (bool val) => setState(() => isSelected = true ),
+              onChanged: (bool val) => setState(() => sportSelect = val ),
             ),
             CheckboxListTile(
-              value: isSelected,
+              value: gameSelect,
               title: Text("Video Games", style: TextStyle(color: Colors.black),),
-              onChanged: (bool val) => setState(() => isSelected = val),
+              onChanged: (bool val) => setState(() => gameSelect = val),
             ),
             CheckboxListTile(
-              value: isSelected,
+              value: langSelect,
               title: Text("Foreign language", style: TextStyle(color: Colors.black),),
-              onChanged: (bool val) => setState(() => isSelected = val),
+              onChanged: (bool val) => setState(() => langSelect = val),
             ),
             CheckboxListTile(
-              value: isSelected,
+              value: movieSelect,
               title: Text("Movies / Series", style: TextStyle(color: Colors.black),),
-              onChanged: (bool val) => setState(() => isSelected = val),
+              onChanged: (bool val) => setState(() => movieSelect = val),
             ),
             CheckboxListTile(
-              value: isSelected,
+              value: volSelect,
               title: Text("Volunteering", style: TextStyle(color: Colors.black),),
-              onChanged: (bool val) => setState(() => isSelected = val),
+              onChanged: (bool val) => setState(() => volSelect = val),
             ),
           ],
         )
       ],
+    );
+  }
+
+  Row getSemester(){
+    return Row(
+      children: <Widget>[
+        Expanded(
+            child: Text("Current Semester: ",
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16),
+            )
+        ),
+        Container(
+          width: 60,
+          child: DropdownButton<String>(
+            items: <String>["1", "2", "3", "4", "5", "6", "7", "8"].map((String value) {
+              return new DropdownMenuItem<String>(
+                value: value,
+                child: Padding(
+                  padding: EdgeInsets.only(left:10, right:10),
+                  child: Text(value),
+                )
+              );
+            }).toList(),
+            value: currentSemester,
+            onChanged: (String val) {
+              setState((){
+                currentSemester = val;
+              });
+            },
+          ),
+        )
+      ]
     );
   }
 
@@ -232,6 +275,9 @@ class screen3State extends State<screen3> {
   void saveData(){
     getRoommate();
     getDistance();
+    getHobbies();
+    widget.formData.semester = int.parse(currentSemester);
+    print("Saving at semester: "+ currentSemester);
   }
 
   //Testing
@@ -243,6 +289,7 @@ class screen3State extends State<screen3> {
     print("Degree: " + widget.formData.postGraduate);
     print("Live: " + widget.formData.roommate);
     print("Distance: " + widget.formData.distance);
+    print(formHobbies);
   }
 
   void getRoommate(){
@@ -277,6 +324,21 @@ class screen3State extends State<screen3> {
         widget.formData.distance = "More than 40 minutes";
         break;
     }
+  }
+
+   void getHobbies(){
+    if(sportSelect)
+      formHobbies.add("Sports");
+    if(gameSelect)
+      formHobbies.add("Video Games");
+    if(langSelect)
+      formHobbies.add("Foreign Language");
+    if(movieSelect)
+      formHobbies.add("Movies / Series");
+    if(volSelect)
+      formHobbies.add("Volunteering");
+
+    widget.formData.hobbies = formHobbies;
   }
 
 }

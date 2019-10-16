@@ -64,7 +64,7 @@ class screen1State extends State<screen1> {
 
   Row Header(String title){
     return Row(children: <Widget>[
-      Text(title, style: TextStyle(color: Colors.blue),)]
+      Text(title, style: TextStyle(color: Colors.blue, fontSize: 16),)]
     );
   }
 

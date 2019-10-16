@@ -9,6 +9,7 @@ class FormData {
       this.roommate,
       this.distance,
       this.hobbies,
+      this.semester
   });
 
 
@@ -21,5 +22,6 @@ class FormData {
    String roommate;
    String distance;
    List<String> hobbies;
+   int semester;
 
 }
