@@ -6,6 +6,7 @@ import 'pages/UnknownPage.dart';
 import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
 import 'pages/search/CoursePage.dart';
+import 'pages/settings/changePassword.dart';
 
 
 class Router {
@@ -35,8 +36,13 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => CoursePage(),
         );
+      case '/change_password':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+            builder: (_) => ChangePassword(),
+        );
 
     }
+
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
       builder: (_) => UnknownPage(),
     );
