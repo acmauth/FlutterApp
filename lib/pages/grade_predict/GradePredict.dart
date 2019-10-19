@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../AbstractPage.dart';
+import '../../entities/course/PredictedCourse.dart';
+import '../fragments/StyledText.dart';
 
 class GradePredict extends AbstractPage {
-  GradePredict({Key key})
-      : super(
+  GradePredict({
+    Key key,
+    @required this.gradeData,
+  }) : super(
           key: key,
           appBarTitle: 'Grade Prediction',
           navIcon: Icons.equalizer,
         );
+  final List<PredictedCourse> gradeData;
 
   _GradePredictState createState() => _GradePredictState();
 }
@@ -17,18 +22,26 @@ class _GradePredictState extends PageState<GradePredict> {
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
+      children: <Widget>[
+        _buildGradePredictionPage(widget.gradeData),
+      ],
+    );
+  }
+}
+
+Widget _buildGradePredictionPage(List<PredictedCourse> data){
+  final Iterable<Column> courses = data.map(
+    (PredictedCourse course) => Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Container(
           margin: EdgeInsets.all(15),
           height: 50,
-          width: MediaQuery.of(context).size.width,
           color: Colors.lightBlue[50],
         ),
         Container(
             margin: EdgeInsets.all(15),
             padding: EdgeInsets.only(left: 30,bottom: 20),
-            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               color: Colors.lightBlue[50],
@@ -37,14 +50,14 @@ class _GradePredictState extends PageState<GradePredict> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 20.0,),
-                Text("NCO-04-02:",
+                Text("${course.courseCode}",
                     style: TextStyle(
                         fontSize: 25,
                         color: Colors.blue[600]
                     )
                 ),
                 SizedBox(height: 5.0,),
-                Text("Artificial Intelligence",
+                Text("${course.courseName}",
                     style: TextStyle(
                         fontSize: 25,
                         color: Colors.blue[600],
@@ -52,28 +65,27 @@ class _GradePredictState extends PageState<GradePredict> {
                     )
                 ),
                 SizedBox(height: 2.0,),
-                Text("Ioannis Vlahavas, Dimitris Vrakas",
+                Text("${course.courseTeacher}",
                     style: TextStyle(
                         fontSize: 13,
                         color: Colors.blue[600]
                     )
                 ),
                 SizedBox(height: 20.0,),
-                Text("Grade Prediction: 9.5",
+                Text("Grade Prediction: ${course.gradePrediction}",
                     style: TextStyle(
                         fontSize: 17,
                         color: Colors.blue[600]
                     )
                 ),
                 SizedBox(height: 5.0,),
-                Text("Difficulty: HARD",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.blue[600]
-                    )
+                StyledText("Difficulty: "),
+                StyledText(
+                  _getDifficultyText(course.difficulty),
+                  color: _getDifficultyColor(course.difficulty),
                 ),
                 SizedBox(height: 20.0,),
-                Text("This grade is above 69%(nice) of all students!",
+                Text("This grade is above ${course.gradePercentage} of all students!",
                     style: TextStyle(
                         fontSize: 17,
                         color: Colors.blue[600]
@@ -95,7 +107,7 @@ class _GradePredictState extends PageState<GradePredict> {
         ),
         Padding(
           padding: EdgeInsets.only(left: 30.0),
-          child: Text("Based on 420 students so far",
+          child: Text("Based on ${course.enrolledStudents} students so far",
             style: TextStyle(
                 fontSize: 14,
                 color: Colors.blue[600]
@@ -111,7 +123,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 flex: 1,
                 child: Container(
                   width: 10,
-                  height: 50,
+                  height: course.box1,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -128,7 +140,7 @@ class _GradePredictState extends PageState<GradePredict> {
                   alignment: Alignment.bottomLeft,
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 70,
+                  height: course.box2,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -145,7 +157,7 @@ class _GradePredictState extends PageState<GradePredict> {
                   alignment: Alignment.bottomLeft,
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 100,
+                  height: course.box3,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -161,7 +173,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 150,
+                  height: course.box4,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -177,7 +189,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 200,
+                  height: course.box5,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -193,7 +205,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 190,
+                  height: course.box6,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -209,7 +221,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 160,
+                  height: course.box7,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -225,7 +237,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 100,
+                  height: course.box8,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -241,7 +253,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 80,
+                  height: course.box9,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -257,7 +269,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 child: Container(
                   margin: EdgeInsets.all(1.0),
                   width: 10,
-                  height: 60,
+                  height: course.box10,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
@@ -380,6 +392,36 @@ class _GradePredictState extends PageState<GradePredict> {
         ),
         SizedBox(height: 20,)
       ],
-    );
+    )
+  );
+
+  return Column(
+    children: courses.toList(),
+  );
+}
+
+String _getDifficultyText(CourseDifficulty difficulty) {
+  switch (difficulty) {
+    case CourseDifficulty.EASY:
+      return "Easy";
+    case CourseDifficulty.MEDIUM:
+      return "Medium";
+    case CourseDifficulty.HARD:
+      return "Hard";
+    default:
+      return "Unmapped value";
+  }
+}
+
+Color _getDifficultyColor(CourseDifficulty difficulty) {
+  switch (difficulty) {
+    case CourseDifficulty.EASY:
+      return Colors.green;
+    case CourseDifficulty.MEDIUM:
+      return Colors.orange;
+    case CourseDifficulty.HARD:
+      return Colors.red;
+    default:
+      return Colors.black;
   }
 }
