@@ -45,7 +45,6 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => UpdateGrades(),
         );
-
     }
 
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
