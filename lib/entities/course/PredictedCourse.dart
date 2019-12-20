@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import 'CourseDifficulty.dart';
+
 class PredictedCourse {
   const PredictedCourse({
     @required this.courseCode,
@@ -40,8 +42,4 @@ class PredictedCourse {
   final double box8;
   final double box9;
   final double box10;
-}
-
-enum CourseDifficulty {
-  EASY, MEDIUM, HARD,
 }

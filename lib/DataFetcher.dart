@@ -1,11 +1,56 @@
 import 'entities/course/BaseCourseData.dart';
+import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
+import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
 
 class DataFetcher {
+  static List<PredictedCourse> fetchPredictedCourses() {
+      return <PredictedCourse>[
+        PredictedCourse(
+          courseCode: "NC0-01-01",
+          courseName: "Introduction to Computer Science",
+          courseTeacher: "Thrasivoulos Tsiatsos",
+          gradePrediction: 10,
+          difficulty: CourseDifficulty.EASY,
+          gradePercentage: 20,
+          enrolledStudents: 150,
+          box1: 20,
+          box2: 20,
+          box3: 20,
+          box4: 20,
+          box5: 50,
+          box6: 20,
+          box7: 20,
+          box8: 20,
+          box9: 20,
+          box10: 20
+        ),
+        PredictedCourse(
+            courseCode: "NC0-01-02",
+            courseName: "Linear Algebra",
+            courseTeacher: "Konstantinos Draziotis",
+            gradePrediction: 10,
+            difficulty: CourseDifficulty.EASY,
+            gradePercentage: 40,
+            enrolledStudents: 150,
+            box1: 20,
+            box2: 20,
+            box3: 20,
+            box4: 20,
+            box5: 50,
+            box6: 20,
+            box7: 20,
+            box8: 20,
+            box9: 20,
+            box10: 20
+        )
+      ];
+  }
+
   static UserData fetchUserData() {
     return UserData(
       name: 'Test Subject',
