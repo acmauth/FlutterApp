@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/pages/settings/updateGrades.dart';
 
 import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
@@ -40,7 +41,10 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
             builder: (_) => ChangePassword(),
         );
-
+      case '/update_grades':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => UpdateGrades(),
+        );
     }
 
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
