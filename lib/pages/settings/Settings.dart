@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Router.dart';
@@ -89,9 +90,10 @@ class _SettingsState extends PageState<Settings> {
             return ToggleableElement(
               name: 'Dark Mode',
               icon: Icons.phone_android,
-              toggle: (bool toggleDark) => themeBloc.dispatch(
-                toggleDark ? ToggleDark() : ToggleLight(),
-              ),
+              toggle: (bool toggleDark) {
+                themeBloc.dispatch(toggleDark ? ToggleDark() : ToggleLight());
+                LocalKeyValuePersistence.setTheme(toggleDark);
+              },
               isOn: themeState is DarkTheme,
             );
           },

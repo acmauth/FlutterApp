@@ -111,7 +111,8 @@ class _AuthPageState extends PageState<AuthPage> {
   }
 
   bool _doAuth() {
-    // TODO(dinos): Implement authentication flow
+    // TODO(sakis): Implement authentication flow
+    // TODO save data to disk
     if (widget.isLogIn) {
       return true;
     } else {

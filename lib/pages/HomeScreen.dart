@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static UserData userData = DataFetcher.fetchUserData();
+  // TODO save pages -> check for internet - otherwise logout
   static List<SuggestedCourseData> suggestedCourses =
       DataFetcher.fetchSuggestedCourses();
 

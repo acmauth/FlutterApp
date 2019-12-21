@@ -33,6 +33,7 @@ class _SearchState extends PageState<Search> {
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return SearchList(
       mapTile: (contact) => new ChildItem(contact, false, historyList),
+      // TODO handle history in fragment
       courselist: courseList,
       onEmpty: buildhistoryList,
     );
