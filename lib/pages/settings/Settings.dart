@@ -109,16 +109,23 @@ class _SettingsState extends PageState<Settings> {
                   CheckableElement(
                     name: 'New Semester',
                     icon: Icons.calendar_today,
-                    toggle: (bool semesterOn) => notifBloc.dispatch(
-                      semesterOn ? SubToSemester() : UnsubFromSemester(),
-                    ),
+                    toggle: (bool semesterOn) {
+                      notifBloc.dispatch(
+                          semesterOn ? SubToSemester() : UnsubFromSemester());
+                      LocalKeyValuePersistence.setNotifState(
+                          semesterOn, notifState.getHasGrades());
+                    },
                     isOn: notifState.hasSemester,
                   ),
                   CheckableElement(
                     name: 'Missing Grades',
                     icon: Icons.warning,
-                    toggle: (bool gradesOn) => notifBloc
-                        .dispatch(gradesOn ? SubToGrades() : UnsubFromGrades()),
+                    toggle: (bool gradesOn) {
+                      notifBloc.dispatch(
+                          gradesOn ? SubToGrades() : UnsubFromGrades());
+                      LocalKeyValuePersistence.setNotifState(
+                          notifState.getHasSemester(), gradesOn);
+                    },
                     isOn: notifState.hasGrades,
                   ),
                 ],

@@ -9,4 +9,21 @@ class NotifState {
 
   final bool hasSemester;
   final bool hasGrades;
+
+  bool getHasSemester() {
+    return hasSemester;
+  }
+
+  bool getHasGrades() {
+    return hasGrades;
+  }
+
+  NotifState.fromJson(Map<String, dynamic> json)
+      : hasSemester = json['hasSemester'],
+        hasGrades = json['hasGrades'];
+
+  Map<String, dynamic> toJson() => {
+        'hasSemester': hasSemester,
+        'hasGrades': hasGrades,
+      };
 }

@@ -10,23 +10,32 @@ import 'bloc/theme/exports.dart';
 import 'pages/LandingPage.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Needed - Error since we call functions before initialize
-  final ThemeState initialThemeState = await LocalKeyValuePersistence.getTheme(); // Getting the theme
-  runApp(MyApp(initialThemeState: initialThemeState));
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Needed - Error since we call functions before initialize
+  final ThemeState initialThemeState =
+      await LocalKeyValuePersistence.getTheme(); // Getting the theme
+  final NotifState initialNotifState = await LocalKeyValuePersistence
+      .getNotifState(); // Getting the notification preferences
+  runApp(MyApp(
+      initialThemeState: initialThemeState,
+      initialNotifState: initialNotifState));
 }
 
 class MyApp extends StatefulWidget {
   final ThemeState initialThemeState;
+  final NotifState initialNotifState;
 
-  const MyApp({Key key, this.initialThemeState}) : super(key: key);
+  const MyApp({Key key, this.initialThemeState, this.initialNotifState})
+      : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState(initialThemeState);
+  _MyAppState createState() =>
+      _MyAppState(initialThemeState, initialNotifState);
 }
 
 class _MyAppState extends State<MyApp> {
   final ThemeState initialThemeState;
-
+  final NotifState initialNotifState;
   final ThemeData lightTheme = ThemeData(
     accentColor: Colors.lightBlue,
     appBarTheme: AppBarTheme(
@@ -62,10 +71,9 @@ class _MyAppState extends State<MyApp> {
     brightness: Brightness.dark,
     primarySwatch: Colors.red,
     textSelectionHandleColor: Colors.lightBlue,
-
   );
 
-  _MyAppState(this.initialThemeState);
+  _MyAppState(this.initialThemeState, this.initialNotifState);
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +83,7 @@ class _MyAppState extends State<MyApp> {
           builder: (BuildContext context) => ThemeBloc(initialThemeState),
         ),
         BlocProvider<NotifBloc>(
-          builder: (BuildContext context) => NotifBloc(),
+          builder: (BuildContext context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
           builder: (BuildContext context) => AuthBloc(),
@@ -103,8 +111,8 @@ class _MyAppState extends State<MyApp> {
 
 class Scroller extends ScrollBehavior {
   @override
-  Widget buildViewportChrome(BuildContext context, Widget child,
-      AxisDirection axisDirection) {
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
   }
 }
