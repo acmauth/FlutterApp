@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'FormData.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class FormData {
    FormData({
       this.age,
@@ -23,5 +28,10 @@ class FormData {
    String distance;
    List<String> hobbies;
    int semester;
+
+   factory FormData.fromJson(Map<String, dynamic> json) =>
+       _$FormDataFromJson(json);
+
+   Map<String, dynamic> toJson() => _$FormDataToJson(this);
 
 }

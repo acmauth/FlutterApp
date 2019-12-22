@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
 import '../DataFetcher.dart';
 import '../entities/course/SuggestedCourseData.dart';
@@ -19,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   static UserData userData = DataFetcher.fetchUserData();
-  // TODO save pages -> check for internet - otherwise logout
   static List<SuggestedCourseData> suggestedCourses =
       DataFetcher.fetchSuggestedCourses();
 
@@ -33,6 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
     UserProfile(userData: userData),
     Settings(),
   ];
+
+  _HomeScreenState() {
+    LocalKeyValuePersistence.setUserData(userData);
+    LocalKeyValuePersistence.setListSuggestedCourses(suggestedCourses);
+  }
 
   @override
   Widget build(BuildContext context) {
