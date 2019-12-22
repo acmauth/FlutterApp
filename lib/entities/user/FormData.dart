@@ -36,4 +36,9 @@ class FormData {
 
    Map<String, dynamic> toJson() => _$FormDataToJson(this);
 
+   factory FormData.fromJson(Map<String, dynamic> json) =>
+       _$FormDataFromJson(json);
+
+   Map<String, dynamic> toJson() => _$FormDataToJson(this);
+
 }
