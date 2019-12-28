@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/entities/course/CourseDifficulty.dart';
-import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
-import 'package:grade_plus_plus/pages/fragments/ChartBar.dart';
-import 'package:grade_plus_plus/pages/fragments/ChartLabel.dart';
 
-import '../AbstractPage.dart';
+import '../../entities/course/CourseDifficulty.dart';
 import '../../entities/course/PredictedCourse.dart';
+import '../AbstractPage.dart';
+import '../fragments/BlankPadding.dart';
+import '../fragments/ChartBar.dart';
+import '../fragments/ChartLabel.dart';
 import '../fragments/StyledText.dart';
 
 class GradePredict extends AbstractPage {
@@ -46,14 +46,13 @@ class _GradePredictState extends PageState<GradePredict> {
               value: course,
             );
           }).toList(),
-
         ),
         _buildGradePredictionPage(_shownCourse),
       ],
     );
   }
 
-  Widget _buildGradePredictionPage(PredictedCourse course){
+  Widget _buildGradePredictionPage(PredictedCourse course) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -69,51 +68,47 @@ class _GradePredictState extends PageState<GradePredict> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("${course.courseCode}",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.blue[600]
-                      )
+                      style: TextStyle(fontSize: 25, color: Colors.blue[600])),
+                  SizedBox(
+                    height: 5.0,
                   ),
-                  SizedBox(height: 5.0,),
                   Text("${course.courseName}",
                       style: TextStyle(
                           fontSize: 25,
                           color: Colors.blue[600],
-                          fontWeight: FontWeight.bold
-                      )
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(
+                    height: 2.0,
                   ),
-                  SizedBox(height: 2.0,),
                   Text("${course.courseTeacher}",
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.blue[600]
-                      )
+                      style: TextStyle(fontSize: 13, color: Colors.blue[600])),
+                  SizedBox(
+                    height: 20.0,
                   ),
-                  SizedBox(height: 20.0,),
                   Text("Grade Prediction: ${course.gradePrediction}",
-                      style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.blue[600]
-                      )
+                      style: TextStyle(fontSize: 17, color: Colors.blue[600])),
+                  SizedBox(
+                    height: 5.0,
                   ),
-                  SizedBox(height: 5.0,),
                   StyledText("Difficulty: "),
                   StyledText(
                     _getDifficultyText(course.difficulty),
                     color: _getDifficultyColor(course.difficulty),
                   ),
-                  SizedBox(height: 20.0,),
-                  Text("This grade is above ${course.gradePercentage} of all students!",
-                      style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.blue[600]
-                      )
-                  )
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Text(
+                      "This grade is above ${course.gradePercentage} of all students!",
+                      style: TextStyle(fontSize: 17, color: Colors.blue[600]))
                 ],
-              )
-          ),
+              )),
           BlankPadding(),
-          StyledText("Grade Destribution", size: 20, weight: FontWeight.bold,),
+          StyledText(
+            "Grade Destribution",
+            size: 20,
+            weight: FontWeight.bold,
+          ),
           StyledText("Based on ${course.enrolledStudents} students so far"),
           BlankPadding(),
           Row(

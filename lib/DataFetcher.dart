@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -12,8 +13,8 @@ import 'entities/user/UserData.dart';
 
 class DataFetcher {
   static List<PredictedCourse> fetchPredictedCourses() {
-      return <PredictedCourse>[
-        PredictedCourse(
+    return <PredictedCourse>[
+      PredictedCourse(
           courseCode: "NC0-01-01",
           courseName: "Introduction to Computer Science",
           courseTeacher: "Thrasivoulos Tsiatsos",
@@ -30,28 +31,26 @@ class DataFetcher {
           box7: 20,
           box8: 20,
           box9: 20,
-          box10: 20
-        ),
-        PredictedCourse(
-            courseCode: "NC0-01-02",
-            courseName: "Linear Algebra",
-            courseTeacher: "Konstantinos Draziotis",
-            gradePrediction: 10,
-            difficulty: CourseDifficulty.EASY,
-            gradePercentage: 40,
-            enrolledStudents: 150,
-            box1: 20,
-            box2: 20,
-            box3: 20,
-            box4: 20,
-            box5: 50,
-            box6: 20,
-            box7: 20,
-            box8: 20,
-            box9: 20,
-            box10: 20
-        )
-      ];
+          box10: 20),
+      PredictedCourse(
+          courseCode: "NC0-01-02",
+          courseName: "Linear Algebra",
+          courseTeacher: "Konstantinos Draziotis",
+          gradePrediction: 10,
+          difficulty: CourseDifficulty.EASY,
+          gradePercentage: 40,
+          enrolledStudents: 150,
+          box1: 20,
+          box2: 20,
+          box3: 20,
+          box4: 20,
+          box5: 50,
+          box6: 20,
+          box7: 20,
+          box8: 20,
+          box9: 20,
+          box10: 20)
+    ];
   }
 
   static UserData fetchUserData() {
@@ -154,6 +153,10 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  static Future<bool> uploadGrades(String filePath) {
+    return Future.value(true); // TODO send to server
   }
 
   // Please use this function for loading user data from local storage

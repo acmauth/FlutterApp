@@ -82,7 +82,7 @@ class _AuthPageState extends PageState<AuthPage> {
                     if (widget.isLogIn)
                       FlatButton(
                         onPressed: () => BlocProvider.of<AuthBloc>(context)
-                            .dispatch(AuthSuccess()),
+                            .add(AuthSuccess()),
                         child: Text('Skip (dev only)'),
                       ),
                   ],
@@ -127,9 +127,9 @@ class _AuthPageState extends PageState<AuthPage> {
     form.save();
     if (form.validate()) {
       if (_doAuth()) {
-        BlocProvider.of<AuthBloc>(context).dispatch(AuthSuccess());
+        BlocProvider.of<AuthBloc>(context).add(AuthSuccess());
         if (!widget.isLogIn) {
-          Router.pop(context);
+          Router.push(context, "/form/personal");
         }
       } else {
         _scfKey.currentState.hideCurrentSnackBar();

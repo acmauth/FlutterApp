@@ -42,7 +42,7 @@ packages:
       name: bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.4"
+    version: "3.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -194,7 +194,7 @@ packages:
       name: flutter_bloc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.20.1"
+    version: "3.0.0"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -207,13 +207,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_uploader:
-    dependency: "direct main"
-    description:
-      name: flutter_uploader
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -246,7 +239,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0+2"
+    version: "0.12.0+3"
   http_multi_server:
     dependency: transitive
     description:
@@ -288,14 +281,14 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   json_serializable:
     dependency: "direct dev"
     description:
       name: json_serializable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.4"
+    version: "3.2.5"
   logging:
     dependency: transitive
     description:
@@ -324,6 +317,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.6+3"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
   node_interop:
     dependency: transitive
     description:
@@ -393,7 +393,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "4.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -421,7 +421,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.22.6"
+    version: "0.23.1"
   shared_preferences:
     dependency: "direct main"
     description:

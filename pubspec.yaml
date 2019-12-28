@@ -4,28 +4,25 @@ description: The mobile app for the project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  flutter_bloc: ^0.20.0
-  url_launcher: ^5.1.2
-  flutter_uploader: ^1.0.5+1
-  file_picker: ^1.2.0
+  flutter_bloc: ^3.0.0
+  url_launcher: ^5.4.1
+  file_picker: ^1.4.3+2
   shared_preferences: ^0.5.6
   connectivity: ^0.4.6+1
-  json_annotation: ^3.0.0
-
-  # cupertino_icons: ^0.1.2
+  json_annotation: ^3.0.1
 
 dev_dependencies:
-  flutter_launcher_icons: "^0.7.2"
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.4
   build_runner: ^1.7.2
-  json_serializable: ^3.2.4
+  json_serializable: ^3.2.5
 
 flutter:
   uses-material-design: true

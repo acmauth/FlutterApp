@@ -14,7 +14,8 @@ class FormData {
       this.roommate,
       this.distance,
       this.hobbies,
-      this.semester
+      this.semester,
+      this.gradesPath,
   });
 
 
@@ -28,6 +29,7 @@ class FormData {
    String distance;
    List<String> hobbies;
    int semester;
+   String gradesPath;
 
    factory FormData.fromJson(Map<String, dynamic> json) =>
        _$FormDataFromJson(json);

@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
+import 'LocalKeyValuePersistence.dart';
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
 import 'bloc/notifications/exports.dart';
@@ -80,13 +80,13 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: <BlocProvider<Bloc<dynamic, dynamic>>>[
         BlocProvider<ThemeBloc>(
-          builder: (BuildContext context) => ThemeBloc(initialThemeState),
+          create: (BuildContext context) => ThemeBloc(initialThemeState),
         ),
         BlocProvider<NotifBloc>(
-          builder: (BuildContext context) => NotifBloc(initialNotifState),
+          create: (BuildContext context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
-          builder: (BuildContext context) => AuthBloc(),
+          create: (BuildContext context) => AuthBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

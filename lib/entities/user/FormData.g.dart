@@ -18,6 +18,7 @@ FormData _$FormDataFromJson(Map<String, dynamic> json) {
     distance: json['distance'] as String,
     hobbies: (json['hobbies'] as List)?.map((e) => e as String)?.toList(),
     semester: json['semester'] as int,
+    gradesPath: json['gradesPath'] as String,
   );
 }
 
@@ -32,4 +33,5 @@ Map<String, dynamic> _$FormDataToJson(FormData instance) => <String, dynamic>{
       'distance': instance.distance,
       'hobbies': instance.hobbies,
       'semester': instance.semester,
+      'gradesPath': instance.gradesPath,
     };

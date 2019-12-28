@@ -1,7 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 import 'CourseDifficulty.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'BaseCourseData.g.dart';
 
