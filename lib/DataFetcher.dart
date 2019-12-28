@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -152,6 +153,10 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  static Future<bool> uploadGrades(String filePath) {
+    return Future.value(true); // TODO send to server
   }
 
   // Please use this function for loading user data from local storage

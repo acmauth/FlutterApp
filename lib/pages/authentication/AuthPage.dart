@@ -129,7 +129,7 @@ class _AuthPageState extends PageState<AuthPage> {
       if (_doAuth()) {
         BlocProvider.of<AuthBloc>(context).add(AuthSuccess());
         if (!widget.isLogIn) {
-          Router.pop(context);
+          Router.push(context, "/form/personal");
         }
       } else {
         _scfKey.currentState.hideCurrentSnackBar();

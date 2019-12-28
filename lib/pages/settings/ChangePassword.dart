@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../Router.dart';
 import '../../entities/user/UserCredentials.dart';
 
-class ChangePassword extends StatefulWidget{
-
+class ChangePassword extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ChangePasswordState();
-
 }
 
-class ChangePasswordState extends State<ChangePassword>{
+class ChangePasswordState extends State<ChangePassword> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -22,64 +21,59 @@ class ChangePasswordState extends State<ChangePassword>{
   //For Testing
 
   UserCredentials userCred = new UserCredentials();
-  ChangePasswordState(){
+  ChangePasswordState() {
     userCred.password = "qwerty";
   }
-
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
         home: Scaffold(
-          key: scKey,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("Edit Profile"),
-            backgroundColor: Colors.blue,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+      key: scKey,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Edit Profile"),
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Router.pop(context);
+          },
+        ),
+      ),
+      body: Form(
+        key: formKey,
+        child: ListView(padding: EdgeInsets.all(30), children: <Widget>[
+          Column(
+            children: <Widget>[
+              curPassField(),
+              SizedBox(height: 20),
+              newPassField(),
+              SizedBox(height: 20),
+              verPassField(),
+              SizedBox(height: 20),
+              SaveButton()
+            ],
           ),
-          body: Form(
-            key: formKey,
-            child: ListView(
-                padding: EdgeInsets.all(30),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      curPassField(),
-                      SizedBox(height: 20),
-                      newPassField(),
-                      SizedBox(height: 20),
-                      verPassField(),
-                      SizedBox(height: 20),
-                      SaveButton()
-                    ],
-                  ),
-                ]
-            ),
-          ),
-        )
-    );
+        ]),
+      ),
+    ));
   }
 
-  Container curPassField(){
+  Container curPassField() {
     return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       child: TextFormField(
         controller: oldPass,
         textInputAction: TextInputAction.next,
         obscureText: true,
         autofocus: true,
-        onFieldSubmitted: (_) {newPassNode.requestFocus();},
+        onFieldSubmitted: (_) {
+          newPassNode.requestFocus();
+        },
         decoration: new InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
           hintText: "Current password",
           //border: InputBorder.none
         ),
@@ -87,21 +81,21 @@ class ChangePasswordState extends State<ChangePassword>{
     );
   }
 
-  Container newPassField(){
+  Container newPassField() {
     return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       child: TextFormField(
         controller: newPass,
         focusNode: newPassNode,
         textInputAction: TextInputAction.next,
         validator: checkPass,
         obscureText: true,
-        onFieldSubmitted: (val) {verPassNode.requestFocus();},
+        onFieldSubmitted: (val) {
+          verPassNode.requestFocus();
+        },
         decoration: new InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
           hintText: "New password",
           //border: InputBorder.none
         ),
@@ -109,11 +103,9 @@ class ChangePasswordState extends State<ChangePassword>{
     );
   }
 
-  Container verPassField(){
+  Container verPassField() {
     return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue)
-      ),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
       child: TextFormField(
         focusNode: verPassNode,
         textInputAction: TextInputAction.done,
@@ -121,7 +113,7 @@ class ChangePasswordState extends State<ChangePassword>{
         validator: checkMatch,
         decoration: new InputDecoration(
           border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left:20, top:10, bottom:10),
+          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
           hintText: "New password, again",
           //border: InputBorder.none
         ),
@@ -129,40 +121,39 @@ class ChangePasswordState extends State<ChangePassword>{
     );
   }
 
-  Padding SaveButton(){
+  Padding SaveButton() {
     return Padding(
-      padding: EdgeInsets.only(top:30, left: 60, right: 60),
+      padding: EdgeInsets.only(top: 30, left: 60, right: 60),
       child: Container(
         color: Colors.blue,
         child: FlatButton(
             child: SizedBox(
               width: double.infinity,
-              child: Text("SAVE CHANGES",
+              child: Text(
+                "SAVE CHANGES",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
-            onPressed: (){
-              if(formKey.currentState.validate()){
+            onPressed: () {
+              if (formKey.currentState.validate()) {
                 formKey.currentState.save();
-                if(oldPass.text == userCred.password) {
+                if (oldPass.text == userCred.password) {
                   showSnackBar("Password successfully changed!");
                   userCred.password = newPass.text;
-                }
-                else
+                } else
                   showSnackBar("Old Password not correct! Please retry.");
               }
-            }
-        ),
-      ) ,
+            }),
+      ),
     );
   }
 
-  String checkPass(String val){
-    return val.length < 5 ? "Password can't be less than 5 characters!" :  null;
+  String checkPass(String val) {
+    return val.length < 5 ? "Password can't be less than 5 characters!" : null;
   }
 
-  String checkMatch(String val){
+  String checkMatch(String val) {
     return val != newPass.text ? "Passwords don't match!" : null;
   }
 
@@ -173,5 +164,4 @@ class ChangePasswordState extends State<ChangePassword>{
     );
     scKey.currentState.showSnackBar(snackBar);
   }
-
 }

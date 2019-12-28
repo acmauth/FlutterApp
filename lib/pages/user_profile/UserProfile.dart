@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/Router.dart';
 
 import '../../entities/course/PassedCourseData.dart';
 import '../../entities/user/SemesterData.dart';
@@ -8,7 +9,7 @@ import '../fragments/BlankPadding.dart';
 import '../fragments/ExpandableSection.dart';
 import '../fragments/ItemContainer.dart';
 import '../fragments/StyledText.dart';
-import 'editProfile.dart';
+import 'EditProfile.dart';
 
 class UserProfile extends AbstractPage {
   UserProfile({
@@ -89,12 +90,7 @@ class _UserProfileState extends PageState<UserProfile> {
           textColor: Colors.blue,
           child: Text("Edit"),
           onPressed: () {
-            Navigator.push(
-                context,
-                new MaterialPageRoute(
-                    builder: (__) => new editProfile(
-                          userData: widget.userData,
-                        )));
+            Router.push(context, '/edit_profile', args: widget.userData);
           },
         )
       ],

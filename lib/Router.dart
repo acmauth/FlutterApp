@@ -5,9 +5,13 @@ import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
 import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
+import 'pages/authentication/forms/MiscForm.dart';
+import 'pages/authentication/forms/PersonalForm.dart';
+import 'pages/authentication/forms/UniForm.dart';
 import 'pages/search/CoursePage.dart';
-import 'pages/settings/changePassword.dart';
-import 'pages/settings/updateGrades.dart';
+import 'pages/settings/ChangePassword.dart';
+import 'pages/settings/UploadGrades.dart';
+import 'pages/user_profile/EditProfile.dart';
 
 class Router {
   static Route<PageRoute<Object>> generateRoute(
@@ -32,7 +36,19 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => SsoScreen(),
         );
-      case '/CoursePage':
+      case '/form/personal':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => PersonalForm(),
+        );
+      case '/form/uni':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => UniForm(formData: args),
+        );
+      case '/form/misc':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => MiscForm(formData: args),
+        );
+      case '/course':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => CoursePage(),
         );
@@ -40,9 +56,13 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => ChangePassword(),
         );
+      case '/edit_profile':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => EditProfile(userData: args),
+        );
       case '/update_grades':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => UpdateGrades(),
+          builder: (_) => UploadGrades(),
         );
     }
 
@@ -57,6 +77,12 @@ class Router {
 
   static void pop(BuildContext context) {
     Navigator.of(context).pop();
+  }
+
+  static void replaceAll(BuildContext context, String route, {Object args}) {
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        route, (Route<dynamic> route) => false,
+        arguments: args);
   }
 
   static void replace(BuildContext context, String route, {Object args}) {

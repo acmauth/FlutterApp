@@ -113,7 +113,7 @@ class ChildItem extends StatelessWidget {
   }
 
   void openCourseInfo(BuildContext context){
-    Router.push(context, '/CoursePage');
+    Router.push(context, '/course');
   }
 
 }

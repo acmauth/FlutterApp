@@ -1,24 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import './EditFavorites.dart';
 import '../../entities/user/UserData.dart';
 import '../AbstractPage.dart';
-import 'addFavorite.dart';
 
-class editProfile extends AbstractPage {
+class EditProfile extends AbstractPage {
   final UserData userData;
 
-  editProfile({Key key, this.userData})
+  EditProfile({Key key, this.userData})
       : super(
             key: key,
             appBarTitle: 'EditProfile',
             appBarColorBg: Colors.blue,
             appBarColorTxt: Colors.white);
 
-  _editProfileState createState() => _editProfileState();
+  _EditProfileState createState() => _EditProfileState();
 }
 
-class _editProfileState extends PageState<editProfile> {
+class _EditProfileState extends PageState<EditProfile> {
   bool courseExpand = false;
   bool subjectExpand = false;
   bool teacherExpand = false;
@@ -39,7 +39,7 @@ class _editProfileState extends PageState<editProfile> {
   Color c2 = Color.fromRGBO(241, 248, 255, 1);
 
   //SMALL SAMPLE
-  _editProfileState() {
+  _EditProfileState() {
     semesterList.add("Semseter Course 1");
     semesterList.add("Semseter Course 2");
     semesterList.add("Semseter Course 3");
@@ -215,7 +215,7 @@ class _editProfileState extends PageState<editProfile> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (__) => new addFavorite(
+                        builder: (__) => new EditFavorites(
                               toSearch: listToSearch,
                               userPref: userPrefList,
                             )));

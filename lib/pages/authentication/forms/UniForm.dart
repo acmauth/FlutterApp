@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import '../../entities/user/FormData.dart';
-import 'screen3.dart';
 
-class screen2 extends StatefulWidget {
-  screen2({Key key, this.formData}) : super(key: key);
+import '../../../Router.dart';
+import '../../../entities/user/FormData.dart';
+
+class UniForm extends StatefulWidget {
+  UniForm({Key key, this.formData}) : super(key: key);
   @override
-  screen2State createState() => new screen2State();
+  UniFormState createState() => new UniFormState();
 
   final FormData formData;
 }
 
-class screen2State extends State<screen2> {
+class UniFormState extends State<UniForm> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -32,7 +33,7 @@ class screen2State extends State<screen2> {
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Router.pop(context),
           )),
       body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
         Form(
@@ -271,12 +272,7 @@ class screen2State extends State<screen2> {
   }
 
   void loadNext() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (__) => new screen3(
-                  formData: widget.formData,
-                )));
+    Router.push(context, '/form/misc', args: widget.formData);
   }
 
   void saveData() {

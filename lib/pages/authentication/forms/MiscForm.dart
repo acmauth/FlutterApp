@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-import '../../entities/user/FormData.dart';
-import '../HomeScreen.dart';
 
-class screen3 extends StatefulWidget {
-  screen3({Key key, this.formData}) : super(key: key);
+import '../../../Router.dart';
+import '../../../entities/user/FormData.dart';
+import '../../fragments/BlankPadding.dart';
+import '../../fragments/FileSelector.dart';
+import '../../fragments/StyledText.dart';
+
+class MiscForm extends StatefulWidget {
+  MiscForm({Key key, this.formData}) : super(key: key);
   @override
-  screen3State createState() => new screen3State();
+  MiscFormState createState() => new MiscFormState();
 
   final FormData formData;
 }
 
-class screen3State extends State<screen3> {
+class MiscFormState extends State<MiscForm> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  final gradesKey = GlobalKey<FileSelectorState>();
 
   bool inputIsOk = false;
 
@@ -39,7 +44,7 @@ class screen3State extends State<screen3> {
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Router.pop(context),
           )),
       body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
         Form(
@@ -47,14 +52,15 @@ class screen3State extends State<screen3> {
           child: Column(
             children: <Widget>[
               getHouse(),
-              SizedBox(height: 20),
+              BlankPadding(),
               getSchoolDistance(),
-              SizedBox(height: 20),
+              BlankPadding(),
               getFavSubjects(),
-              SizedBox(
-                height: 20,
-              ),
+              BlankPadding(),
               getSemester(),
+              BlankPadding(),
+              getGrades(),
+              BlankPadding(),
               nextButton(),
             ],
           ),
@@ -248,6 +254,21 @@ class screen3State extends State<screen3> {
     ]);
   }
 
+  Column getGrades() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.centerLeft,
+          child: StyledText(
+            "Upload your grades:",
+            size: 16,
+          ),
+        ),
+        FileSelector(key: gradesKey),
+      ],
+    );
+  }
+
   Padding nextButton() {
     return Padding(
       padding: EdgeInsets.only(top: 30, left: 60, right: 60),
@@ -267,7 +288,6 @@ class screen3State extends State<screen3> {
               if (inputIsOk) {
                 saveData();
                 loadNext();
-                printData();
               }
             }),
       ),
@@ -275,8 +295,7 @@ class screen3State extends State<screen3> {
   }
 
   void loadNext() {
-    Navigator.push(
-        context, new MaterialPageRoute(builder: (__) => new HomeScreen()));
+    Router.replaceAll(context, '/home');
   }
 
   void validateInput() {
@@ -286,6 +305,8 @@ class screen3State extends State<screen3> {
         showSnackBar("Please enter house option!");
       else if (distanceGroup < 0)
         showSnackBar('Please enter your school distance!');
+      else if (gradesKey.currentState.path == null)
+        showSnackBar('Please select your grades file!');
       else {
         inputIsOk = true;
         form.save();
@@ -306,19 +327,7 @@ class screen3State extends State<screen3> {
     getDistance();
     getHobbies();
     widget.formData.semester = int.parse(currentSemester);
-    print("Saving at semester: " + currentSemester);
-  }
-
-  //Testing
-  void printData() {
-    print(widget.formData.privateLessons);
-    print("Reason: " + widget.formData.reason);
-    print("Study: " + widget.formData.studyTime);
-    print("Attend: " + widget.formData.lectures);
-    print("Degree: " + widget.formData.postGraduate);
-    print("Live: " + widget.formData.roommate);
-    print("Distance: " + widget.formData.distance);
-    print(formHobbies);
+    widget.formData.gradesPath = gradesKey.currentState.path;
   }
 
   void getRoommate() {

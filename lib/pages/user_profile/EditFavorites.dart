@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import '../AbstractPage.dart';
 import '../fragments/SearchList.dart';
 
-class addFavorite extends AbstractPage {
+class EditFavorites extends AbstractPage {
   //List that will be searched depending on what user has clicked
   List<String> toSearch;
   //List with current preferences;
   List<String> userPref;
 
-  addFavorite({
+  EditFavorites({
     Key key,
     this.toSearch,
     this.userPref,
@@ -19,10 +19,10 @@ class addFavorite extends AbstractPage {
             appBarColorBg: Colors.blue,
             appBarColorTxt: Colors.white);
 
-  addFavoriteState createState() => addFavoriteState();
+  EditFavoritesState createState() => EditFavoritesState();
 }
 
-class addFavoriteState extends PageState<addFavorite> {
+class EditFavoritesState extends PageState<EditFavorites> {
   final GlobalKey<dynamic> searchKey = new GlobalKey();
 
   //Final list including user's choices to add. This is returned.

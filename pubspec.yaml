@@ -12,7 +12,6 @@ dependencies:
 
   flutter_bloc: ^3.0.0
   url_launcher: ^5.4.1
-  flutter_uploader: ^1.2.0
   file_picker: ^1.4.3+2
   shared_preferences: ^0.5.6
   connectivity: ^0.4.6+1
