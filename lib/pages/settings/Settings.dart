@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Router.dart';
@@ -89,9 +90,10 @@ class _SettingsState extends PageState<Settings> {
             return ToggleableElement(
               name: 'Dark Mode',
               icon: Icons.phone_android,
-              toggle: (bool toggleDark) => themeBloc.dispatch(
-                toggleDark ? ToggleDark() : ToggleLight(),
-              ),
+              toggle: (bool toggleDark) {
+                themeBloc.dispatch(toggleDark ? ToggleDark() : ToggleLight());
+                LocalKeyValuePersistence.setTheme(toggleDark);
+              },
               isOn: themeState is DarkTheme,
             );
           },
@@ -107,16 +109,23 @@ class _SettingsState extends PageState<Settings> {
                   CheckableElement(
                     name: 'New Semester',
                     icon: Icons.calendar_today,
-                    toggle: (bool semesterOn) => notifBloc.dispatch(
-                      semesterOn ? SubToSemester() : UnsubFromSemester(),
-                    ),
+                    toggle: (bool semesterOn) {
+                      notifBloc.dispatch(
+                          semesterOn ? SubToSemester() : UnsubFromSemester());
+                      LocalKeyValuePersistence.setNotifState(
+                          semesterOn, notifState.getHasGrades());
+                    },
                     isOn: notifState.hasSemester,
                   ),
                   CheckableElement(
                     name: 'Missing Grades',
                     icon: Icons.warning,
-                    toggle: (bool gradesOn) => notifBloc
-                        .dispatch(gradesOn ? SubToGrades() : UnsubFromGrades()),
+                    toggle: (bool gradesOn) {
+                      notifBloc.dispatch(
+                          gradesOn ? SubToGrades() : UnsubFromGrades());
+                      LocalKeyValuePersistence.setNotifState(
+                          notifState.getHasSemester(), gradesOn);
+                    },
                     isOn: notifState.hasGrades,
                   ),
                 ],

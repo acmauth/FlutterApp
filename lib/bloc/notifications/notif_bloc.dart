@@ -5,11 +5,15 @@ import 'package:bloc/bloc.dart';
 import 'exports.dart';
 
 class NotifBloc extends Bloc<NotifEvent, NotifState> {
+  final NotifState initialNotifState;
+
+  NotifBloc(this.initialNotifState);
+
   @override
   NotifState get initialState => NotifState(
-        hasSemester: true,
-        hasGrades: true,
-      );
+        hasSemester: initialNotifState.getHasSemester(),
+        hasGrades: initialNotifState.getHasGrades(),
+  );
 
   @override
   Stream<NotifState> mapEventToState(NotifEvent event) async* {

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
@@ -8,16 +9,33 @@ import 'bloc/notifications/exports.dart';
 import 'bloc/theme/exports.dart';
 import 'pages/LandingPage.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Needed - Error since we call functions before initialize
+  final ThemeState initialThemeState =
+      await LocalKeyValuePersistence.getTheme(); // Getting the theme
+  final NotifState initialNotifState = await LocalKeyValuePersistence
+      .getNotifState(); // Getting the notification preferences
+  runApp(MyApp(
+      initialThemeState: initialThemeState,
+      initialNotifState: initialNotifState));
+}
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  final ThemeState initialThemeState;
+  final NotifState initialNotifState;
+
+  const MyApp({Key key, this.initialThemeState, this.initialNotifState})
+      : super(key: key);
 
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() =>
+      _MyAppState(initialThemeState, initialNotifState);
 }
 
 class _MyAppState extends State<MyApp> {
+  final ThemeState initialThemeState;
+  final NotifState initialNotifState;
   final ThemeData lightTheme = ThemeData(
     accentColor: Colors.lightBlue,
     appBarTheme: AppBarTheme(
@@ -55,15 +73,17 @@ class _MyAppState extends State<MyApp> {
     textSelectionHandleColor: Colors.lightBlue,
   );
 
+  _MyAppState(this.initialThemeState, this.initialNotifState);
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: <BlocProvider<Bloc<dynamic, dynamic>>>[
         BlocProvider<ThemeBloc>(
-          builder: (BuildContext context) => ThemeBloc(),
+          builder: (BuildContext context) => ThemeBloc(initialThemeState),
         ),
         BlocProvider<NotifBloc>(
-          builder: (BuildContext context) => NotifBloc(),
+          builder: (BuildContext context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
           builder: (BuildContext context) => AuthBloc(),

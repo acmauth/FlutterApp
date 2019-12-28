@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 import 'package:grade_plus_plus/entities/course/PredictedCourse.dart';
 
 import '../DataFetcher.dart';
@@ -36,6 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
     UserProfile(userData: userData),
     Settings(),
   ];
+
+  _HomeScreenState() {
+    LocalKeyValuePersistence.setUserData(userData);
+    LocalKeyValuePersistence.setListSuggestedCourses(suggestedCourses);
+  }
 
   @override
   Widget build(BuildContext context) {
