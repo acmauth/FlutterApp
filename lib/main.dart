@@ -80,13 +80,13 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: <BlocProvider<Bloc<dynamic, dynamic>>>[
         BlocProvider<ThemeBloc>(
-          builder: (BuildContext context) => ThemeBloc(initialThemeState),
+          create: (BuildContext context) => ThemeBloc(initialThemeState),
         ),
         BlocProvider<NotifBloc>(
-          builder: (BuildContext context) => NotifBloc(initialNotifState),
+          create: (BuildContext context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
-          builder: (BuildContext context) => AuthBloc(),
+          create: (BuildContext context) => AuthBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

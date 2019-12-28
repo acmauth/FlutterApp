@@ -91,7 +91,7 @@ class _SettingsState extends PageState<Settings> {
               name: 'Dark Mode',
               icon: Icons.phone_android,
               toggle: (bool toggleDark) {
-                themeBloc.dispatch(toggleDark ? ToggleDark() : ToggleLight());
+                themeBloc.add(toggleDark ? ToggleDark() : ToggleLight());
                 LocalKeyValuePersistence.setTheme(toggleDark);
               },
               isOn: themeState is DarkTheme,
@@ -110,7 +110,7 @@ class _SettingsState extends PageState<Settings> {
                     name: 'New Semester',
                     icon: Icons.calendar_today,
                     toggle: (bool semesterOn) {
-                      notifBloc.dispatch(
+                      notifBloc.add(
                           semesterOn ? SubToSemester() : UnsubFromSemester());
                       LocalKeyValuePersistence.setNotifState(
                           semesterOn, notifState.getHasGrades());
@@ -121,7 +121,7 @@ class _SettingsState extends PageState<Settings> {
                     name: 'Missing Grades',
                     icon: Icons.warning,
                     toggle: (bool gradesOn) {
-                      notifBloc.dispatch(
+                      notifBloc.add(
                           gradesOn ? SubToGrades() : UnsubFromGrades());
                       LocalKeyValuePersistence.setNotifState(
                           notifState.getHasSemester(), gradesOn);
@@ -145,7 +145,7 @@ class _SettingsState extends PageState<Settings> {
           label: 'Log Out',
           icon: Icons.exit_to_app,
           color: Colors.red.shade500,
-          onTap: () => BlocProvider.of<AuthBloc>(context).dispatch(LogOut()),
+          onTap: () => BlocProvider.of<AuthBloc>(context).add(LogOut()),
         ),
       ],
     );

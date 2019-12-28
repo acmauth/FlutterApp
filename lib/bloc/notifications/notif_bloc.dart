@@ -20,26 +20,26 @@ class NotifBloc extends Bloc<NotifEvent, NotifState> {
     if (event is SubToGrades) {
       _subToGrades();
       yield NotifState(
-        hasSemester: currentState.hasSemester,
+        hasSemester: state.hasSemester,
         hasGrades: true,
       );
     } else if (event is UnsubFromGrades) {
       _unsubFromGrades();
       yield NotifState(
-        hasSemester: currentState.hasSemester,
+        hasSemester: state.hasSemester,
         hasGrades: false,
       );
     } else if (event is SubToSemester) {
       _subToSemester();
       yield NotifState(
         hasSemester: true,
-        hasGrades: currentState.hasGrades,
+        hasGrades: state.hasGrades,
       );
     } else if (event is UnsubFromSemester) {
       _unsubFromSemester();
       yield NotifState(
         hasSemester: false,
-        hasGrades: currentState.hasGrades,
+        hasGrades: state.hasGrades,
       );
     }
   }
