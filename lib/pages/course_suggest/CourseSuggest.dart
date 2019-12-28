@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/entities/course/CourseDifficulty.dart';
 
-import '../../entities/course/BaseCourseData.dart';
 import '../../entities/course/SuggestedCourseData.dart';
 import '../../entities/user/SchoolData.dart';
 import '../AbstractPage.dart';
