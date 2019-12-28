@@ -1,5 +1,7 @@
 import 'package:meta/meta.dart';
 
+import 'CourseDifficulty.dart';
+
 class BaseCourseData {
   const BaseCourseData({
     @required this.title,
@@ -14,10 +16,4 @@ class BaseCourseData {
   final String teacher;
   final double averageGrade;
   final CourseDifficulty difficulty;
-}
-
-enum CourseDifficulty {
-  EASY,
-  MEDIUM,
-  HARD,
 }

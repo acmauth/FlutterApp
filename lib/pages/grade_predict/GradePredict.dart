@@ -1,385 +1,179 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/entities/course/CourseDifficulty.dart';
+import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
+import 'package:grade_plus_plus/pages/fragments/ChartBar.dart';
+import 'package:grade_plus_plus/pages/fragments/ChartLabel.dart';
 
 import '../AbstractPage.dart';
+import '../../entities/course/PredictedCourse.dart';
+import '../fragments/StyledText.dart';
 
 class GradePredict extends AbstractPage {
-  GradePredict({Key key})
-      : super(
+  GradePredict({
+    Key key,
+    @required this.gradeData,
+  }) : super(
           key: key,
           appBarTitle: 'Grade Prediction',
           navIcon: Icons.equalizer,
         );
+  final List<PredictedCourse> gradeData;
 
   _GradePredictState createState() => _GradePredictState();
 }
 
 class _GradePredictState extends PageState<GradePredict> {
+  PredictedCourse _shownCourse;
+
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
+    if (_shownCourse == null) {
+      _shownCourse = widget.gradeData[0];
+    }
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(15),
-          height: 50,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.lightBlue[50],
+        DropdownButton(
+          value: _shownCourse,
+          onChanged: (newValue) {
+            setState(() {
+              _shownCourse = newValue;
+            });
+          },
+          items: widget.gradeData.map((course) {
+            return DropdownMenuItem(
+              child: new Text(course.courseName),
+              value: course,
+            );
+          }).toList(),
+
         ),
-        Container(
-            margin: EdgeInsets.all(15),
-            padding: EdgeInsets.only(left: 30,bottom: 20),
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.lightBlue[50],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(height: 20.0,),
-                Text("NCO-04-02:",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.blue[600]
-                    )
-                ),
-                SizedBox(height: 5.0,),
-                Text("Artificial Intelligence",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.blue[600],
-                        fontWeight: FontWeight.bold
-                    )
-                ),
-                SizedBox(height: 2.0,),
-                Text("Ioannis Vlahavas, Dimitris Vrakas",
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue[600]
-                    )
-                ),
-                SizedBox(height: 20.0,),
-                Text("Grade Prediction: 9.5",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.blue[600]
-                    )
-                ),
-                SizedBox(height: 5.0,),
-                Text("Difficulty: HARD",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.blue[600]
-                    )
-                ),
-                SizedBox(height: 20.0,),
-                Text("This grade is above 69%(nice) of all students!",
-                    style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.blue[600]
-                    )
-                )
-              ],
-            )
-        ),
-        SizedBox(height: 20.0,),
-        Padding(
-          padding: EdgeInsets.only(left: 30.0),
-          child: Text("Grade Destribution",
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.blue[600],
-                  fontWeight: FontWeight.bold
-              )
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 30.0),
-          child: Text("Based on 420 students so far",
-            style: TextStyle(
-                fontSize: 14,
-                color: Colors.blue[600]
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 30.0,right: 30.0,top: 40),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 70,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.bottomLeft,
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 190,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 160,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(1.0),
-                  width: 10,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment(0.0, 1),
-                      colors: [ Colors.blue, Colors.lightBlue[50],], // whitish to gray
-                      tileMode: TileMode.repeated, // repeats the gradient over the canvas
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 30.0,right: 30.0),
-          child: Row(
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("1",
-                    style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("2",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("3",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("4",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("5",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("6",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("7",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("8",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  width: 10,
-                  child: Text("9",
-                      style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                      textAlign: TextAlign.center
-                  ),
-                ),
-              ),
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                    width: 10,
-                    child: Text("10",
-                        style:TextStyle(fontSize: 10.0,color: Colors.blue),
-                        textAlign: TextAlign.center
-                    ),
-                  )
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: 20,)
+        _buildGradePredictionPage(_shownCourse),
       ],
     );
+  }
+
+  Widget _buildGradePredictionPage(PredictedCourse course){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: <Widget>[
+          Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: Colors.lightBlue[50],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text("${course.courseCode}",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.blue[600]
+                      )
+                  ),
+                  SizedBox(height: 5.0,),
+                  Text("${course.courseName}",
+                      style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.blue[600],
+                          fontWeight: FontWeight.bold
+                      )
+                  ),
+                  SizedBox(height: 2.0,),
+                  Text("${course.courseTeacher}",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.blue[600]
+                      )
+                  ),
+                  SizedBox(height: 20.0,),
+                  Text("Grade Prediction: ${course.gradePrediction}",
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.blue[600]
+                      )
+                  ),
+                  SizedBox(height: 5.0,),
+                  StyledText("Difficulty: "),
+                  StyledText(
+                    _getDifficultyText(course.difficulty),
+                    color: _getDifficultyColor(course.difficulty),
+                  ),
+                  SizedBox(height: 20.0,),
+                  Text("This grade is above ${course.gradePercentage} of all students!",
+                      style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.blue[600]
+                      )
+                  )
+                ],
+              )
+          ),
+          BlankPadding(),
+          StyledText("Grade Destribution", size: 20, weight: FontWeight.bold,),
+          StyledText("Based on ${course.enrolledStudents} students so far"),
+          BlankPadding(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              ChartBar(height: course.box1),
+              ChartBar(height: course.box2),
+              ChartBar(height: course.box3),
+              ChartBar(height: course.box4),
+              ChartBar(height: course.box5),
+              ChartBar(height: course.box6),
+              ChartBar(height: course.box7),
+              ChartBar(height: course.box8),
+              ChartBar(height: course.box9),
+              ChartBar(height: course.box10),
+            ],
+          ),
+          Row(
+//          mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              ChartLabel("1"),
+              ChartLabel("2"),
+              ChartLabel("3"),
+              ChartLabel("4"),
+              ChartLabel("5"),
+              ChartLabel("6"),
+              ChartLabel("7"),
+              ChartLabel("8"),
+              ChartLabel("9"),
+              ChartLabel("10"),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+String _getDifficultyText(CourseDifficulty difficulty) {
+  switch (difficulty) {
+    case CourseDifficulty.EASY:
+      return "Easy";
+    case CourseDifficulty.MEDIUM:
+      return "Medium";
+    case CourseDifficulty.HARD:
+      return "Hard";
+    default:
+      return "Unmapped value";
+  }
+}
+
+Color _getDifficultyColor(CourseDifficulty difficulty) {
+  switch (difficulty) {
+    case CourseDifficulty.EASY:
+      return Colors.green;
+    case CourseDifficulty.MEDIUM:
+      return Colors.orange;
+    case CourseDifficulty.HARD:
+      return Colors.red;
+    default:
+      return Colors.black;
   }
 }
