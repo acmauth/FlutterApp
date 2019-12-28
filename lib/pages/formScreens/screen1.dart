@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/entities/user/FormData.dart';
-import 'package:grade_plus_plus/pages/formScreens/screen2.dart';
+
+import '../../entities/user/FormData.dart';
+import 'screen2.dart';
 
 class screen1 extends StatefulWidget {
   screen1({ Key key}) : super(key: key);

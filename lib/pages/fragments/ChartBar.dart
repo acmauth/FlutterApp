@@ -18,7 +18,8 @@ class ChartBar extends Expanded {
                   Colors.blue,
                   Colors.lightBlue[50],
                 ], // whitish to gray
-                tileMode: TileMode.repeated, // repeats the gradient over the canvas
+                tileMode:
+                    TileMode.repeated, // repeats the gradient over the canvas
               ),
             ),
           ),

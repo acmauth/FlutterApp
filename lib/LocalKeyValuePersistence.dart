@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:grade_plus_plus/bloc/theme/exports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/notifications/notif_state.dart';
+import 'bloc/theme/exports.dart';
 import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/UserData.dart';
 
@@ -54,7 +54,12 @@ class LocalKeyValuePersistence {
     if (prefs.containsKey(_userData)) {
       return UserData.fromJson(jsonDecode(prefs.getString(_userData)));
     }
-    return new UserData(estYear: null, schoolData: null, favSubjects: null, favTeachers: null, semesterDataList: null);
+    return new UserData(
+        estYear: null,
+        schoolData: null,
+        favSubjects: null,
+        favTeachers: null,
+        semesterDataList: null);
   }
 
   static setListSuggestedCourses(

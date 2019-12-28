@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/entities/user/UserCredentials.dart';
+
+import '../../entities/user/UserCredentials.dart';
 
 class ChangePassword extends StatefulWidget{
 

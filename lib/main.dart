@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
+import 'LocalKeyValuePersistence.dart';
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
 import 'bloc/notifications/exports.dart';

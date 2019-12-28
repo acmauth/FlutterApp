@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/StyledText.dart';
+
+import 'StyledText.dart';
 
 class ChartLabel extends Expanded {
   ChartLabel(String text)

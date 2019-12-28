@@ -1,28 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/user_profile/addFavorite.dart';
-import '../AbstractPage.dart';
+
 import '../../entities/user/UserData.dart';
+import '../AbstractPage.dart';
+import 'addFavorite.dart';
 
-
-
-class editProfile extends AbstractPage{
-
+class editProfile extends AbstractPage {
   final UserData userData;
 
-  editProfile({
-    Key key,
-    this.userData
-  }) : super(key: key,
-      appBarTitle: 'EditProfile',
-      appBarColorBg: Colors.blue,
-      appBarColorTxt: Colors.white);
+  editProfile({Key key, this.userData})
+      : super(
+            key: key,
+            appBarTitle: 'EditProfile',
+            appBarColorBg: Colors.blue,
+            appBarColorTxt: Colors.white);
 
   _editProfileState createState() => _editProfileState();
-
 }
 
-class _editProfileState extends PageState<editProfile>{
+class _editProfileState extends PageState<editProfile> {
   bool courseExpand = false;
   bool subjectExpand = false;
   bool teacherExpand = false;
@@ -30,7 +26,6 @@ class _editProfileState extends PageState<editProfile>{
   static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final TextEditingController txtController = new TextEditingController();
   String tempName;
-
 
   //LISTS THAT WILL CONTAIN ALL COURSES , SUBJECTS & TEACHERS AVAILABLE
   final List<String> semesterList = new List();
@@ -44,8 +39,7 @@ class _editProfileState extends PageState<editProfile>{
   Color c2 = Color.fromRGBO(241, 248, 255, 1);
 
   //SMALL SAMPLE
-  _editProfileState(){
-
+  _editProfileState() {
     semesterList.add("Semseter Course 1");
     semesterList.add("Semseter Course 2");
     semesterList.add("Semseter Course 3");
@@ -63,35 +57,35 @@ class _editProfileState extends PageState<editProfile>{
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
-        children: <Widget>[
-          EditName(),
-          SizedBox(height:20),
-          DropDownElement("Semester Courses", 1),
-          SizedBox(height:20),
-          DropDownElement("Favorite Subjects", 2),
-          SizedBox(height:20),
-          DropDownElement("Favorite Teachers", 3),
-          SizedBox(height:20),
-          saveButton(),
-        ],
+      children: <Widget>[
+        EditName(),
+        SizedBox(height: 20),
+        DropDownElement("Semester Courses", 1),
+        SizedBox(height: 20),
+        DropDownElement("Favorite Subjects", 2),
+        SizedBox(height: 20),
+        DropDownElement("Favorite Teachers", 3),
+        SizedBox(height: 20),
+        saveButton(),
+      ],
     );
   }
 
   void _toggleExpand(int view) {
     setState(() {
-      if(view == 1){
+      if (view == 1) {
         courseExpand = !courseExpand;
         subjectExpand = false;
         teacherExpand = false;
       }
 
-      if(view == 2){
+      if (view == 2) {
         courseExpand = false;
         subjectExpand = !subjectExpand;
         teacherExpand = false;
       }
 
-      if(view == 3){
+      if (view == 3) {
         courseExpand = false;
         subjectExpand = false;
         teacherExpand = !teacherExpand;
@@ -99,42 +93,32 @@ class _editProfileState extends PageState<editProfile>{
     });
   }
 
-  Column DropDownElement(String title, int ID){
-
+  Column DropDownElement(String title, int ID) {
     bool objIsExpanded = true;
-    if(ID == 1)
-      objIsExpanded = courseExpand;
-    if(ID == 2)
-      objIsExpanded = subjectExpand;
-    if(ID == 3)
-      objIsExpanded = teacherExpand;
-
+    if (ID == 1) objIsExpanded = courseExpand;
+    if (ID == 2) objIsExpanded = subjectExpand;
+    if (ID == 3) objIsExpanded = teacherExpand;
 
     return Column(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top:30, left:30, right:30),
+          padding: EdgeInsets.only(top: 30, left: 30, right: 30),
           child: Container(
             decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-            child: Column(
-                children: <Widget>[
-                  Header(title, ID)
-                ]
-            ),
+            child: Column(children: <Widget>[Header(title, ID)]),
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left:30, right: 30),
+          padding: EdgeInsets.only(left: 30, right: 30),
           child: objIsExpanded ? dropDownView(title, ID) : null,
         )
       ],
     );
   }
 
-  Padding EditName(){
-
+  Padding EditName() {
     return Padding(
-        padding: EdgeInsets.only(top:30, left: 30, right: 30),
+        padding: EdgeInsets.only(top: 30, left: 30, right: 30),
         child: Container(
           height: 50,
           color: c2,
@@ -143,147 +127,152 @@ class _editProfileState extends PageState<editProfile>{
             child: TextFormField(
               initialValue: widget.userData.name,
               textInputAction: TextInputAction.done,
-              onSaved: (String val) => tempName = val ,
-              validator: (value) { return value.length < 3 ? "Name can't be less than 3 characters!" : null; },
+              onSaved: (String val) => tempName = val,
+              validator: (value) {
+                return value.length < 3
+                    ? "Name can't be less than 3 characters!"
+                    : null;
+              },
               style: TextStyle(color: Colors.blue),
               decoration: InputDecoration(
                 border: InputBorder.none,
-                suffixIcon: Icon(Icons.edit, color: Colors.blue,),
-                contentPadding: EdgeInsets.only(top:20, left:15),
+                suffixIcon: Icon(
+                  Icons.edit,
+                  color: Colors.blue,
+                ),
+                contentPadding: EdgeInsets.only(top: 20, left: 15),
               ),
             ),
           ),
-        )
-    );
-
+        ));
   }
 
   Row Header(String title, int ID) {
-
-    return Row(
-        children:  <Widget>[
-          Expanded(
-            child: FlatButton(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                child: SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      title,
-                      style: TextStyle(color: Colors.blue),
-                      textAlign: TextAlign.left,
-                    )
-                ),
-                onPressed: (){_toggleExpand(ID);}
-            ),
-          ),
-          IconButton(
-            highlightColor: c1,
-            splashColor: c1,
-            color: Colors.blue,
-            icon: Icon(Icons.keyboard_arrow_down),
-            onPressed: (){_toggleExpand(ID);},
-          )
-        ]
-    );
+    return Row(children: <Widget>[
+      Expanded(
+        child: FlatButton(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: SizedBox(
+                width: double.infinity,
+                child: Text(
+                  title,
+                  style: TextStyle(color: Colors.blue),
+                  textAlign: TextAlign.left,
+                )),
+            onPressed: () {
+              _toggleExpand(ID);
+            }),
+      ),
+      IconButton(
+        highlightColor: c1,
+        splashColor: c1,
+        color: Colors.blue,
+        icon: Icon(Icons.keyboard_arrow_down),
+        onPressed: () {
+          _toggleExpand(ID);
+        },
+      )
+    ]);
   }
 
-  Column dropDownView(String title, int ID){
-
+  Column dropDownView(String title, int ID) {
     return Column(
       children: <Widget>[
-        ListView(
-            shrinkWrap: true,
-            children: buildList(ID)
-        ),
-        if(title !=  "Semester Courses")
-          addNewTile(ID)
+        ListView(shrinkWrap: true, children: buildList(ID)),
+        if (title != "Semester Courses") addNewTile(ID)
       ],
     );
   }
 
-  Container addNewTile(int ID){
-
+  Container addNewTile(int ID) {
     List<String> userPrefList;
 
-    if(ID == 1){
+    if (ID == 1) {
       listToSearch = semesterList;
     }
-    if(ID == 2){
+    if (ID == 2) {
       listToSearch = subjectList;
       userPrefList = widget.userData.favSubjects;
     }
-    if(ID == 3){
+    if (ID == 3) {
       listToSearch = teacherList;
       userPrefList = widget.userData.favTeachers;
     }
-
 
     return Container(
         color: Colors.grey[100],
         child: ListTile(
             contentPadding: EdgeInsets.only(left: 20),
-            title: Text("Add new", style: TextStyle(color: Colors.black),),
+            title: Text(
+              "Add new",
+              style: TextStyle(color: Colors.black),
+            ),
             trailing: IconButton(
               color: Colors.black,
               icon: Icon(Icons.add),
               onPressed: () {
-                Navigator.push(context,
+                Navigator.push(
+                    context,
                     new MaterialPageRoute(
                         builder: (__) => new addFavorite(
-                            toSearch: listToSearch,
-                            userPref: userPrefList,
-                        )
-                    )
-                );
+                              toSearch: listToSearch,
+                              userPref: userPrefList,
+                            )));
               },
-            )
-        )
-    );
+            )));
   }
 
-  Padding saveButton(){
-
+  Padding saveButton() {
     return Padding(
-      padding: EdgeInsets.only(top:30, left: 90, right: 90, bottom: 30),
+      padding: EdgeInsets.only(top: 30, left: 90, right: 90, bottom: 30),
       child: Container(
         color: Colors.blue,
         child: FlatButton(
             child: SizedBox(
               width: double.infinity,
-              child: Text("SAVE CHANGES",
+              child: Text(
+                "SAVE CHANGES",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
-            onPressed: (){
-              if (formKey.currentState.validate()){
+            onPressed: () {
+              if (formKey.currentState.validate()) {
                 formKey.currentState.save();
                 widget.userData.name = tempName;
               }
-            }
-        ),
-      ) ,
+            }),
+      ),
     );
-
   }
 
-  List<objTile> buildList(int ID){
-    if(ID == 1)
-      return semesterList.map((title) => new objTile(title, onTap: () => deleteItem(semesterList, semesterList, title))).toList();
-    if(ID == 2)
-      return widget.userData.favSubjects.map((title) => new objTile(title, onTap:() => deleteItem(subjectList, widget.userData.favSubjects, title))).toList();
+  List<objTile> buildList(int ID) {
+    if (ID == 1)
+      return semesterList
+          .map((title) => new objTile(title,
+              onTap: () => deleteItem(semesterList, semesterList, title)))
+          .toList();
+    if (ID == 2)
+      return widget.userData.favSubjects
+          .map((title) => new objTile(title,
+              onTap: () =>
+                  deleteItem(subjectList, widget.userData.favSubjects, title)))
+          .toList();
     else
-      return widget.userData.favTeachers.map((title) => new objTile(title, onTap: () => deleteItem(teacherList, widget.userData.favTeachers, title))).toList();
+      return widget.userData.favTeachers
+          .map((title) => new objTile(title,
+              onTap: () =>
+                  deleteItem(teacherList, widget.userData.favTeachers, title)))
+          .toList();
   }
 
-  void deleteItem(List<String> mainList, List<String> favlist, String name){
+  void deleteItem(List<String> mainList, List<String> favlist, String name) {
     setState(() {
       mainList.add(name);
       favlist.remove(name);
     });
   }
-
 }
 
 class objTile extends StatelessWidget {
@@ -300,12 +289,14 @@ class objTile extends StatelessWidget {
         color: c2,
         child: ListTile(
             contentPadding: EdgeInsets.only(left: 20),
-            title: new Text(name, style: TextStyle(color: Colors.blue),),
+            title: new Text(
+              name,
+              style: TextStyle(color: Colors.blue),
+            ),
             trailing: IconButton(
               color: Colors.blue,
               icon: Icon(Icons.close),
               onPressed: onTap,
-            )
-        ));
+            )));
   }
 }

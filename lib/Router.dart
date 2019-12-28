@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/settings/updateGrades.dart';
 
 import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
@@ -8,12 +7,12 @@ import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
 import 'pages/search/CoursePage.dart';
 import 'pages/settings/changePassword.dart';
-
+import 'pages/settings/updateGrades.dart';
 
 class Router {
   static Route<PageRoute<Object>> generateRoute(
-      RouteSettings settings,
-      ) {
+    RouteSettings settings,
+  ) {
     final Object args = settings.arguments;
     switch (settings.name) {
       case '/':
@@ -39,7 +38,7 @@ class Router {
         );
       case '/change_password':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-            builder: (_) => ChangePassword(),
+          builder: (_) => ChangePassword(),
         );
       case '/update_grades':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
@@ -64,4 +63,3 @@ class Router {
     Navigator.of(context).pushReplacementNamed(route, arguments: args);
   }
 }
-

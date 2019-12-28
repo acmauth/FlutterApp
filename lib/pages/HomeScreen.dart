@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
-import 'package:grade_plus_plus/entities/course/PredictedCourse.dart';
 
 import '../DataFetcher.dart';
+import '../LocalKeyValuePersistence.dart';
+import '../entities/course/PredictedCourse.dart';
 import '../entities/course/SuggestedCourseData.dart';
 import '../entities/user/UserData.dart';
 import 'AbstractPage.dart';
@@ -23,12 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   static UserData userData = DataFetcher.fetchUserData();
   static List<SuggestedCourseData> suggestedCourses =
       DataFetcher.fetchSuggestedCourses();
-  static List<PredictedCourse> predictedCourses = DataFetcher.fetchPredictedCourses();
+  static List<PredictedCourse> predictedCourses =
+      DataFetcher.fetchPredictedCourses();
 
   final List<AbstractPage> pages = <AbstractPage>[
-    GradePredict(
-      gradeData: predictedCourses
-    ),
+    GradePredict(gradeData: predictedCourses),
     CourseSuggest(
       schoolData: userData.schoolData,
       suggestedCourses: suggestedCourses,

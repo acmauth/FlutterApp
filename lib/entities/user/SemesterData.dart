@@ -3,7 +3,6 @@ import 'package:meta/meta.dart';
 
 import '../course/PassedCourseData.dart';
 
-
 part 'SemesterData.g.dart';
 
 @JsonSerializable(explicitToJson: true)

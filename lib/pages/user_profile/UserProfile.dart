@@ -8,7 +8,7 @@ import '../fragments/BlankPadding.dart';
 import '../fragments/ExpandableSection.dart';
 import '../fragments/ItemContainer.dart';
 import '../fragments/StyledText.dart';
-import 'package:grade_plus_plus/pages/user_profile/editProfile.dart';
+import 'editProfile.dart';
 
 class UserProfile extends AbstractPage {
   UserProfile({
@@ -84,19 +84,17 @@ class _UserProfileState extends PageState<UserProfile> {
           ],
         ),
         RaisedButton(
-          shape: RoundedRectangleBorder(
-              side: BorderSide(
-                  color: Colors.blue
-              )
-          ),
+          shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue)),
           color: Colors.white,
           textColor: Colors.blue,
           child: Text("Edit"),
-          onPressed: (){
-            Navigator.push(context,
+          onPressed: () {
+            Navigator.push(
+                context,
                 new MaterialPageRoute(
-                builder: (__) => new editProfile( userData: widget.userData,))
-            );
+                    builder: (__) => new editProfile(
+                          userData: widget.userData,
+                        )));
           },
         )
       ],
@@ -150,7 +148,8 @@ class _UserProfileState extends PageState<UserProfile> {
                     padding: EdgeInsets.symmetric(horizontal: 30),
                     fillContentBg: false,
                     content: Column(
-                      children: semester.courseDataList.map((PassedCourseData course) => Container(
+                      children: semester.courseDataList
+                          .map((PassedCourseData course) => Container(
                                 margin: EdgeInsets.only(top: 20),
                                 padding: EdgeInsets.all(20),
                                 decoration: BoxDecoration(
@@ -173,7 +172,8 @@ class _UserProfileState extends PageState<UserProfile> {
                                     Text("Year: ${course.year}"),
                                   ],
                                 ),
-                              )).toList(),
+                              ))
+                          .toList(),
                     ),
                   ),
                   BlankPadding(),

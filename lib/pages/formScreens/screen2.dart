@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/entities/user/FormData.dart';
-import 'package:grade_plus_plus/pages/formScreens/screen3.dart';
+import '../../entities/user/FormData.dart';
+import 'screen3.dart';
 
 class screen2 extends StatefulWidget {
-  screen2({ Key key, this.formData }) : super(key: key);
+  screen2({Key key, this.formData}) : super(key: key);
   @override
   screen2State createState() => new screen2State();
 
@@ -11,7 +11,6 @@ class screen2 extends StatefulWidget {
 }
 
 class screen2State extends State<screen2> {
-
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -26,47 +25,46 @@ class screen2State extends State<screen2> {
   Widget build(BuildContext context) {
     return new MaterialApp(
         home: Scaffold(
-          key: scKey,
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("Form 2 of 3"),
-            backgroundColor: Colors.blue,
-              leading: IconButton(icon:Icon(Icons.arrow_back),
-                onPressed:() => Navigator.pop(context, false),
-              )
+      key: scKey,
+      appBar: AppBar(
+          centerTitle: true,
+          title: Text("Form 2 of 3"),
+          backgroundColor: Colors.blue,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context, false),
+          )),
+      body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
+        Form(
+          key: formKey,
+          child: Column(
+            children: <Widget>[
+              buildStudyTimeTiles(),
+              SizedBox(height: 20),
+              buildAttendanceTiles(),
+              SizedBox(height: 20),
+              buildPrivateLessonTiles(),
+              SizedBox(height: 20),
+              buildEducationTiles(),
+              SizedBox(height: 20),
+              nextButton(),
+            ],
           ),
-          body: ListView(
-              padding: EdgeInsets.all(30),
-              children: <Widget>[
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: <Widget>[
-                      buildStudyTimeTiles(),
-                      SizedBox(height: 20),
-                      buildAttendanceTiles(),
-                      SizedBox(height: 20),
-                      buildPrivateLessonTiles(),
-                      SizedBox(height:20),
-                      buildEducationTiles(),
-                      SizedBox(height:20),
-                      nextButton(),
-                    ],
-                  ),
-                ),
-              ]
-          ),
-        )
-    );
+        ),
+      ]),
+    ));
   }
 
-  Row Header(String title){
+  Row Header(String title) {
     return Row(children: <Widget>[
-      Text(title, style: TextStyle(color: Colors.blue, fontSize: 16),)]
-    );
+      Text(
+        title,
+        style: TextStyle(color: Colors.blue, fontSize: 16),
+      )
+    ]);
   }
 
-  Column buildStudyTimeTiles(){
+  Column buildStudyTimeTiles() {
     return Column(
       children: <Widget>[
         Header("Average weekly study time: "),
@@ -75,20 +73,29 @@ class screen2State extends State<screen2> {
             RadioListTile(
               value: 0,
               groupValue: studyGroup,
-              title: Text("0 - 2 hours", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => studyGroup  = val),
+              title: Text(
+                "0 - 2 hours",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => studyGroup = val),
             ),
             RadioListTile(
               value: 1,
               groupValue: studyGroup,
-              title: Text("2 - 5 hours", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => studyGroup  = val),
+              title: Text(
+                "2 - 5 hours",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => studyGroup = val),
             ),
             RadioListTile(
               value: 2,
               groupValue: studyGroup,
-              title: Text("5 or more hours", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => studyGroup  = val),
+              title: Text(
+                "5 or more hours",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => studyGroup = val),
             ),
           ],
         )
@@ -96,49 +103,62 @@ class screen2State extends State<screen2> {
     );
   }
 
-  Column buildAttendanceTiles(){
-    return Column(
+  Column buildAttendanceTiles() {
+    return Column(children: <Widget>[
+      Header("I attend"),
+      Column(
         children: <Widget>[
-          Header("I attend"),
-          Column(
-            children: <Widget>[
-              RadioListTile(
-                value: 0,
-                groupValue: attendGroup,
-                title: Text("All lectures", style: TextStyle(color: Colors.black),),
-                onChanged: (val) => setState(() => attendGroup  = val),
-              ),
-              RadioListTile(
-                value: 1,
-                groupValue: attendGroup,
-                title: Text("More than half the lectures", style: TextStyle(color: Colors.black),),
-                onChanged: (val) => setState(() => attendGroup  = val),
-              ),
-              RadioListTile(
-                value: 2,
-                groupValue: attendGroup,
-                title: Text("Half the lectures", style: TextStyle(color: Colors.black),),
-                onChanged: (val) => setState(() => attendGroup  = val),
-              ),
-              RadioListTile(
-                value: 3,
-                groupValue: attendGroup,
-                title: Text("Less than half the lectures", style: TextStyle(color: Colors.black),),
-                onChanged: (val) => setState(() => attendGroup  = val),
-              ),
-              RadioListTile(
-                value: 4,
-                groupValue: attendGroup,
-                title: Text("None of the lectures", style: TextStyle(color: Colors.black),),
-                onChanged: (val) => setState(() => attendGroup  = val),
-              ),
-            ],
-          )
-        ]
-    );
+          RadioListTile(
+            value: 0,
+            groupValue: attendGroup,
+            title: Text(
+              "All lectures",
+              style: TextStyle(color: Colors.black),
+            ),
+            onChanged: (val) => setState(() => attendGroup = val),
+          ),
+          RadioListTile(
+            value: 1,
+            groupValue: attendGroup,
+            title: Text(
+              "More than half the lectures",
+              style: TextStyle(color: Colors.black),
+            ),
+            onChanged: (val) => setState(() => attendGroup = val),
+          ),
+          RadioListTile(
+            value: 2,
+            groupValue: attendGroup,
+            title: Text(
+              "Half the lectures",
+              style: TextStyle(color: Colors.black),
+            ),
+            onChanged: (val) => setState(() => attendGroup = val),
+          ),
+          RadioListTile(
+            value: 3,
+            groupValue: attendGroup,
+            title: Text(
+              "Less than half the lectures",
+              style: TextStyle(color: Colors.black),
+            ),
+            onChanged: (val) => setState(() => attendGroup = val),
+          ),
+          RadioListTile(
+            value: 4,
+            groupValue: attendGroup,
+            title: Text(
+              "None of the lectures",
+              style: TextStyle(color: Colors.black),
+            ),
+            onChanged: (val) => setState(() => attendGroup = val),
+          ),
+        ],
+      )
+    ]);
   }
 
-  Column buildPrivateLessonTiles(){
+  Column buildPrivateLessonTiles() {
     return Column(
       children: <Widget>[
         Header("Attending private lessons: "),
@@ -147,14 +167,20 @@ class screen2State extends State<screen2> {
             RadioListTile(
               value: 0,
               groupValue: privateGroup,
-              title: Text("Yes", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => privateGroup  = val),
+              title: Text(
+                "Yes",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => privateGroup = val),
             ),
             RadioListTile(
               value: 1,
               groupValue: privateGroup,
-              title: Text("No", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => privateGroup  = val),
+              title: Text(
+                "No",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => privateGroup = val),
             ),
           ],
         )
@@ -162,7 +188,7 @@ class screen2State extends State<screen2> {
     );
   }
 
-  Column buildEducationTiles(){
+  Column buildEducationTiles() {
     return Column(
       children: <Widget>[
         Header("After my degree I would go for: "),
@@ -171,20 +197,29 @@ class screen2State extends State<screen2> {
             RadioListTile(
               value: 0,
               groupValue: degreeGoal,
-              title: Text("MSc degree", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => degreeGoal  = val),
+              title: Text(
+                "MSc degree",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => degreeGoal = val),
             ),
             RadioListTile(
               value: 1,
               groupValue: degreeGoal,
-              title: Text("Phd degree", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => degreeGoal  = val),
+              title: Text(
+                "Phd degree",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => degreeGoal = val),
             ),
             RadioListTile(
               value: 2,
               groupValue: degreeGoal,
-              title: Text("No further education", style: TextStyle(color: Colors.black),),
-              onChanged: (val) => setState(() => degreeGoal  = val),
+              title: Text(
+                "No further education",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => degreeGoal = val),
             ),
           ],
         )
@@ -192,42 +227,41 @@ class screen2State extends State<screen2> {
     );
   }
 
-  Padding nextButton(){
+  Padding nextButton() {
     return Padding(
-      padding: EdgeInsets.only(top:30, left: 60, right: 60),
+      padding: EdgeInsets.only(top: 30, left: 60, right: 60),
       child: Container(
         color: Colors.blue,
         child: FlatButton(
             child: SizedBox(
               width: double.infinity,
-              child: Text("NEXT",
+              child: Text(
+                "NEXT",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
-            onPressed: (){
+            onPressed: () {
               validateInput();
-              if(inputIsOk){
+              if (inputIsOk) {
                 saveData();
                 loadNext();
               }
-            }
-        ),
-      ) ,
+            }),
+      ),
     );
   }
-
 
   void validateInput() {
     final form = formKey.currentState;
     if (form.validate()) {
-      if(studyGroup < 0)
+      if (studyGroup < 0)
         showSnackBar("Please enter your study time!");
       else if (attendGroup < 0)
         showSnackBar('Please enter hours of attendance!');
-      else if(privateGroup < 0)
+      else if (privateGroup < 0)
         showSnackBar('Please etner Private Lessons!');
-      else if(degreeGoal < 0)
+      else if (degreeGoal < 0)
         showSnackBar('Please enter your degree goal!');
       else {
         inputIsOk = true;
@@ -236,24 +270,24 @@ class screen2State extends State<screen2> {
     }
   }
 
-  void loadNext(){
+  void loadNext() {
     Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (__) => new screen3(formData: widget.formData,)
-        )
-    );
+            builder: (__) => new screen3(
+                  formData: widget.formData,
+                )));
   }
 
-  void saveData(){
+  void saveData() {
     getStudyTime();
     getAttendance();
     getPrivateLesson();
     getPostGraduate();
   }
 
-  void getStudyTime(){
-    switch(studyGroup){
+  void getStudyTime() {
+    switch (studyGroup) {
       case 0:
         widget.formData.studyTime = "0-2 hours";
         break;
@@ -266,8 +300,8 @@ class screen2State extends State<screen2> {
     }
   }
 
-  void getAttendance(){
-    switch(attendGroup){
+  void getAttendance() {
+    switch (attendGroup) {
       case 0:
         widget.formData.lectures = "All lectures";
         break;
@@ -275,7 +309,7 @@ class screen2State extends State<screen2> {
         widget.formData.lectures = "More than half the lectures";
         break;
       case 2:
-        widget.formData.lectures =  "Half the lectures";
+        widget.formData.lectures = "Half the lectures";
         break;
       case 3:
         widget.formData.lectures = "Less than half the lectures";
@@ -286,15 +320,15 @@ class screen2State extends State<screen2> {
     }
   }
 
-  void getPrivateLesson(){
-    if(privateGroup == 0)
+  void getPrivateLesson() {
+    if (privateGroup == 0)
       widget.formData.privateLessons = true;
     else
       widget.formData.privateLessons = false;
   }
 
-  void getPostGraduate(){
-    switch(degreeGoal){
+  void getPostGraduate() {
+    switch (degreeGoal) {
       case 0:
         widget.formData.postGraduate = "MSc degree";
         break;
@@ -314,5 +348,4 @@ class screen2State extends State<screen2> {
     );
     scKey.currentState.showSnackBar(snackBar);
   }
-
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/pages/fragments/SearchList.dart';
 
 import '../../Router.dart';
 import '../AbstractPage.dart';
+import '../fragments/SearchList.dart';
 
 class Search extends AbstractPage {
   Search({Key key})
