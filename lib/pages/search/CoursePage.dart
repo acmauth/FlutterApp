@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
+import '../../entities/course/QaCourseData.dart';
 import '../AbstractPage.dart';
+import '../fragments/BlankPadding.dart';
+import '../fragments/StyledText.dart';
 
 class CoursePage extends AbstractPage {
-  final String data;
-
   CoursePage({
     Key key,
     @required this.data,
   }) : super(
-            key: key,
-            appBarTitle: 'Course Page',
-            appBarColorBg: Colors.blue,
-            appBarColorTxt: Colors.white,
-            navIcon: Icons.search);
+          key: key,
+          appBarTitle: 'Course Page',
+          appBarColorBg: Colors.blue,
+          appBarColorTxt: Colors.white,
+          navIcon: Icons.search,
+        );
+
+  final QaCourseData data;
 
   _CoursePageState createState() => _CoursePageState();
 }
@@ -21,63 +25,110 @@ class CoursePage extends AbstractPage {
 class _CoursePageState extends PageState<CoursePage> {
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
-    return Column(
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(30),
-          padding: EdgeInsets.all(15),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            color: Colors.lightBlue[50],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("Artificial Intelligence",
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.blue[600],
-                        fontWeight: FontWeight.bold)),
-                SizedBox(
-                  height: 2.0,
+    return Container(
+      margin: EdgeInsets.all(15),
+      child: Column(
+        children: <Widget>[
+          _buildBox(
+            Colors.lightBlue,
+            <Widget>[
+              StyledText(
+                widget.data.base.title,
+                size: 25,
+                weight: FontWeight.bold,
+              ),
+              StyledText(widget.data.base.code),
+              BlankPadding(),
+              _normalText(
+                "${_getSemester(widget.data.period)} Semester, Year ${widget.data.year}",
+              ),
+              _normalText("Teachers: ${widget.data.teachers.join(', ')}"),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: StyledText(
+                  widget.data.goal,
+                  size: 20,
                 ),
-                Text(
-                    "Code: NCO-04-02\n\nProffesor: \n\nTeaching: Ioannis Vlahavas, Dimitris Vrakas\n\n6th Semester\n\nYear: 2019",
-                    style: TextStyle(fontSize: 15, color: Colors.blue[600])),
-              ],
-            ),
+              ),
+              _headerText("Content:"),
+              _buildPadded(widget.data.content),
+              BlankPadding(),
+              _normalText(
+                "This course is${widget.data.erasmus ? "" : " NOT"} available for Erasmus students.",
+              ),
+            ],
           ),
-        ), //Main info
+          BlankPadding(),
+          _buildBox(
+            Colors.grey,
+            <Widget>[
+              StyledText(
+                "Prerequisites and Assessment",
+                size: 20,
+                weight: FontWeight.bold,
+              ),
+              Divider(height: 20),
+              _normalText("Courses:"),
+              _buildPadded(widget.data.preCourses),
+              BlankPadding(),
+              _normalText("Knowledge:"),
+              _buildPadded(widget.data.preKnowledge),
+              BlankPadding(),
+              _normalText(widget.data.assessDesc),
+              BlankPadding(),
+              _normalText("Methods of assessment:"),
+              _buildPadded(widget.data.assessMethods),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-        Container(
-          margin: EdgeInsets.only(right: 30, left: 30, bottom: 30),
-          padding: EdgeInsets.all(15),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.grey[100],
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text("Extra Information",
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.blue[600],
-                        fontWeight: FontWeight.bold)),
-                Text(
-                    "Erasmus: Available\n\nPrerequirements:\n\t\t-Courses:\n\t\t-Knowledge: \n\nCourse Description:",
-                    style: TextStyle(fontSize: 15, color: Colors.blue[600]))
-              ],
-            ),
-          ),
-        ) //Minor info
-      ],
+  String _getSemester(int period) {
+    switch (period % 10) {
+      case 1:
+        return "${period}st";
+      case 2:
+        return "{$period}nd";
+      case 3:
+        return "{$period}rd";
+      default:
+        return "${period}th";
+    }
+  }
+
+  StyledText _headerText(String str) {
+    return StyledText(str, size: 18);
+  }
+
+  StyledText _normalText(String str) {
+    return StyledText(str, size: 16);
+  }
+
+  Widget _buildPadded(List<String> content) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: content.map((str) => _normalText("- $str")).toList(),
+      ),
+    );
+  }
+
+  Container _buildBox(Color color, List<Widget> content) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(10),
+        border: null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: content,
+      ),
     );
   }
 }

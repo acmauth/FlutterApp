@@ -6,6 +6,7 @@ import 'LocalKeyValuePersistence.dart';
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
 import 'bloc/notifications/exports.dart';
+import 'bloc/search/search_bloc.dart';
 import 'bloc/theme/exports.dart';
 import 'pages/LandingPage.dart';
 
@@ -87,6 +88,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<AuthBloc>(
           create: (BuildContext context) => AuthBloc(),
+        ),
+        BlocProvider<SearchBloc>(
+          create: (BuildContext context) => SearchBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 import 'pages/LandingPage.dart';
 import 'pages/UnknownPage.dart';
@@ -50,7 +49,7 @@ class Router {
         );
       case '/course':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => CoursePage(),
+          builder: (_) => CoursePage(data: args),
         );
       case '/change_password':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
@@ -58,7 +57,7 @@ class Router {
         );
       case '/edit_profile':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => EditProfile(userData: args),
+          builder: (_) => EditProfile(data: args),
         );
       case '/update_grades':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
