@@ -9,7 +9,6 @@ import '../fragments/BlankPadding.dart';
 import '../fragments/ExpandableSection.dart';
 import '../fragments/ItemContainer.dart';
 import '../fragments/StyledText.dart';
-import 'EditProfile.dart';
 
 class UserProfile extends AbstractPage {
   UserProfile({
@@ -85,10 +84,14 @@ class _UserProfileState extends PageState<UserProfile> {
           ],
         ),
         RaisedButton(
-          shape: RoundedRectangleBorder(side: BorderSide(color: Colors.blue)),
-          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              color: Colors.blue.withOpacity(0.5),
+            ),
+          ),
+          color: Theme.of(context).cardColor,
           textColor: Colors.blue,
-          child: Text("Edit"),
+          child: Text('Edit Profile'),
           onPressed: () {
             Router.push(context, '/edit_profile', args: widget.userData);
           },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'BlankPadding.dart';
 import 'StyledText.dart';
 
 class SectionHeader extends Row {
@@ -9,7 +10,7 @@ class SectionHeader extends Row {
     Color barColor,
     Color textColor = Colors.blue,
     String subtitle,
-    Widget extras,
+    Widget extras = const BlankPadding(),
   }) : super(
           key: key,
           children: <Expanded>[

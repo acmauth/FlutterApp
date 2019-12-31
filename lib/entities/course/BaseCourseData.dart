@@ -22,7 +22,6 @@ class BaseCourseData {
   final double averageGrade;
   final CourseDifficulty difficulty;
 
-
   factory BaseCourseData.fromJson(Map<String, dynamic> json) =>
       _$BaseCourseDataFromJson(json);
 

@@ -1,121 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../Router.dart';
+import '../../bloc/search/exports.dart';
+import '../../entities/course/BaseCourseData.dart';
+import '../../entities/course/CourseDifficulty.dart';
+import '../../entities/course/QaCourseData.dart';
 import '../AbstractPage.dart';
-import '../fragments/SearchList.dart';
+import '../fragments/SearchBar.dart';
 
 class Search extends AbstractPage {
   Search({Key key})
       : super(
-    key: key,
-    appBarTitle: 'Search',
-    navIcon: Icons.search,
-  );
-
+          key: key,
+          appBarTitle: "Search",
+          navIcon: Icons.search,
+        );
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends PageState<Search> {
+  final history = Set<String>();
+  final searchMap = {
+    "Linear Algebra": "ABC-01-01",
+    "Algebra 1": "BXY-01-01",
+    "Discrete Maths": "ADS-01-01",
+    "Advanced Maths": "CXZ-01-01",
+    "Software Engineering": "AAA-22-22",
+    "Astrology": "BBA-01-61",
+  };
 
-
-  Icon actionIcon = new Icon(Icons.search, color: Colors.white,);
-  final key = new GlobalKey<ScaffoldState>();
- // static TextEditingController _searchQuery = new TextEditingController();
-
-  List<String> courseList = List();
-  List<String> historyList = new List();
-
-  _SearchState() {
-    initCourseList();
+  QaCourseData _getData(String str, String code) {
+    return QaCourseData(
+      base: BaseCourseData(
+        title: str,
+        code: code,
+        teacher: "Some teacher",
+        averageGrade: 8.2,
+        difficulty: CourseDifficulty.EASY,
+      ),
+      period: 6,
+      year: "2019 - 2020",
+      teachers: ["Main Teacher", "Substitute"],
+      erasmus: false,
+      goal: "The goal of this subject is to exist...",
+      content: ["Programming", "Speaking", "Breathing"],
+      assessDesc: "You are graded based on how tall you are.",
+      assessMethods: [
+        "Height taken by computer vision tools",
+        "Guesstimate by proessor",
+        "Team project",
+      ],
+      preCourses: ["Signal Processing", "Trigonometry"],
+      preKnowledge: ["Swimming", "Simple arithmetic"],
+    );
   }
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
-    return SearchList(
-      mapTile: (contact) => new ChildItem(contact, false, historyList),
-      // TODO handle history in fragment
-      courselist: courseList,
-      onEmpty: buildhistoryList,
-    );
-
-  }
-
-   void initCourseList() {
-    courseList.add("ΜΑΘΗΜΑΤΙΚΗ ΑΝΑΛΥΣΗ Ι");
-    courseList.add("ΕΙΣΑΓΩΓΗ ΣΤΗΝ ΠΛΗΡΟΦΟΡΙΚΗ");
-    courseList.add("ΓΡΑΜΜΙΚΗ ΑΛΓΕΒΡΑ");
-    courseList.add("ΔΙΑΚΡΙΤΑ ΜΑΘΗΜΑΤΙΚΑ");
-    courseList.add("ΒΑΣΙΚΕΣ ΑΡΧΕΣ ΠΡΟΓΡΑΜΜΑΤΙΣΜΟΥ");
-    courseList.add("ΜΑΘΗΜΑΤΙΚΗ ΑΝΑΛΥΣΗ ΙΙ");
-    courseList.add("ΠΙΘΑΝΟΤΗΤΕΣ & ΣΤΑΤΙΣΤΙΚΗ");
-    courseList.add("ΔΟΜΕΣ ΔΕΔΟΜΕΝΩΝ");
-    courseList.add("ΨΗΦΙΑΚΗ ΣΧΕΔΙΑΣΗ");
-    courseList.add("ΘΕΩΡΙΑ ΥΠΟΛΟΓΙΣΜΟΥ");
-  }
-
-  List<ChildItem> buildhistoryList(){
-    return historyList.map(
-            (contact) => new ChildItem(contact,
-            true,
-            historyList,
-            onDelete: () => removeItem(contact))).toList();
-  }
-  List<ChildItem> buildFullList(){
-    return courseList.map(
-            (contact) => new ChildItem(contact,
-            false,
-            historyList,
-            onDelete: () => removeItem(contact))).toList();
-  }
-
-  void removeItem(String name){
-    setState(() {
-      historyList.remove(name);
-    });
-  }
-
-}
-
-
-class ChildItem extends StatelessWidget {
-  final String name;
-  final VoidCallback onDelete;
-
-  final bool wasClicked;
-  final List<String> history;
-
-  ChildItem(this.name, this.wasClicked, this.history, {this.onDelete});
-
-  @override
-  Widget build(BuildContext context) {
-    return new ListTile(
-        leading: Container(
-            padding: EdgeInsets.only(right: 12.0),
-            decoration: new BoxDecoration(
-                border: new Border(
-                    right: new BorderSide(width: 1.0, color: Colors.lightBlueAccent))),
-            child: Icon(wasClicked ? Icons.history : Icons.library_books)
-        ),
-        title: new Text(this.name),
-        subtitle: new Text("1st Semester"),
-        onTap: () {
-          if(!history.contains(this.name)){
-            history.add(this.name);
-          }
-          openCourseInfo(context);
-        },
-
-        trailing: IconButton(
-          icon: Icon(wasClicked ? Icons.close : Icons.keyboard_arrow_right,),
-          onPressed: this.onDelete,
-        )
+    return SearchBar(
+      searchSet: searchMap.keys.toSet(),
+      onTap: (str) {
+        BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str));
+        Router.push(context, '/course', args: _getData(str, searchMap[str]));
+      },
     );
   }
-
-  void openCourseInfo(BuildContext context){
-    Router.push(context, '/course');
-  }
-
 }
-
-
