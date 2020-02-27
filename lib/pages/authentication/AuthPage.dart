@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../DataFetcher.dart';
 import '../../Router.dart';
 import '../../bloc/auth/exports.dart';
 import '../AbstractPage.dart';
@@ -110,14 +111,9 @@ class _AuthPageState extends PageState<AuthPage> {
     _pwdNode.unfocus();
   }
 
-  bool _doAuth() {
-    // TODO(sakis): Implement authentication flow
+  Future<bool> _doAuth() async {
     // TODO save data to disk
-    if (widget.isLogIn) {
-      return true;
-    } else {
-      return true;
-    }
+    return DataFetcher.doAuth(_email, _pwd, widget.isLogIn);
   }
 
   void _doValidate() {
@@ -126,15 +122,17 @@ class _AuthPageState extends PageState<AuthPage> {
     final FormState form = _formKey.currentState;
     form.save();
     if (form.validate()) {
-      if (_doAuth()) {
-        BlocProvider.of<AuthBloc>(context).add(AuthSuccess());
-        if (!widget.isLogIn) {
-          Router.push(context, "/form/personal");
+      _doAuth().then((succ) {
+        if (succ) {
+          BlocProvider.of<AuthBloc>(context).add(AuthSuccess());
+          if (!widget.isLogIn) {
+            Router.push(context, "/form/personal");
+          }
+        } else {
+          _scfKey.currentState.hideCurrentSnackBar();
+          _scfKey.currentState.showSnackBar(error);
         }
-      } else {
-        _scfKey.currentState.hideCurrentSnackBar();
-        _scfKey.currentState.showSnackBar(error);
-      }
+      });
     }
   }
 
