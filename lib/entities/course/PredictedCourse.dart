@@ -1,6 +1,12 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 import 'CourseDifficulty.dart';
+
+
+part 'PredictedCourse.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 
 class PredictedCourse {
   const PredictedCourse({
@@ -42,4 +48,10 @@ class PredictedCourse {
   final double box8;
   final double box9;
   final double box10;
+
+
+  factory PredictedCourse.fromJson(Map<String, dynamic> json) =>
+      _$PredictedCourseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PredictedCourseToJson(this);
 }

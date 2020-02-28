@@ -2,11 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 import 'BaseCourseData.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'PassedCourseData.g.dart';
-
-@JsonSerializable(explicitToJson: true)
 
 part 'PassedCourseData.g.dart';
 
