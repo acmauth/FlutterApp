@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -11,6 +12,29 @@ import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
 
 class DataFetcher {
+  static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
+
+  static String token = '';
+  static String refresh = '';
+
+  static Future<bool> doAuth(
+    String email,
+    String pwd,
+    bool isLogin,
+  ) async {
+    var res = await http.post(
+      _api + (isLogin ? "auth/login/" : "auth/signup/"),
+      body: {'email': email, 'password': pwd},
+    );
+    if (res.statusCode != 200 && res.statusCode != 201) {
+      return false;
+    }
+    var json = jsonDecode(res.body);
+    token = json["token"];
+    refresh = json["refreshToken"];
+    return true;
+  }
+
   static List<PredictedCourse> fetchPredictedCourses() {
     // To be implemented for data fetching
     return new List();
