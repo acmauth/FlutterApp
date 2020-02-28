@@ -36,5 +36,4 @@ class FormData {
 
    Map<String, dynamic> toJson() => _$FormDataToJson(this);
 
-
 }
