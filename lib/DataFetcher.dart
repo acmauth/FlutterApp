@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -13,6 +12,30 @@ import 'entities/user/UserData.dart';
 
 class DataFetcher {
   static List<PredictedCourse> fetchPredictedCourses() {
+    // To be implemented for data fetching
+    return new List();
+  }
+
+  static UserData fetchUserData() {
+    // To be implemented for data fetching
+    return new UserData(
+        estYear: null,
+        schoolData: null,
+        favSubjects: null,
+        favTeachers: null,
+        semesterDataList: null);
+  }
+
+  static List<SuggestedCourseData> fetchSuggestedCourses() {
+    // To be implemented for data fetching
+    return new List();
+  }
+
+  static Future<bool> uploadGrades(String filePath) {
+    return Future.value(true); // TODO send to server
+  }
+
+  static List<PredictedCourse> fetchDefaultPredictedCourses() {
     return <PredictedCourse>[
       PredictedCourse(
           courseCode: "NC0-01-01",
@@ -53,7 +76,7 @@ class DataFetcher {
     ];
   }
 
-  static UserData fetchUserData() {
+  static UserData fetchDefaultUserData() {
     return UserData(
       name: 'Test Subject',
       schoolData: SchoolData(
@@ -119,7 +142,7 @@ class DataFetcher {
     );
   }
 
-  static List<SuggestedCourseData> fetchSuggestedCourses() {
+  static List<SuggestedCourseData> fetchDefaultSuggestedCourses() {
     return <SuggestedCourseData>[
       SuggestedCourseData(
         baseData: BaseCourseData(
@@ -153,10 +176,6 @@ class DataFetcher {
         match: 55,
       ),
     ];
-  }
-
-  static Future<bool> uploadGrades(String filePath) {
-    return Future.value(true); // TODO send to server
   }
 
   // Please use this function for loading user data from local storage

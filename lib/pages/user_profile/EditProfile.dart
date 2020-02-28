@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
 import '../../Router.dart';
 import '../../entities/user/UserData.dart';
@@ -159,6 +160,8 @@ class _EditProfileState extends PageState<EditProfile> {
 
         widget.data.favTeachers.clear();
         widget.data.favTeachers.addAll(favTeachers);
+
+        LocalKeyValuePersistence.setUserData(widget.data);
         Router.pop(context);
       },
     );

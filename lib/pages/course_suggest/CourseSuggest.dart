@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/entities/user/UserData.dart';
 
 import '../../entities/course/CourseDifficulty.dart';
 import '../../entities/course/SuggestedCourseData.dart';
@@ -11,7 +12,7 @@ import '../fragments/StyledText.dart';
 class CourseSuggest extends AbstractPage {
   CourseSuggest({
     Key key,
-    @required this.schoolData,
+    @required this.userData,
     @required this.suggestedCourses,
   }) : super(
           key: key,
@@ -19,7 +20,7 @@ class CourseSuggest extends AbstractPage {
           navIcon: Icons.event_note,
         );
 
-  final SchoolData schoolData;
+  final UserData userData;
   final List<SuggestedCourseData> suggestedCourses;
 
   _CourseSuggestState createState() => _CourseSuggestState();
@@ -30,7 +31,7 @@ class _CourseSuggestState extends PageState<CourseSuggest> {
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
       children: <Widget>[
-        _buildSchoolInfo(widget.schoolData),
+        _buildSchoolInfo(widget.userData.schoolData),
         _buildSuggestionList(widget.suggestedCourses),
       ],
     );

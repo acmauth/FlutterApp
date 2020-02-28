@@ -1,7 +1,12 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:meta/meta.dart';
 
 import 'BaseCourseData.dart';
 
+part 'QaCourseData.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class QaCourseData {
   QaCourseData({
     @required this.base,
@@ -28,4 +33,9 @@ class QaCourseData {
   final List<String> content;
   final List<String> preCourses;
   final List<String> preKnowledge;
+
+  factory QaCourseData.fromJson(Map<String, dynamic> json) =>
+      _$QaCourseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$QaCourseDataToJson(this);
 }
