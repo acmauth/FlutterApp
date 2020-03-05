@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/DataFetcher.dart';
 import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 import 'package:grade_plus_plus/entities/user/Teacher.dart';
@@ -164,6 +165,14 @@ class _EditProfileState extends PageState<EditProfile> {
         widget.data.favTeachers.addAll(favTeachers);
 
         LocalKeyValuePersistence.setUserData(widget.data);
+
+        // TODO: what happens with selectedCourses?
+
+        DataFetcher.updateName(name);
+        DataFetcher.updateSubjects(favSubjects);
+        DataFetcher.updateTeachers(favTeachers);
+        // TODO: check if success
+
         Router.pop(context);
       },
     );

@@ -84,14 +84,12 @@ class DataFetcher {
     }
   }
 
-  static UserData fetchUserData() {
-    // To be implemented for data fetching
-    return new UserData(
-        estYear: null,
-        schoolData: null,
-        favSubjects: null,
-        favTeachers: null,
-        semesterDataList: null);
+  static Future<UserData> fetchUserData() async {
+    var res = await http.get(
+      _api + "user/profile/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    return UserData.fromJson(jsonDecode(res.body));
   }
 
   static List<SuggestedCourseData> fetchSuggestedCourses() {
@@ -121,6 +119,38 @@ class DataFetcher {
     } on DioError catch (_) {
       return false;
     }
+  }
+
+  static Future<bool> updateName(String name) async {
+    var res = await http.patch(
+      _api + "user/profile/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+      body: {"name": name},
+    );
+    return res.statusCode == 200;
+  }
+
+  static Future<bool> updateSubjects(Set<String> subj) async {
+    return _updateFavorite("course", subj);
+  }
+
+  static Future<bool> updateTeachers(Set<String> teach) async {
+    return _updateFavorite("teacher", teach);
+  }
+
+  static Future<bool> _updateFavorite(
+    String name,
+    Set<String> collection,
+  ) async {
+    var res = await http.patch(
+      _api + "user/favorites/$name/",
+      headers: {
+        HttpHeaders.authorizationHeader: "Bearer $token",
+        HttpHeaders.contentTypeHeader: "application/json",
+      },
+      body: json.encode({"${name}s": collection.toList()}),
+    );
+    return res.statusCode == 204;
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
