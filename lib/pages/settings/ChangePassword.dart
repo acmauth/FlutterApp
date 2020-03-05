@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../Router.dart';
 import '../../entities/user/UserCredentials.dart';
+import '../../DataFetcher.dart';
 
 class ChangePassword extends StatefulWidget {
   @override
@@ -138,13 +139,18 @@ class ChangePasswordState extends State<ChangePassword> {
             onPressed: () {
               if (formKey.currentState.validate()) {
                 formKey.currentState.save();
-                if (oldPass.text == userCred.password) {
-                  showSnackBar("Password successfully changed!");
-                  userCred.password = newPass.text;
-                } else
-                  showSnackBar("Old Password not correct! Please retry.");
-              }
-            }),
+                if (formKey.currentState.validate()) {
+                  formKey.currentState.save();
+                  _changePassword(oldPass.text, newPass.text)
+                      .then((succ) {
+                    if (succ) {
+                      showSnackBar("Password successfully changed!");
+                    } else {
+                      showSnackBar("Old Password not correct! Please retry.");
+                    }
+                  });
+                }
+            }}),
       ),
     );
   }
@@ -164,4 +170,9 @@ class ChangePasswordState extends State<ChangePassword> {
     );
     scKey.currentState.showSnackBar(snackBar);
   }
+
+  Future<bool> _changePassword(oldPass, newPass) async {
+    return DataFetcher.changePassword(oldPass, newPass);
+  }
+
 }
