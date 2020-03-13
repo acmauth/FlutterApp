@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
+
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
 import 'entities/course/CourseDifficulty.dart';
@@ -10,6 +13,8 @@ import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
+import 'package:path/path.dart';
+
 
 class DataFetcher {
   static List<PredictedCourse> fetchPredictedCourses() {
@@ -155,8 +160,22 @@ class DataFetcher {
     ];
   }
 
-  static Future<bool> uploadGrades(String filePath) {
-    return Future.value(true); // TODO send to server
+  static uploadGrades(String filePath) async {
+
+    Dio dio = new Dio();
+
+    final String serverEndPoint = "http://localhost:3000/filePath"; // Temporary
+
+    File file = new File(filePath);
+    String fileName = basename(file.path);
+
+    FormData formData = new FormData.fromMap(({
+      "file": await MultipartFile.fromFile(filePath, filename: fileName)
+    }));
+
+    Response response = await dio.post(serverEndPoint, data: formData);
+
+    return response;
   }
 
   // Please use this function for loading user data from local storage
@@ -172,4 +191,5 @@ class DataFetcher {
         await LocalKeyValuePersistence.getListSuggestedCourses();
     print(jsonEncode(suggestedCourses));
   }
+
 }
