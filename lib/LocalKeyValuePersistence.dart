@@ -143,8 +143,11 @@ class LocalKeyValuePersistence {
           history.removeAt(0);
         }
         history.add(element);
-        prefs.setStringList(_searchHistory, history);
+      } else {
+        history.remove(element);
+        history.add(element);
       }
+      prefs.setStringList(_searchHistory, history);
     } else {
       prefs.setStringList(_searchHistory, [element]);
     }
