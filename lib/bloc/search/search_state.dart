@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 abstract class SearchState {
   SearchState(this.history);
 
-  final List<String> history;
+  List<String> history;
 }
 
 class InitSearchState extends SearchState {

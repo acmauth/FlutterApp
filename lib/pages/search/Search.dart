@@ -16,11 +16,12 @@ class Search extends AbstractPage {
           appBarTitle: "Search",
           navIcon: Icons.search,
         );
+
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends PageState<Search> {
-  final history = Set<String>();
+//  final history = Set<String>();
   final searchMap = {
     "Linear Algebra": "ABC-01-01",
     "Algebra 1": "BXY-01-01",

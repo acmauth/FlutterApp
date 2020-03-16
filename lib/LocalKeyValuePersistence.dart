@@ -17,6 +17,7 @@ class LocalKeyValuePersistence {
   static final String _predictedCourses = "predictedCourses";
   static final String _token = "token";
   static final String _refreshToken = "refreshToken";
+  static final String _searchHistory = "searchHistory";
 
   static setTheme(bool value) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -131,5 +132,40 @@ class LocalKeyValuePersistence {
       return courseData;
     }
     return DataFetcher.fetchDefaultPredictedCourses();
+  }
+
+  static updateSearchHistory(String element) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(_searchHistory)) {
+      List<String> history = prefs.getStringList(_searchHistory);
+      if (!history.contains(element)) {
+        if (history.length >= 10) {
+          history.removeAt(0);
+        }
+        history.add(element);
+        prefs.setStringList(_searchHistory, history);
+      }
+    } else {
+      prefs.setStringList(_searchHistory, [element]);
+    }
+  }
+
+  static Future<List<String>> getSearchHistory() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(_searchHistory)) {
+      List<String> history = prefs.getStringList(_searchHistory);
+      return history;
+    } else {
+      return [];
+    }
+  }
+
+  static removeFromSearchHistory(String element) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(_searchHistory)) {
+      List<String> history = prefs.getStringList(_searchHistory);
+      history.remove(element);
+      prefs.setStringList(_searchHistory, history);
+    }
   }
 }
