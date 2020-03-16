@@ -112,7 +112,6 @@ class _AuthPageState extends PageState<AuthPage> {
   }
 
   Future<bool> _doAuth() async {
-    // TODO save data to disk
     return DataFetcher.doAuth(_email, _pwd, widget.isLogIn);
   }
 
