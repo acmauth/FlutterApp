@@ -234,10 +234,14 @@ class DataFetcher {
   }
 
   static Future<bool> changePassword(
-      String prevPassword, String newPassword) async {
-    var res = await http.post(_api + "user/change_password/",
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-        body: {'previousPassword': prevPassword, 'newPassword': newPassword});
+    String prevPassword,
+    String newPassword,
+  ) async {
+    var res = await http.patch(
+      _api + "user/change_password/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+      body: {'previousPassword': prevPassword, 'newPassword': newPassword},
+    );
 
     return res.statusCode == 200;
   }

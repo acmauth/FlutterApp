@@ -146,7 +146,7 @@ class ChangePasswordState extends State<ChangePassword> {
                     if (succ) {
                       showSnackBar("Password successfully changed!");
                     } else {
-                      showSnackBar("Old Password not correct! Please retry.");
+                      showSnackBar("Old password not correct! Please retry.");
                     }
                   });
                 }
