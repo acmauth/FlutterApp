@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../LocalKeyValuePersistence.dart';
 import '../../bloc/search/exports.dart';
 import 'IconLabelPair.dart';
 
@@ -27,7 +28,14 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   final controller = TextEditingController();
   final results = Set<SearchTile>();
+  Future<List<String>> history;
   bool showHist = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadHistory();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +99,14 @@ class _SearchBarState extends State<SearchBar> {
     });
   }
 
+  void _loadHistory() {
+    Future<List<dynamic>> lHistory =
+        LocalKeyValuePersistence.getSearchHistory();
+    setState(() {
+      history = lHistory;
+    });
+  }
+
   Widget _buildBar() {
     return Container(
       decoration: BoxDecoration(
@@ -122,21 +138,44 @@ class _SearchBarState extends State<SearchBar> {
         children: widget.suggestions.map((str) => getTile(str)).toList(),
       );
     }
-    final history = BlocProvider.of<SearchBloc>(context).state.history;
-    if (history.isEmpty) {
-      return SearchTile(
-        label: DEFAULT_LABEL,
-        tileIcon: widget.tileIcon,
-        isHist: true,
-        onTap: null,
-      );
-    }
-    return Column(
-      children: history
-          .map((str) => getTile(str, isHist: true))
-          .toList()
-          .reversed
-          .toList(),
+    return FutureBuilder(
+      future: history,
+      builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+        if (snapshot.hasData) {
+          BlocProvider.of<SearchBloc>(context).state.history = snapshot.data;
+          final history = BlocProvider.of<SearchBloc>(context).state.history;
+          if (history.isEmpty) {
+            return SearchTile(
+              label: DEFAULT_LABEL,
+              tileIcon: widget.tileIcon,
+              isHist: true,
+              onTap: null,
+            );
+          } else {
+            return Column(
+              children: history
+                  .map((str) => getTile(str, isHist: true))
+                  .toList()
+                  .reversed
+                  .toList(),
+            );
+          }
+        } else if (snapshot.hasError) {
+          // This is not tested
+
+        } else {
+          return CircularProgressIndicator(
+            backgroundColor: Colors.blue,
+            strokeWidth: 5,
+          );
+        }
+        return SearchTile(
+          label: DEFAULT_LABEL,
+          tileIcon: widget.tileIcon,
+          isHist: true,
+          onTap: null,
+        );
+      },
     );
   }
 }

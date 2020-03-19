@@ -121,8 +121,8 @@ class _SettingsState extends PageState<Settings> {
                     name: 'Missing Grades',
                     icon: Icons.warning,
                     toggle: (bool gradesOn) {
-                      notifBloc.add(
-                          gradesOn ? SubToGrades() : UnsubFromGrades());
+                      notifBloc
+                          .add(gradesOn ? SubToGrades() : UnsubFromGrades());
                       LocalKeyValuePersistence.setNotifState(
                           notifState.getHasSemester(), gradesOn);
                     },
@@ -145,7 +145,10 @@ class _SettingsState extends PageState<Settings> {
           label: 'Log Out',
           icon: Icons.exit_to_app,
           color: Colors.red.shade500,
-          onTap: () => BlocProvider.of<AuthBloc>(context).add(LogOut()),
+          onTap: () {
+            LocalKeyValuePersistence.deleteTokens();
+            BlocProvider.of<AuthBloc>(context).add(LogOut());
+          },
         ),
       ],
     );

@@ -16,11 +16,12 @@ class Search extends AbstractPage {
           appBarTitle: "Search",
           navIcon: Icons.search,
         );
+
   _SearchState createState() => _SearchState();
 }
 
 class _SearchState extends PageState<Search> {
-  final history = Set<String>();
+//  final history = Set<String>();
   final searchMap = {
     "Linear Algebra": "ABC-01-01",
     "Algebra 1": "BXY-01-01",
@@ -61,7 +62,7 @@ class _SearchState extends PageState<Search> {
     return SearchBar(
       searchSet: searchMap.keys.toSet(),
       onTap: (str) {
-        BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str));
+        BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str,true));
         Router.push(context, '/course', args: _getData(str, searchMap[str]));
       },
     );

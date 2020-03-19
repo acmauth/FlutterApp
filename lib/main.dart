@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'DataFetcher.dart';
 import 'LocalKeyValuePersistence.dart';
 import 'Router.dart';
 import 'bloc/auth/exports.dart';
@@ -17,26 +18,46 @@ void main() async {
       await LocalKeyValuePersistence.getTheme(); // Getting the theme
   final NotifState initialNotifState = await LocalKeyValuePersistence
       .getNotifState(); // Getting the notification preferences
+  String token = await LocalKeyValuePersistence.getUserToken();
+  String refresh = await LocalKeyValuePersistence.getRefreshToken();
+  DataFetcher.localAuth(token, refresh).then((succ) {
+    if (!succ) {
+      token = null;
+      refresh = null;
+    }
+  });
+
   runApp(MyApp(
       initialThemeState: initialThemeState,
-      initialNotifState: initialNotifState));
+      initialNotifState: initialNotifState,
+      token: token,
+      refresh: refresh));
 }
 
 class MyApp extends StatefulWidget {
   final ThemeState initialThemeState;
   final NotifState initialNotifState;
+  final String token;
+  final String refresh;
 
-  const MyApp({Key key, this.initialThemeState, this.initialNotifState})
+  const MyApp(
+      {Key key,
+      this.initialThemeState,
+      this.initialNotifState,
+      this.token,
+      this.refresh})
       : super(key: key);
 
   @override
   _MyAppState createState() =>
-      _MyAppState(initialThemeState, initialNotifState);
+      _MyAppState(initialThemeState, initialNotifState, token, refresh);
 }
 
 class _MyAppState extends State<MyApp> {
   final ThemeState initialThemeState;
   final NotifState initialNotifState;
+  final String token;
+  final String refresh;
   final ThemeData lightTheme = ThemeData(
     accentColor: Colors.lightBlue,
     appBarTheme: AppBarTheme(
@@ -74,7 +95,8 @@ class _MyAppState extends State<MyApp> {
     textSelectionHandleColor: Colors.lightBlue,
   );
 
-  _MyAppState(this.initialThemeState, this.initialNotifState);
+  _MyAppState(
+      this.initialThemeState, this.initialNotifState, this.token, this.refresh);
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +109,7 @@ class _MyAppState extends State<MyApp> {
           create: (BuildContext context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
-          create: (BuildContext context) => AuthBloc(),
+          create: (BuildContext context) => AuthBloc(token, refresh),
         ),
         BlocProvider<SearchBloc>(
           create: (BuildContext context) => SearchBloc(),

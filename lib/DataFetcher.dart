@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
@@ -32,7 +34,23 @@ class DataFetcher {
     var json = jsonDecode(res.body);
     token = json["token"];
     refresh = json["refreshToken"];
+    LocalKeyValuePersistence.setUserToken(token);
+    LocalKeyValuePersistence.setRefreshToken(refresh);
     return true;
+  }
+
+  static Future<bool> localAuth(lToken, lRefresh) async {
+    token = lToken;
+    refresh = lRefresh;
+    if (token != null && refresh != null) {
+      var res = await http.get(_api + "user/profile",
+          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+      if (res.statusCode != 200 && res.statusCode != 201) {
+        return false;
+      }
+      return true;
+    }
+    return false;
   }
 
   static List<PredictedCourse> fetchPredictedCourses() {
@@ -200,19 +218,5 @@ class DataFetcher {
         match: 55,
       ),
     ];
-  }
-
-  // Please use this function for loading user data from local storage
-  static fetchLocalUserData() async {
-    final UserData userData = await LocalKeyValuePersistence.getUserData();
-    print(userData.toJson());
-    return userData;
-  }
-
-  // Please use this function for loading list suggested courses from local storage
-  static fetchLocalSuggestedCourses() async {
-    List<SuggestedCourseData> suggestedCourses =
-        await LocalKeyValuePersistence.getListSuggestedCourses();
-    print(jsonEncode(suggestedCourses));
   }
 }
