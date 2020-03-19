@@ -100,7 +100,8 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   void _loadHistory() {
-    Future<List<dynamic>> lHistory = LocalKeyValuePersistence.getSearchHistory();
+    Future<List<dynamic>> lHistory =
+        LocalKeyValuePersistence.getSearchHistory();
     setState(() {
       history = lHistory;
     });
@@ -176,7 +177,6 @@ class _SearchBarState extends State<SearchBar> {
         );
       },
     );
-
   }
 }
 
@@ -211,7 +211,6 @@ class SearchTile extends StatelessWidget {
             if (isHist && label != DEFAULT_LABEL)
               GestureDetector(
                 onTap: () {
-//                  LocalKeyValuePersistence.removeFromSearchHistory(label);
                   BlocProvider.of<SearchBloc>(context)
                       .add(HistoryDeleteEvent(label));
                 },
