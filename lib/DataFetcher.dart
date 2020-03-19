@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -13,11 +13,69 @@ import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
-import 'package:path/path.dart';
-
 
 class DataFetcher {
+  static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
+
+  static String token = '';
+  static String refresh = '';
+
+  static Future<bool> doAuth(
+      String email,
+      String pwd,
+      bool isLogin,
+      ) async {
+    var res = await http.post(
+      _api + (isLogin ? "auth/login/" : "auth/signup/"),
+      body: {'email': email, 'password': pwd},
+    );
+    if (res.statusCode != 200 && res.statusCode != 201) {
+      return false;
+    }
+    var json = jsonDecode(res.body);
+    token = json["token"];
+    refresh = json["refreshToken"];
+    return true;
+  }
+
   static List<PredictedCourse> fetchPredictedCourses() {
+    // To be implemented for data fetching
+    return new List();
+  }
+
+  static UserData fetchUserData() {
+    // To be implemented for data fetching
+    return new UserData(
+        estYear: null,
+        schoolData: null,
+        favSubjects: null,
+        favTeachers: null,
+        semesterDataList: null);
+  }
+
+  static List<SuggestedCourseData> fetchSuggestedCourses() {
+    // To be implemented for data fetching
+    return new List();
+  }
+
+  static uploadGrades(String filePath) async {
+    Dio dio = new Dio();
+
+    final String serverEndPoint = _api + "/grades/pdf";
+
+    File file = new File(filePath);
+    String fileName = basename(file.path) ;
+
+    FormData formData = new FormData.fromMap(({
+      "file" : await MultipartFile.fromFile(filePath, filename: fileName)
+    }));
+
+    Response response = await dio.put(serverEndPoint, data: formData);
+
+    return response;
+  }
+
+  static List<PredictedCourse> fetchDefaultPredictedCourses() {
     return <PredictedCourse>[
       PredictedCourse(
           courseCode: "NC0-01-01",
@@ -58,7 +116,7 @@ class DataFetcher {
     ];
   }
 
-  static UserData fetchUserData() {
+  static UserData fetchDefaultUserData() {
     return UserData(
       name: 'Test Subject',
       schoolData: SchoolData(
@@ -124,7 +182,7 @@ class DataFetcher {
     );
   }
 
-  static List<SuggestedCourseData> fetchSuggestedCourses() {
+  static List<SuggestedCourseData> fetchDefaultSuggestedCourses() {
     return <SuggestedCourseData>[
       SuggestedCourseData(
         baseData: BaseCourseData(
@@ -160,24 +218,6 @@ class DataFetcher {
     ];
   }
 
-  static uploadGrades(String filePath) async {
-
-    Dio dio = new Dio();
-
-    final String serverEndPoint = "http://localhost:3000/filePath"; // Temporary
-
-    File file = new File(filePath);
-    String fileName = basename(file.path);
-
-    FormData formData = new FormData.fromMap(({
-      "file": await MultipartFile.fromFile(filePath, filename: fileName)
-    }));
-
-    Response response = await dio.post(serverEndPoint, data: formData);
-
-    return response;
-  }
-
   // Please use this function for loading user data from local storage
   static fetchLocalUserData() async {
     final UserData userData = await LocalKeyValuePersistence.getUserData();
@@ -188,8 +228,7 @@ class DataFetcher {
   // Please use this function for loading list suggested courses from local storage
   static fetchLocalSuggestedCourses() async {
     List<SuggestedCourseData> suggestedCourses =
-        await LocalKeyValuePersistence.getListSuggestedCourses();
+    await LocalKeyValuePersistence.getListSuggestedCourses();
     print(jsonEncode(suggestedCourses));
   }
-
 }
