@@ -62,7 +62,7 @@ class _SearchState extends PageState<Search> {
     return SearchBar(
       searchSet: searchMap.keys.toSet(),
       onTap: (str) {
-        BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str));
+        BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str,true));
         Router.push(context, '/course', args: _getData(str, searchMap[str]));
       },
     );
