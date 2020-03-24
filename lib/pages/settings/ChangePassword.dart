@@ -139,18 +139,16 @@ class ChangePasswordState extends State<ChangePassword> {
             onPressed: () {
               if (formKey.currentState.validate()) {
                 formKey.currentState.save();
-                if (formKey.currentState.validate()) {
-                  formKey.currentState.save();
-                  _changePassword(oldPass.text, newPass.text)
-                      .then((succ) {
-                    if (succ) {
-                      showSnackBar("Password successfully changed!");
-                    } else {
-                      showSnackBar("Old password not correct! Please retry.");
-                    }
-                  });
-                }
-            }}),
+                _changePassword(oldPass.text, newPass.text).then((succ) {
+                  if (succ) {
+                    showSnackBar("Password successfully changed!");
+                    Router.pop(context);
+                  } else {
+                    showSnackBar("Old password not correct! Please retry.");
+                  }
+                });
+              }
+            }),
       ),
     );
   }
@@ -174,5 +172,4 @@ class ChangePasswordState extends State<ChangePassword> {
   Future<bool> _changePassword(oldPass, newPass) async {
     return DataFetcher.changePassword(oldPass, newPass);
   }
-
 }
