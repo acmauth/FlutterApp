@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 
 import '../LocalKeyValuePersistence.dart';
 import '../entities/course/PredictedCourse.dart';
@@ -7,6 +6,9 @@ import '../entities/course/SuggestedCourseData.dart';
 import '../entities/user/UserData.dart';
 import 'AbstractPage.dart';
 import 'course_suggest/CourseSuggest.dart';
+import 'fragments/BlankPadding.dart';
+import 'fragments/LoadingIndicator.dart';
+import 'fragments/StyledText.dart';
 import 'grade_predict/GradePredict.dart';
 import 'search/Search.dart';
 import 'settings/Settings.dart';
@@ -105,17 +107,19 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ];
         } else {
-          // TODO This needs ui fixing
-          return CircularProgressIndicator(
-            backgroundColor: Colors.blue,
-            strokeWidth: 5,
-          );
+          children = [
+            LoadingIndicator(),
+            BlankPadding(),
+            StyledText("Loading..."),
+          ];
         }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
+        return Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ),
           ),
         );
       },

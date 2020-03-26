@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../LocalKeyValuePersistence.dart';
 import '../../bloc/search/exports.dart';
 import 'IconLabelPair.dart';
+import 'LoadingIndicator.dart';
 
 const String DEFAULT_LABEL = "Your history will show up here.";
 
@@ -164,10 +165,7 @@ class _SearchBarState extends State<SearchBar> {
           // This is not tested
 
         } else {
-          return CircularProgressIndicator(
-            backgroundColor: Colors.blue,
-            strokeWidth: 5,
-          );
+          return LoadingIndicator();
         }
         return SearchTile(
           label: DEFAULT_LABEL,
