@@ -296,7 +296,6 @@ class MiscFormState extends State<MiscForm> {
   }
 
 
-
   void validateInput() {
     final form = formKey.currentState;
     if (form.validate()) {
@@ -320,7 +319,6 @@ class MiscFormState extends State<MiscForm> {
     );
     scKey.currentState.showSnackBar(snackBar);
   }
-
 
   void getRoommate() {
     switch (houseGroup) {
@@ -378,11 +376,12 @@ class MiscFormState extends State<MiscForm> {
   void loadNext() {
     DataFetcher.fetchFormData(widget.formData).then((success) {
       if (success) {
-        Router.replaceAll(context, '/home');
+        Router.pop(context);
       } else {
         showSnackBar("Something went wrong!");
       }
     });
+    Router.replaceAll(context, '/home');
   }
 
 }
