@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -12,6 +13,7 @@ import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
+import 'entities/user/FormData.dart' as FormClass;
 
 class DataFetcher {
   static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
@@ -20,10 +22,10 @@ class DataFetcher {
   static String refresh = '';
 
   static Future<bool> doAuth(
-    String email,
-    String pwd,
-    bool isLogin,
-  ) async {
+      String email,
+      String pwd,
+      bool isLogin,
+      ) async {
     var res = await http.post(
       _api + (isLogin ? "auth/login/" : "auth/signup/"),
       body: {'email': email, 'password': pwd},
@@ -34,23 +36,7 @@ class DataFetcher {
     var json = jsonDecode(res.body);
     token = json["token"];
     refresh = json["refreshToken"];
-    LocalKeyValuePersistence.setUserToken(token);
-    LocalKeyValuePersistence.setRefreshToken(refresh);
     return true;
-  }
-
-  static Future<bool> localAuth(lToken, lRefresh) async {
-    token = lToken;
-    refresh = lRefresh;
-    if (token != null && refresh != null) {
-      var res = await http.get(_api + "user/profile",
-          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-      if (res.statusCode != 200 && res.statusCode != 201) {
-        return false;
-      }
-      return true;
-    }
-    return false;
   }
 
   static List<PredictedCourse> fetchPredictedCourses() {
@@ -73,8 +59,46 @@ class DataFetcher {
     return new List();
   }
 
-  static Future<bool> uploadGrades(String filePath) {
-    return Future.value(true); // TODO send to server
+  static fetchFormData(FormClass.FormData data) async {
+    Dio dio = new Dio();
+
+    final String serverEndPoint = _api + "/user/profile";
+
+    FormData formData = new FormData.fromMap(({
+      "name": "Christina Kreza", //Change age with name
+      "semester" : data.semester,
+      "school": data.school,
+      "reason": data.reason,
+      "study_time": data.studyTime,
+      "lectures": data.lectures,
+      "private": data.privateLessons,
+      "postgraduate": data.postGraduate,
+      "roomates": data.roommate,
+      "distance": data.distance,
+      "hobbies": data.hobbies,
+    }));
+
+    Response response = await dio.put(serverEndPoint, data: formData);
+
+    return response;
+
+  }
+
+  static uploadGrades(String filePath) async {
+    Dio dio = new Dio();
+
+    final String serverEndPoint = _api + "/grades/pdf";
+
+    File file = new File(filePath);
+    String fileName = basename(file.path);
+
+    FormData formData = new FormData.fromMap(({
+      "file" : await MultipartFile.fromFile(filePath, filename: fileName)
+    }));
+
+    Response response = await dio.put(serverEndPoint, data: formData);
+
+    return response;
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
@@ -218,5 +242,19 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  // Please use this function for loading user data from local storage
+  static fetchLocalUserData() async {
+    final UserData userData = await LocalKeyValuePersistence.getUserData();
+    print(userData.toJson());
+    return userData;
+  }
+
+  // Please use this function for loading list suggested courses from local storage
+  static fetchLocalSuggestedCourses() async {
+    List<SuggestedCourseData> suggestedCourses =
+    await LocalKeyValuePersistence.getListSuggestedCourses();
+    print(jsonEncode(suggestedCourses));
   }
 }

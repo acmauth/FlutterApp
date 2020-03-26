@@ -8,7 +8,8 @@ part of 'FormData.dart';
 
 FormData _$FormDataFromJson(Map<String, dynamic> json) {
   return FormData(
-    age: json['age'] as int,
+    name: json['name'] as String,
+    school: json['school'] as String,
     reason: json['reason'] as String,
     studyTime: json['studyTime'] as String,
     lectures: json['lectures'] as String,
@@ -23,15 +24,16 @@ FormData _$FormDataFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$FormDataToJson(FormData instance) => <String, dynamic>{
-      'age': instance.age,
-      'reason': instance.reason,
-      'studyTime': instance.studyTime,
-      'lectures': instance.lectures,
-      'privateLessons': instance.privateLessons,
-      'postGraduate': instance.postGraduate,
-      'roommate': instance.roommate,
-      'distance': instance.distance,
-      'hobbies': instance.hobbies,
-      'semester': instance.semester,
-      'gradesPath': instance.gradesPath,
-    };
+  'name': instance.name,
+  'school': instance.school,
+  'reason': instance.reason,
+  'studyTime': instance.studyTime,
+  'lectures': instance.lectures,
+  'privateLessons': instance.privateLessons,
+  'postGraduate': instance.postGraduate,
+  'roommate': instance.roommate,
+  'distance': instance.distance,
+  'hobbies': instance.hobbies,
+  'semester': instance.semester,
+  'gradesPath': instance.gradesPath,
+};

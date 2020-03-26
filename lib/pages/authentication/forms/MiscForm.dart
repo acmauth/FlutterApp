@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../DataFetcher.dart';
 import '../../../Router.dart';
 import '../../../entities/user/FormData.dart';
 import '../../fragments/BlankPadding.dart';
@@ -37,36 +38,36 @@ class MiscFormState extends State<MiscForm> {
   Widget build(BuildContext context) {
     return new MaterialApp(
         home: Scaffold(
-      key: scKey,
-      appBar: AppBar(
-          centerTitle: true,
-          title: Text("Form 3 of 3"),
-          backgroundColor: Colors.blue,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () => Router.pop(context),
-          )),
-      body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
-        Form(
-          key: formKey,
-          child: Column(
-            children: <Widget>[
-              getHouse(),
-              BlankPadding(),
-              getSchoolDistance(),
-              BlankPadding(),
-              getFavSubjects(),
-              BlankPadding(),
-              getSemester(),
-              BlankPadding(),
-              getGrades(),
-              BlankPadding(),
-              nextButton(),
-            ],
-          ),
-        ),
-      ]),
-    ));
+          key: scKey,
+          appBar: AppBar(
+              centerTitle: true,
+              title: Text("Form 3 of 3"),
+              backgroundColor: Colors.blue,
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Router.pop(context),
+              )),
+          body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
+            Form(
+              key: formKey,
+              child: Column(
+                children: <Widget>[
+                  getHouse(),
+                  BlankPadding(),
+                  getSchoolDistance(),
+                  BlankPadding(),
+                  getFavSubjects(),
+                  BlankPadding(),
+                  getSemester(),
+                  BlankPadding(),
+                  getGrades(),
+                  BlankPadding(),
+                  nextButton(),
+                ],
+              ),
+            ),
+          ]),
+        ));
   }
 
   Row Header(String title) {
@@ -228,9 +229,9 @@ class MiscFormState extends State<MiscForm> {
     return Row(children: <Widget>[
       Expanded(
           child: Text(
-        "Current Semester: ",
-        style: TextStyle(color: Colors.blue, fontSize: 16),
-      )),
+            "Current Semester: ",
+            style: TextStyle(color: Colors.blue, fontSize: 16),
+          )),
       Container(
         width: 60,
         child: DropdownButton<String>(
@@ -294,9 +295,7 @@ class MiscFormState extends State<MiscForm> {
     );
   }
 
-  void loadNext() {
-    Router.replaceAll(context, '/home');
-  }
+
 
   void validateInput() {
     final form = formKey.currentState;
@@ -322,13 +321,6 @@ class MiscFormState extends State<MiscForm> {
     scKey.currentState.showSnackBar(snackBar);
   }
 
-  void saveData() {
-    getRoommate();
-    getDistance();
-    getHobbies();
-    widget.formData.semester = int.parse(currentSemester);
-    widget.formData.gradesPath = gradesKey.currentState.path;
-  }
 
   void getRoommate() {
     switch (houseGroup) {
@@ -373,4 +365,25 @@ class MiscFormState extends State<MiscForm> {
 
     widget.formData.hobbies = formHobbies;
   }
+
+
+  void saveData() {
+    getRoommate();
+    getDistance();
+    getHobbies();
+    widget.formData.semester = int.parse(currentSemester);
+    widget.formData.gradesPath = gradesKey.currentState.path;
+  }
+
+  void loadNext() {
+    DataFetcher.fetchFormData(widget.formData).then((success) {
+      if (success) {
+        Router.pop(context);
+      } else {
+        showSnackBar("Something went wrong!");
+      }
+    });
+    Router.replaceAll(context, '/home');
+  }
+
 }
