@@ -81,8 +81,8 @@ class DataFetcher {
 
     final String serverEndPoint = _api + "/user/profile";
 
-    FormData formData = new FormData.fromMap(({
-      "name": "Christina Kreza", //Change age with name
+      FormData formData = new FormData.fromMap(({
+      "name": data.name,
       "semester" : data.semester,
       "school": data.school,
       "reason": data.reason,
@@ -261,17 +261,4 @@ class DataFetcher {
     ];
   }
 
-  // Please use this function for loading user data from local storage
-  static fetchLocalUserData() async {
-    final UserData userData = await LocalKeyValuePersistence.getUserData();
-    print(userData.toJson());
-    return userData;
-  }
-
-  // Please use this function for loading list suggested courses from local storage
-  static fetchLocalSuggestedCourses() async {
-    List<SuggestedCourseData> suggestedCourses =
-    await LocalKeyValuePersistence.getListSuggestedCourses();
-    print(jsonEncode(suggestedCourses));
-  }
 }
