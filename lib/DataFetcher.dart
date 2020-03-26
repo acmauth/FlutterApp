@@ -36,8 +36,25 @@ class DataFetcher {
     var json = jsonDecode(res.body);
     token = json["token"];
     refresh = json["refreshToken"];
+    LocalKeyValuePersistence.setUserToken(token);
+    LocalKeyValuePersistence.setRefreshToken(refresh);
     return true;
   }
+
+  static Future<bool> localAuth(lToken, lRefresh) async {
+    token = lToken;
+    refresh = lRefresh;
+    if (token != null && refresh != null) {
+      var res = await http.get(_api + "user/profile",
+          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
+      if (res.statusCode != 200 && res.statusCode != 201) {
+        return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
 
   static List<PredictedCourse> fetchPredictedCourses() {
     // To be implemented for data fetching
