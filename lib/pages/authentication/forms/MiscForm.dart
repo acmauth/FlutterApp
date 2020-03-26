@@ -376,12 +376,11 @@ class MiscFormState extends State<MiscForm> {
   void loadNext() {
     DataFetcher.fetchFormData(widget.formData).then((success) {
       if (success) {
-        Router.pop(context);
+        Router.replaceAll(context, '/home');
       } else {
         showSnackBar("Something went wrong!");
       }
     });
-    Router.replaceAll(context, '/home');
   }
 
 }
