@@ -142,7 +142,9 @@ class ChangePasswordState extends State<ChangePassword> {
                 _changePassword(oldPass.text, newPass.text).then((succ) {
                   if (succ) {
                     showSnackBar("Password successfully changed!");
-                    Router.pop(context);
+                    Future.delayed(Duration(seconds: 2), () {
+                      Router.pop(context);
+                    });
                   } else {
                     showSnackBar("Old password not correct! Please retry.");
                   }
