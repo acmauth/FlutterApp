@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
@@ -218,5 +217,18 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  static Future<bool> changePassword(
+    String prevPassword,
+    String newPassword,
+  ) async {
+    var res = await http.patch(
+      _api + "user/change_password/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+      body: {'previousPassword': prevPassword, 'newPassword': newPassword},
+    );
+
+    return res.statusCode == 200;
   }
 }
