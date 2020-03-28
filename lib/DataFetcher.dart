@@ -219,20 +219,6 @@ class DataFetcher {
     ];
   }
 
-  // Please use this function for loading user data from local storage
-  static fetchLocalUserData() async {
-    final UserData userData = await LocalKeyValuePersistence.getUserData();
-    print(userData.toJson());
-    return userData;
-  }
-
-  // Please use this function for loading list suggested courses from local storage
-  static fetchLocalSuggestedCourses() async {
-    List<SuggestedCourseData> suggestedCourses =
-        await LocalKeyValuePersistence.getListSuggestedCourses();
-    print(jsonEncode(suggestedCourses));
-  }
-
   static Future<bool> changePassword(
     String prevPassword,
     String newPassword,
