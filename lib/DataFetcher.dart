@@ -12,7 +12,7 @@ import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
-import 'entities/user/FormData.dart' as FormClass;
+import 'entities/user/FormData.dart';
 
 class DataFetcher {
   static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
