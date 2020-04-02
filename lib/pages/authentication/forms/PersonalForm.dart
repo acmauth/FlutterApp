@@ -68,7 +68,7 @@ class PersonalFormState extends State<PersonalForm> {
   Column buildAgeField() {
     return Column(
       children: <Widget>[
-        Header("AGE"),
+        Header("Name"),
         TextFormField(
           controller: username,
           keyboardType: TextInputType.text,

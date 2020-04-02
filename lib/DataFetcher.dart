@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -13,7 +11,7 @@ import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
-import 'entities/user/FormData.dart' as FormClass;
+import 'entities/user/FormData.dart';
 
 class DataFetcher {
   static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
@@ -76,46 +74,42 @@ class DataFetcher {
     return new List();
   }
 
-  static fetchFormData(FormClass.FormData data) async {
-    Dio dio = new Dio();
+  static fetchFormData(FormData data) async {
+    final String serverEndPoint = _api + "user/profile";
 
-    final String serverEndPoint = _api + "/user/profile";
+    var res =  await http.patch(
+      serverEndPoint,
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+      body: {
+        "name": data.name,
+        "semester" : data.semester,
+        "school": data.school,
+        "reason": data.reason,
+        "study_time": data.studyTime,
+        "lectures": data.lectures,
+        "private": data.privateLessons,
+        "postgraduate": data.postGraduate,
+        "roomates": data.roommate,
+        "distance": data.distance,
+        "hobbies": data.hobbies,
+      }
+    );
 
-      FormData formData = new FormData.fromMap(({
-      "name": data.name,
-      "semester" : data.semester,
-      "school": data.school,
-      "reason": data.reason,
-      "study_time": data.studyTime,
-      "lectures": data.lectures,
-      "private": data.privateLessons,
-      "postgraduate": data.postGraduate,
-      "roomates": data.roommate,
-      "distance": data.distance,
-      "hobbies": data.hobbies,
-    }));
-
-    Response response = await dio.put(serverEndPoint, data: formData);
-
-    return response;
-
+    return FormData.fromJson(jsonDecode(res.body));
   }
 
   static uploadGrades(String filePath) async {
-    Dio dio = new Dio();
-
-    final String serverEndPoint = _api + "/grades/pdf";
-
+    final String serverEndPoint = _api + "grades/pdf";
     File file = new File(filePath);
-    String fileName = basename(file.path);
 
-    FormData formData = new FormData.fromMap(({
-      "file" : await MultipartFile.fromFile(filePath, filename: fileName)
-    }));
+    var res = await http.put(
+      serverEndPoint,
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+      body:{"file": file},
+    );
 
-    Response response = await dio.put(serverEndPoint, data: formData);
+    return res.statusCode == 200;
 
-    return response;
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {

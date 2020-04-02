@@ -3,6 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 part 'FormData.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+
+
 class FormData {
   FormData({
     this.name,
@@ -33,8 +35,7 @@ class FormData {
   int semester;
   String gradesPath;
 
-  factory FormData.fromJson(Map<String, dynamic> json) =>
-      _$FormDataFromJson(json);
+  factory FormData.fromJson(Map<String, dynamic> json) => _$FormDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$FormDataToJson(this);
 

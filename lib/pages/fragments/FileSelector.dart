@@ -28,7 +28,7 @@ class FileSelectorState extends State<FileSelector> {
   void _selectFile() async {
     Scaffold.of(context).hideCurrentSnackBar();
     String path = await FilePicker.getFilePath(
-      type: FileType.CUSTOM,
+      type: FileType.custom,
       fileExtension: "pdf",
     );
     if (path == null) {
