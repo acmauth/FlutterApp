@@ -1,9 +1,13 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
+import 'entities/course/Course.dart';
 import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
@@ -17,6 +21,8 @@ class DataFetcher {
 
   static String token = '';
   static String refresh = '';
+//  static HashMap<String, Course> courses = new HashMap();
+//  static Map<String, String> searchMap = new Map();
 
   static Future<bool> doAuth(
     String email,
@@ -217,6 +223,28 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  static Future<HashMap<String, Course>> fetchCourses() async {
+    var res = await http.get(
+      _api + "list/courses/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+
+    // Use the compute function to run parsePhotos in a separate isolate.
+    return compute(parseCourses, res.body);
+  }
+
+// A function that converts a response body into a List<Photo>.
+  static HashMap<String, Course> parseCourses(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    HashMap<String, Course> instanceCourses = new HashMap();
+    parsed.forEach((json) =>
+        instanceCourses.putIfAbsent(json['_id'], () => Course.fromJson(json)));
+
+
+//    courses = instanceCourses;
+    return instanceCourses;
   }
 
   static Future<bool> changePassword(

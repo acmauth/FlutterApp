@@ -1,4 +1,8 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/DataFetcher.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
 
 import '../LocalKeyValuePersistence.dart';
 import '../entities/course/PredictedCourse.dart';
@@ -26,12 +30,18 @@ class _HomeScreenState extends State<HomeScreen> {
   static Future<List<SuggestedCourseData>> suggestedCourses;
   static Future<List<PredictedCourse>> predictedCourses;
   static List<AbstractPage> pages;
+  static Future<HashMap<String, Course>> courses;
 
   @override
   void initState() {
     super.initState();
+//
+
+    courses = DataFetcher.fetchCourses();
+
     // When then data is loaded from disk needs to be determined after we complete communication with server.
     // This actually needs to be reversed
+
     _loadLocalData();
   }
 
@@ -45,28 +55,34 @@ class _HomeScreenState extends State<HomeScreen> {
       userData = ud;
       suggestedCourses = sc;
       predictedCourses = pc;
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([userData, suggestedCourses, predictedCourses]).then(
+      future:
+          Future.wait([userData, suggestedCourses, predictedCourses, courses])
+              .then(
         (response) => new Merged(
             userData: response[0],
             suggestedCourses: response[1],
-            predictedCourses: response[2]),
+            predictedCourses: response[2],
+            courses: response[3]),
       ),
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
+          Map<String, String> searchMap = new Map();
+
           pages = <AbstractPage>[
             GradePredict(gradeData: snapshot.data.predictedCourses),
             CourseSuggest(
               userData: snapshot.data.userData,
               suggestedCourses: snapshot.data.suggestedCourses,
             ),
-            Search(),
+            Search(courses: snapshot.data.courses),
             UserProfile(userData: snapshot.data.userData),
             Settings(),
           ];
@@ -131,6 +147,11 @@ class Merged {
   final UserData userData;
   final List<SuggestedCourseData> suggestedCourses;
   final List<PredictedCourse> predictedCourses;
+  final HashMap<String, Course> courses;
 
-  Merged({this.userData, this.suggestedCourses, this.predictedCourses});
+  Merged(
+      {this.userData,
+      this.suggestedCourses,
+      this.predictedCourses,
+      this.courses});
 }

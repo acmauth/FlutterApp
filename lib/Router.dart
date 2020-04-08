@@ -49,7 +49,7 @@ class Router {
         );
       case '/course':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => CoursePage(data: args),
+          builder: (_) => CoursePage(course: args),
         );
       case '/change_password':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
