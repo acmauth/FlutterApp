@@ -1,5 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/Router.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
 import '../../entities/course/PassedCourseData.dart';
 import '../../entities/user/SemesterData.dart';
@@ -14,6 +18,8 @@ class UserProfile extends AbstractPage {
   UserProfile({
     Key key,
     @required this.userData,
+    @required this.courses,
+    @required this.teachers,
   }) : super(
           key: key,
           appBarTitle: 'Profile',
@@ -21,6 +27,8 @@ class UserProfile extends AbstractPage {
         );
 
   final UserData userData;
+  final HashMap<String, Course> courses;
+  final HashMap<String, Teacher> teachers;
 
   _UserProfileState createState() => _UserProfileState();
 }
@@ -93,7 +101,11 @@ class _UserProfileState extends PageState<UserProfile> {
           textColor: Colors.blue,
           child: Text('Edit Profile'),
           onPressed: () {
-            Router.push(context, '/edit_profile', args: widget.userData);
+            Router.push(context, '/edit_profile', args: {
+              'data': widget.userData,
+              'courses': widget.courses,
+              'teachers': widget.teachers
+            });
           },
         )
       ],

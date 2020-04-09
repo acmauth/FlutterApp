@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/DataFetcher.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
 import '../LocalKeyValuePersistence.dart';
 import '../entities/course/PredictedCourse.dart';
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static Future<List<PredictedCourse>> predictedCourses;
   static List<AbstractPage> pages;
   static Future<HashMap<String, Course>> courses;
+  static Future<HashMap<String, Teacher>> teachers;
 
   @override
   void initState() {
@@ -38,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
 //
 
     courses = DataFetcher.fetchCourses();
+    teachers = DataFetcher.fetchTeachers();
     predictedCourses = DataFetcher.fetchPredictedCourses();
+
     _loadLocalData(); // See the to-do below
   }
 
@@ -47,26 +51,25 @@ class _HomeScreenState extends State<HomeScreen> {
     Future<UserData> ud = LocalKeyValuePersistence.getUserData();
     Future<List<dynamic>> sc =
         LocalKeyValuePersistence.getListSuggestedCourses();
-//    Future<List<dynamic>> pc =
-//        DataFetcher.fetchDefaultPredictedCourses();
+
     setState(() {
       userData = ud;
       suggestedCourses = sc;
-//      predictedCourses = pc;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future:
-          Future.wait([userData, suggestedCourses, predictedCourses, courses])
-              .then(
+      future: Future.wait(
+              [userData, suggestedCourses, predictedCourses, courses, teachers])
+          .then(
         (response) => new Merged(
             userData: response[0],
             suggestedCourses: response[1],
             predictedCourses: response[2],
-            courses: response[3]),
+            courses: response[3],
+            teachers: response[4]),
       ),
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
@@ -80,7 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
               suggestedCourses: snapshot.data.suggestedCourses,
             ),
             Search(courses: snapshot.data.courses),
-            UserProfile(userData: snapshot.data.userData),
+            UserProfile(
+                userData: snapshot.data.userData,
+                courses: snapshot.data.courses,
+                teachers: snapshot.data.teachers),
             Settings(),
           ];
 
@@ -91,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
           LocalKeyValuePersistence.setListSuggestedCourses(
               snapshot.data.suggestedCourses);
           LocalKeyValuePersistence.setMapCourses(snapshot.data.courses);
+          LocalKeyValuePersistence.setMapTeachers(snapshot.data.teachers);
 
           return DefaultTabController(
             length: pages.length,
@@ -146,10 +153,12 @@ class Merged {
   final List<SuggestedCourseData> suggestedCourses;
   final List<PredictedCourse> predictedCourses;
   final HashMap<String, Course> courses;
+  final HashMap<String, Teacher> teachers;
 
   Merged(
       {this.userData,
       this.suggestedCourses,
       this.predictedCourses,
-      this.courses});
+      this.courses,
+      this.teachers});
 }

@@ -56,8 +56,12 @@ class Router {
           builder: (_) => ChangePassword(),
         );
       case '/edit_profile':
+        Map<String, dynamic> map = args;
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => EditProfile(data: args),
+          builder: (_) => EditProfile(
+              data: map['data'],
+              courses: map['courses'],
+              teachers: map['teachers']),
         );
       case '/update_grades':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(

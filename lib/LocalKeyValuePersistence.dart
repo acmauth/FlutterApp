@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:grade_plus_plus/DataFetcher.dart';
 import 'package:grade_plus_plus/entities/course/PredictedCourse.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc/notifications/notif_state.dart';
@@ -18,6 +19,7 @@ class LocalKeyValuePersistence {
   static final String _suggestedCourses = "suggestedCourses";
   static final String _predictedCourses = "predictedCourses";
   static final String _courses = "courses";
+  static final String _teachers = "teachers";
   static final String _token = "token";
   static final String _refreshToken = "refreshToken";
   static final String _searchHistory = "searchHistory";
@@ -142,6 +144,26 @@ class LocalKeyValuePersistence {
         courses.putIfAbsent(course.id, () => course);
       });
       return courses;
+    }
+  }
+
+  static setMapTeachers(HashMap<String, Teacher> teachers) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> stringTeachers = new List();
+    teachers.forEach((k, v) => stringTeachers.add(jsonEncode(v)));
+    prefs.setStringList(_teachers, stringTeachers);
+  }
+
+  static Future<HashMap<String, Teacher>> getMapTeachers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(_teachers)) {
+      List<String> stringList = prefs.getStringList(_teachers);
+      HashMap<String, Teacher> teachers = new HashMap();
+      stringList.forEach((element) {
+        Teacher teacher = Teacher.fromJson(jsonDecode(element));
+        teachers.putIfAbsent(teacher.id, () => teacher);
+      });
+      return teachers;
     }
   }
 

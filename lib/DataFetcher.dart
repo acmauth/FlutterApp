@@ -14,6 +14,7 @@ import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
+import 'entities/user/Teacher.dart';
 import 'entities/user/UserData.dart';
 
 class DataFetcher {
@@ -219,6 +220,26 @@ class DataFetcher {
     HashMap<String, Course> instanceCourses = new HashMap();
     parsed.forEach((json) =>
         instanceCourses.putIfAbsent(json['_id'], () => Course.fromJson(json)));
+    return instanceCourses;
+  }
+
+  static Future<HashMap<String, Teacher>> fetchTeachers() async {
+    var res = await http.get(
+      _api + "list/teachers/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    if (res.statusCode == 200) {
+      return compute(_parseTeachers, res.body);
+    } else {
+      return LocalKeyValuePersistence.getMapTeachers();
+    }
+  }
+
+  static HashMap<String, Teacher> _parseTeachers(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    HashMap<String, Teacher> instanceCourses = new HashMap();
+    parsed.forEach((json) =>
+        instanceCourses.putIfAbsent(json['_id'], () => Teacher.fromJson(json)));
     return instanceCourses;
   }
 

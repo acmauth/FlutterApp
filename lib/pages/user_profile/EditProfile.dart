@@ -1,5 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
 import '../../Router.dart';
 import '../../entities/user/UserData.dart';
@@ -9,10 +13,12 @@ import '../fragments/SelectionMenu.dart';
 import '../fragments/StyledText.dart';
 
 class EditProfile extends AbstractPage {
-  EditProfile({
-    Key key,
-    @required this.data,
-  }) : super(
+  EditProfile(
+      {Key key,
+      @required this.data,
+      @required this.courses,
+      @required this.teachers})
+      : super(
           key: key,
           appBarTitle: 'Edit Profile',
           appBarColorBg: Colors.blue,
@@ -20,10 +26,12 @@ class EditProfile extends AbstractPage {
         );
 
   final UserData data;
+  final HashMap<String, Course> courses;
+  final HashMap<String, Teacher> teachers;
 
   // TODO: make these sets dynamic
 
-  final courses = {
+  final myCourses = {
     "Linear Algebra",
     "Astronomy",
     "Nuclear Reactions",
@@ -37,7 +45,7 @@ class EditProfile extends AbstractPage {
     "Counting Sheep",
   };
 
-  final teachers = {
+  final myTeachers = {
     "Mr Bean",
     "John Smith",
     "Jon Snow",
@@ -48,7 +56,6 @@ class EditProfile extends AbstractPage {
 
 class _EditProfileState extends PageState<EditProfile> {
   TextEditingController nameController;
-
   Set<String> selectedCourses;
   Set<String> favSubjects;
   Set<String> favTeachers;
@@ -61,9 +68,9 @@ class _EditProfileState extends PageState<EditProfile> {
     favSubjects = widget.data.favSubjects.toSet();
     favTeachers = widget.data.favTeachers.toSet();
 
-    widget.courses.removeAll(selectedCourses);
+    widget.myCourses.removeAll(selectedCourses);
     widget.subjects.removeAll(favSubjects);
-    widget.teachers.removeAll(favTeachers);
+    widget.myTeachers.removeAll(favTeachers);
   }
 
   @override
@@ -87,7 +94,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.bookmark,
       emptyIcon: Icons.bookmark_border,
       selection: selectedCourses,
-      options: widget.courses,
+      options: widget.myCourses,
     );
   }
 
@@ -109,7 +116,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.person,
       emptyIcon: Icons.person_outline,
       selection: favTeachers,
-      options: widget.teachers,
+      options: widget.myTeachers,
     );
   }
 
