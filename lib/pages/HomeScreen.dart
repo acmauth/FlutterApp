@@ -38,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //
 
     courses = DataFetcher.fetchCourses();
+    predictedCourses = DataFetcher.fetchPredictedCourses();
     _loadLocalData(); // See the to-do below
   }
 
@@ -46,12 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
     Future<UserData> ud = LocalKeyValuePersistence.getUserData();
     Future<List<dynamic>> sc =
         LocalKeyValuePersistence.getListSuggestedCourses();
-    Future<List<dynamic>> pc =
-        LocalKeyValuePersistence.getListPredictedCourses();
+//    Future<List<dynamic>> pc =
+//        DataFetcher.fetchDefaultPredictedCourses();
     setState(() {
       userData = ud;
       suggestedCourses = sc;
-      predictedCourses = pc;
+//      predictedCourses = pc;
     });
   }
 
@@ -71,7 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
         List<Widget> children;
         if (snapshot.hasData) {
           pages = <AbstractPage>[
-            GradePredict(gradeData: snapshot.data.predictedCourses),
+            GradePredict(
+                predictedCourses: snapshot.data.predictedCourses,
+                courses: snapshot.data.courses),
             CourseSuggest(
               userData: snapshot.data.userData,
               suggestedCourses: snapshot.data.suggestedCourses,

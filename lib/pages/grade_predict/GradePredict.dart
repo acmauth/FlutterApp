@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:collection';
 
+import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
+
+import '../../LocalKeyValuePersistence.dart';
 import '../../entities/course/CourseDifficulty.dart';
 import '../../entities/course/PredictedCourse.dart';
 import '../AbstractPage.dart';
@@ -9,15 +13,16 @@ import '../fragments/ChartLabel.dart';
 import '../fragments/StyledText.dart';
 
 class GradePredict extends AbstractPage {
-  GradePredict({
-    Key key,
-    @required this.gradeData,
-  }) : super(
+  GradePredict(
+      {Key key, @required this.predictedCourses, @required this.courses})
+      : super(
           key: key,
           appBarTitle: 'Grade Prediction',
           navIcon: Icons.equalizer,
         );
-  final List<PredictedCourse> gradeData;
+
+  final HashMap<String, Course> courses;
+  final List<PredictedCourse> predictedCourses;
 
   _GradePredictState createState() => _GradePredictState();
 }
@@ -28,9 +33,10 @@ class _GradePredictState extends PageState<GradePredict> {
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     if (_shownCourse == null) {
-      _shownCourse = widget.gradeData[0];
+      _shownCourse = widget.predictedCourses[0];
     }
-
+    LocalKeyValuePersistence.setListPredictedCourses(widget.predictedCourses);
+    Course course = widget.courses[_shownCourse.courseID];
     return Column(
       children: <Widget>[
         DropdownButton(
@@ -40,19 +46,21 @@ class _GradePredictState extends PageState<GradePredict> {
               _shownCourse = newValue;
             });
           },
-          items: widget.gradeData.map((course) {
+          items: widget.predictedCourses.map((predictedCourse) {
             return DropdownMenuItem(
-              child: new Text(course.courseName),
-              value: course,
+              child: new Text(widget.courses[predictedCourse.courseID].title),
+              value: predictedCourse,
             );
           }).toList(),
         ),
-        _buildGradePredictionPage(_shownCourse),
+        _buildGradePredictionPage(_shownCourse, course),
       ],
     );
   }
 
-  Widget _buildGradePredictionPage(PredictedCourse course) {
+  Widget _buildGradePredictionPage(
+      PredictedCourse predictedCourse, Course course) {
+    List<int> histogram = course.courseMetrics.histogram;
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -67,12 +75,12 @@ class _GradePredictState extends PageState<GradePredict> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text("${course.courseCode}",
+                  Text("${course.code}",
                       style: TextStyle(fontSize: 25, color: Colors.blue[600])),
                   SizedBox(
                     height: 5.0,
                   ),
-                  Text("${course.courseName}",
+                  Text("${course.title}",
                       style: TextStyle(
                           fontSize: 25,
                           color: Colors.blue[600],
@@ -80,26 +88,26 @@ class _GradePredictState extends PageState<GradePredict> {
                   SizedBox(
                     height: 2.0,
                   ),
-                  Text("${course.courseTeacher}",
+                  Text("${course.teacher}",
                       style: TextStyle(fontSize: 13, color: Colors.blue[600])),
                   SizedBox(
                     height: 20.0,
                   ),
-                  Text("Grade Prediction: ${course.gradePrediction}",
+                  Text("Grade Prediction: ${predictedCourse.gradePrediction}",
                       style: TextStyle(fontSize: 17, color: Colors.blue[600])),
                   SizedBox(
                     height: 5.0,
                   ),
                   StyledText("Difficulty: "),
                   StyledText(
-                    _getDifficultyText(course.difficulty),
-                    color: _getDifficultyColor(course.difficulty),
+                    _getDifficultyText(course.courseMetrics.difficulty),
+                    color: _getDifficultyColor(course.courseMetrics.difficulty),
                   ),
                   SizedBox(
                     height: 20.0,
                   ),
                   Text(
-                      "This grade is above ${course.gradePercentage} of all students!",
+                      "This grade is above ${(predictedCourse.distribution).toStringAsFixed(2)}% of all students!",
                       style: TextStyle(fontSize: 17, color: Colors.blue[600]))
                 ],
               )),
@@ -109,21 +117,22 @@ class _GradePredictState extends PageState<GradePredict> {
             size: 20,
             weight: FontWeight.bold,
           ),
-          StyledText("Based on ${course.enrolledStudents} students so far"),
+          StyledText(
+              "Based on ${course.courseMetrics.enrolled} students so far"),
           BlankPadding(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              ChartBar(height: course.box1),
-              ChartBar(height: course.box2),
-              ChartBar(height: course.box3),
-              ChartBar(height: course.box4),
-              ChartBar(height: course.box5),
-              ChartBar(height: course.box6),
-              ChartBar(height: course.box7),
-              ChartBar(height: course.box8),
-              ChartBar(height: course.box9),
-              ChartBar(height: course.box10),
+              ChartBar(height: 10 * histogram[0].toDouble()),
+              ChartBar(height: 10 * histogram[1].toDouble()),
+              ChartBar(height: 10 * histogram[2].toDouble()),
+              ChartBar(height: 10 * histogram[3].toDouble()),
+              ChartBar(height: 10 * histogram[4].toDouble()),
+              ChartBar(height: 10 * histogram[5].toDouble()),
+              ChartBar(height: 10 * histogram[6].toDouble()),
+              ChartBar(height: 10 * histogram[7].toDouble()),
+              ChartBar(height: 10 * histogram[8].toDouble()),
+              ChartBar(height: 10 * histogram[9].toDouble()),
             ],
           ),
           Row(
@@ -168,6 +177,8 @@ Color _getDifficultyColor(CourseDifficulty difficulty) {
       return Colors.orange;
     case CourseDifficulty.HARD:
       return Colors.red;
+    case CourseDifficulty.VERY_HARD:
+      return Colors.black;
     default:
       return Colors.black;
   }
