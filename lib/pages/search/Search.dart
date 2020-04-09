@@ -21,15 +21,6 @@ class Search extends AbstractPage {
 }
 
 class _SearchState extends PageState<Search> {
-//  final history = Set<String>();
-//  final searchMap = {
-//    "Linear Algebra 2": "ABC-01-01",
-//    "Algebra 1": "BXY-01-01",
-//    "Discrete Maths": "ADS-01-01",
-//    "Advanced Maths": "CXZ-01-01",
-//    "Software Engineering": "AAA-22-22",
-//    "ΕΝΑ": "BBA-01-61",
-//  };
 
   Course _getData(String str, String code) {
     return widget.courses[code];
