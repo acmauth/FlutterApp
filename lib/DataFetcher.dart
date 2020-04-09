@@ -21,6 +21,7 @@ class DataFetcher {
 
   static String token = '';
   static String refresh = '';
+
 //  static HashMap<String, Course> courses = new HashMap();
 //  static Map<String, String> searchMap = new Map();
 
@@ -230,20 +231,18 @@ class DataFetcher {
       _api + "list/courses/",
       headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
     );
-
-    // Use the compute function to run parsePhotos in a separate isolate.
-    return compute(parseCourses, res.body);
+    if (res.statusCode == 200) {
+      return compute(_parseCourses, res.body);
+    } else {
+      return LocalKeyValuePersistence.getMapCourses();
+    }
   }
 
-// A function that converts a response body into a List<Photo>.
-  static HashMap<String, Course> parseCourses(String responseBody) {
+  static HashMap<String, Course> _parseCourses(String responseBody) {
     final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
     HashMap<String, Course> instanceCourses = new HashMap();
     parsed.forEach((json) =>
         instanceCourses.putIfAbsent(json['_id'], () => Course.fromJson(json)));
-
-
-//    courses = instanceCourses;
     return instanceCourses;
   }
 

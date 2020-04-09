@@ -28,7 +28,7 @@ class Course {
     Map<String, dynamic> basicInfo = json['basic_info'];
     int semester = int.parse((basicInfo['code'] as String).split("-")[1]);
     return Course(
-      id: basicInfo['_id'] as String,
+      id: json['_id'] as String,
       code: basicInfo['code'] as String,
       title: basicInfo['name'] as String,
       period: semester,
@@ -44,4 +44,19 @@ class Course {
           : CourseMetrics.fromJson(json['metrics'] as Map<String, dynamic>),
     );
   }
+
+  Map<String, dynamic> toJson() =>
+      <String, dynamic>{
+        '_id': id,
+        'basic_info': <String,dynamic>{
+          'code':code,
+          'name':title,
+          'period': period,
+          'teacher': teacher,
+          'class': courseClass?.toJson()
+        },
+        'extra_data':courseExtra?.toJson(),
+        'metrics':courseMetrics?.toJson()
+      };
+
 }

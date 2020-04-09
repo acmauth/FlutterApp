@@ -86,4 +86,5 @@ const _$CourseDifficultyEnumMap = {
   CourseDifficulty.EASY: 'EASY',
   CourseDifficulty.MEDIUM: 'MEDIUM',
   CourseDifficulty.HARD: 'HARD',
+  CourseDifficulty.VERY_HARD: 'VERY_HARD',
 };

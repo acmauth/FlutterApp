@@ -35,4 +35,18 @@ class CourseExtra {
             ?.map((e) => e as String)
             ?.toList());
   }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'erasmus': erasmus,
+        'goal': goal,
+        'content': content,
+        'assessment': <String, dynamic>{
+          'description': assessDesc,
+          'methods': assessMethods
+        },
+        'prerequisites': <String, dynamic>{
+          'courses': preCourses,
+          'knowledge': preKnowledge,
+        }
+      };
 }

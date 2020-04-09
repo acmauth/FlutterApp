@@ -38,14 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
 //
 
     courses = DataFetcher.fetchCourses();
-
-    // When then data is loaded from disk needs to be determined after we complete communication with server.
-    // This actually needs to be reversed
-
-    _loadLocalData();
+    _loadLocalData(); // See the to-do below
   }
 
   _loadLocalData() {
+    // TODO: We can implement this inside their call in data fetcher as the DataFetcher.fetchCourses is implemented
     Future<UserData> ud = LocalKeyValuePersistence.getUserData();
     Future<List<dynamic>> sc =
         LocalKeyValuePersistence.getListSuggestedCourses();
@@ -55,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
       userData = ud;
       suggestedCourses = sc;
       predictedCourses = pc;
-
     });
   }
 
@@ -74,8 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
-          Map<String, String> searchMap = new Map();
-
           pages = <AbstractPage>[
             GradePredict(gradeData: snapshot.data.predictedCourses),
             CourseSuggest(
@@ -93,6 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               snapshot.data.predictedCourses);
           LocalKeyValuePersistence.setListSuggestedCourses(
               snapshot.data.suggestedCourses);
+          LocalKeyValuePersistence.setMapCourses(snapshot.data.courses);
 
           return DefaultTabController(
             length: pages.length,
