@@ -11,7 +11,7 @@ class Search extends AbstractPage {
   Search({Key key, @required this.courses})
       : super(
           key: key,
-          appBarTitle: "Search",
+    appBarTitle: "Search",
           navIcon: Icons.search,
         );
 
@@ -21,11 +21,6 @@ class Search extends AbstractPage {
 }
 
 class _SearchState extends PageState<Search> {
-
-  Course _getData(String str, String code) {
-    return widget.courses[code];
-  }
-
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     Map<String, String> searchMap = new Map();
@@ -35,7 +30,7 @@ class _SearchState extends PageState<Search> {
       searchSet: searchMap.keys.toSet(),
       onTap: (str) {
         BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str, true));
-        Router.push(context, '/course', args: _getData(str, searchMap[str]));
+        Router.push(context, '/course', args: widget.courses[searchMap[str]]);
       },
     );
   }
