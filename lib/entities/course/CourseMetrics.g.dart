@@ -8,9 +8,8 @@ part of 'CourseMetrics.dart';
 
 CourseMetrics _$CourseMetricsFromJson(Map<String, dynamic> json) {
   return CourseMetrics(
-    distribution: (json['distribution'] as List)
-        ?.map((e) => (e as num)?.toDouble())
-        ?.toList(),
+    difficulty:
+        _$enumDecodeNullable(_$CourseDifficultyEnumMap, json['difficulty']),
     average: (json['average'] as num)?.toDouble(),
     enrolled: json['enrolled'] as int,
     histogram: (json['histogram'] as List)?.map((e) => e as int)?.toList(),
@@ -19,8 +18,46 @@ CourseMetrics _$CourseMetricsFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$CourseMetricsToJson(CourseMetrics instance) =>
     <String, dynamic>{
-      'distribution': instance.distribution,
       'average': instance.average,
       'enrolled': instance.enrolled,
+      'difficulty': _$CourseDifficultyEnumMap[instance.difficulty],
       'histogram': instance.histogram,
     };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$CourseDifficultyEnumMap = {
+  CourseDifficulty.EASY: 'EASY',
+  CourseDifficulty.MEDIUM: 'MEDIUM',
+  CourseDifficulty.HARD: 'HARD',
+};

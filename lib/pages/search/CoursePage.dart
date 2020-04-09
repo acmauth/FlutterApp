@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 
-import '../../entities/course/QaCourseData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
 import '../fragments/StyledText.dart';
@@ -41,7 +40,7 @@ class _CoursePageState extends PageState<CoursePage> {
               StyledText(widget.course.code),
               BlankPadding(),
               _normalText(
-                "${_getSemester(int.parse(widget.course.period))} Semester, Year ${widget.course.courseClass.year}",
+                "${_getSemester(widget.course.period)} Semester, Year ${widget.course.courseClass.year}",
               ),
               _normalText("Teachers: ${widget.course.courseClass.teachers.join(', ')}"),
               Padding(
