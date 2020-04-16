@@ -13,6 +13,7 @@ class FileSelector extends StatefulWidget {
 class FileSelectorState extends State<FileSelector> {
   String _fileName = "No file selected.";
   File _selectedFile;
+
   String get path => _selectedFile.path;
 
   @override
@@ -29,7 +30,7 @@ class FileSelectorState extends State<FileSelector> {
     Scaffold.of(context).hideCurrentSnackBar();
     String path = await FilePicker.getFilePath(
       type: FileType.custom,
-      fileExtension: "pdf",
+      allowedExtensions: ["pdf"],
     );
     if (path == null) {
       return;

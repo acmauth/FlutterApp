@@ -374,7 +374,7 @@ class MiscFormState extends State<MiscForm> {
   }
 
   void loadNext() {
-    DataFetcher.fetchFormData(widget.formData).then((success) {
+    DataFetcher.uploadFormData(widget.formData).then((success) {
       if (success) {
         Router.replaceAll(context, '/home');
       } else {

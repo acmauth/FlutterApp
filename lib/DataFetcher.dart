@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
@@ -9,10 +9,10 @@ import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
+import 'entities/user/FormData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/UserData.dart';
-import 'entities/user/FormData.dart';
 
 class DataFetcher {
   static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
@@ -21,10 +21,10 @@ class DataFetcher {
   static String refresh = '';
 
   static Future<bool> doAuth(
-      String email,
-      String pwd,
-      bool isLogin,
-      ) async {
+    String email,
+    String pwd,
+    bool isLogin,
+  ) async {
     var res = await http.post(
       _api + (isLogin ? "auth/login/" : "auth/signup/"),
       body: {'email': email, 'password': pwd},
@@ -74,26 +74,24 @@ class DataFetcher {
     return new List();
   }
 
-  static fetchFormData(FormData data) async {
+  static uploadFormData(FormData data) async {
     final String serverEndPoint = _api + "user/profile";
 
-    var res =  await http.patch(
-      serverEndPoint,
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-      body: {
-        "name": data.name,
-        "semester" : data.semester,
-        "school": data.school,
-        "reason": data.reason,
-        "study_time": data.studyTime,
-        "lectures": data.lectures,
-        "private": data.privateLessons,
-        "postgraduate": data.postGraduate,
-        "roomates": data.roommate,
-        "distance": data.distance,
-        "hobbies": data.hobbies,
-      }
-    );
+    var res = await http.patch(serverEndPoint, headers: {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    }, body: {
+      "name": data.name,
+      "semester": data.semester,
+      "school": data.school,
+      "reason": data.reason,
+      "study_time": data.studyTime,
+      "lectures": data.lectures,
+      "private": data.privateLessons,
+      "postgraduate": data.postGraduate,
+      "roomates": data.roommate,
+      "distance": data.distance,
+      "hobbies": data.hobbies,
+    });
 
     return FormData.fromJson(jsonDecode(res.body));
   }
@@ -105,11 +103,10 @@ class DataFetcher {
     var res = await http.put(
       serverEndPoint,
       headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-      body:{"file": file},
+      body: {"file": file},
     );
 
     return res.statusCode == 200;
-
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
@@ -254,5 +251,4 @@ class DataFetcher {
       ),
     ];
   }
-
 }
