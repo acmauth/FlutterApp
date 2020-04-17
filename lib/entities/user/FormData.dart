@@ -9,31 +9,29 @@ class FormData {
   FormData({
     this.name,
     this.school,
+    this.semester,
     this.reason,
     this.studyTime,
     this.lectures,
     this.privateLessons,
-    this.postGraduate,
-    this.roommate,
+    this.postgraduate,
+    this.roomates,
     this.distance,
     this.hobbies,
-    this.semester,
-    this.gradesPath,
   });
 
 
   String name;
   String school;
+  int semester;
   String reason;
-  String studyTime;
+  int studyTime;
   String lectures;
   bool privateLessons;
-  String postGraduate;
-  String roommate;
+  String postgraduate;
+  String roomates;
   String distance;
   List<String> hobbies;
-  int semester;
-  String gradesPath;
 
   factory FormData.fromJson(Map<String, dynamic> json) => _$FormDataFromJson(json);
 

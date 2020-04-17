@@ -75,38 +75,26 @@ class DataFetcher {
   }
 
   static uploadFormData(FormData data) async {
-    final String serverEndPoint = _api + "user/profile";
+    var res = await http.patch(_api + "user/profile",
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(data));
 
-    var res = await http.patch(serverEndPoint, headers: {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    }, body: {
-      "name": data.name,
-      "semester": data.semester,
-      "school": data.school,
-      "reason": data.reason,
-      "study_time": data.studyTime,
-      "lectures": data.lectures,
-      "private": data.privateLessons,
-      "postgraduate": data.postGraduate,
-      "roomates": data.roommate,
-      "distance": data.distance,
-      "hobbies": data.hobbies,
-    });
-
-    return FormData.fromJson(jsonDecode(res.body));
+    return res.statusCode == 200;
   }
 
   static uploadGrades(String filePath) async {
-    final String serverEndPoint = _api + "grades/pdf";
-    File file = new File(filePath);
-
-    var res = await http.put(
-      serverEndPoint,
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-      body: {"file": file},
-    );
-
-    return res.statusCode == 200;
+    var uri = Uri.parse(_api + "user/grades/pdf");
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var req = new http.MultipartRequest("PUT", uri);
+    req.headers.addAll(headers);
+    req.files.add(await http.MultipartFile.fromPath('grades', filePath));
+    var res = await req.send();
+    return res.statusCode == 201;
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
