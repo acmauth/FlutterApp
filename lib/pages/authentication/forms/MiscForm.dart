@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../DataFetcher.dart';
 import '../../../Router.dart';
 import '../../../entities/user/FormData.dart';
 import '../../fragments/BlankPadding.dart';
@@ -8,6 +9,7 @@ import '../../fragments/StyledText.dart';
 
 class MiscForm extends StatefulWidget {
   MiscForm({Key key, this.formData}) : super(key: key);
+
   @override
   MiscFormState createState() => new MiscFormState();
 
@@ -40,7 +42,7 @@ class MiscFormState extends State<MiscForm> {
       key: scKey,
       appBar: AppBar(
           centerTitle: true,
-          title: Text("Form 3 of 3"),
+          title: Text("Page 3/3"),
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -128,7 +130,7 @@ class MiscFormState extends State<MiscForm> {
 
   Column getSchoolDistance() {
     return Column(children: <Widget>[
-      Header("How far away is your school?"),
+      Header("How far away is your school:"),
       Column(
         children: <Widget>[
           RadioListTile(
@@ -175,7 +177,7 @@ class MiscFormState extends State<MiscForm> {
   Column getFavSubjects() {
     return Column(
       children: <Widget>[
-        Header("How do you spent your free time? "),
+        Header("How do you spent your free time:"),
         Column(
           children: <Widget>[
             CheckboxListTile(
@@ -205,7 +207,7 @@ class MiscFormState extends State<MiscForm> {
             CheckboxListTile(
               value: movieSelect,
               title: Text(
-                "Movies / Series",
+                "Movies/Series",
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (bool val) => setState(() => movieSelect = val),
@@ -217,7 +219,7 @@ class MiscFormState extends State<MiscForm> {
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (bool val) => setState(() => volSelect = val),
-            ),
+            ), // TODO We need to add other-specify case here.
           ],
         )
       ],
@@ -234,7 +236,16 @@ class MiscFormState extends State<MiscForm> {
       Container(
         width: 60,
         child: DropdownButton<String>(
-          items: <String>["1", "2", "3", "4", "5", "6", "7", "8"]
+          items: <String>[
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"
+          ] // TODO Greater values should also be available, maybe an int field.
               .map((String value) {
             return new DropdownMenuItem<String>(
                 value: value,
@@ -273,32 +284,18 @@ class MiscFormState extends State<MiscForm> {
     return Padding(
       padding: EdgeInsets.only(top: 30, left: 60, right: 60),
       child: Container(
-        color: Colors.blue,
+//        padding: EdgeInsets.all(20),
         child: FlatButton(
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                "SUBMIT",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            onPressed: () {
-              validateInput();
-              if (inputIsOk) {
-                saveData();
-                loadNext();
-              }
-            }),
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
+          onPressed: () => _uploadUserData(),
+          child: const Text('Submit'),
+        ),
       ),
     );
   }
 
-  void loadNext() {
-    Router.replaceAll(context, '/home');
-  }
-
-  void validateInput() {
+  bool validateInput() {
     final form = formKey.currentState;
     if (form.validate()) {
       if (houseGroup < 0)
@@ -308,41 +305,34 @@ class MiscFormState extends State<MiscForm> {
       else if (gradesKey.currentState.path == null)
         showSnackBar('Please select your grades file!');
       else {
-        inputIsOk = true;
         form.save();
+        return true;
       }
     }
+    return false;
   }
 
   void showSnackBar(message) {
     final snackBar = new SnackBar(
       content: new Text(message),
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1000),
     );
     scKey.currentState.showSnackBar(snackBar);
-  }
-
-  void saveData() {
-    getRoommate();
-    getDistance();
-    getHobbies();
-    widget.formData.semester = int.parse(currentSemester);
-    widget.formData.gradesPath = gradesKey.currentState.path;
   }
 
   void getRoommate() {
     switch (houseGroup) {
       case 0:
-        widget.formData.roommate = "I live on my own";
+        widget.formData.roomates = "I live on my own";
         break;
       case 1:
-        widget.formData.roommate = "I live with a friend";
+        widget.formData.roomates = "I live with a friend";
         break;
       case 2:
-        widget.formData.roommate = "I live with my brother";
+        widget.formData.roomates = "I live with my brother";
         break;
       case 3:
-        widget.formData.roommate = "I live with my parents";
+        widget.formData.roomates = "I live with my parents";
         break;
     }
   }
@@ -372,5 +362,62 @@ class MiscFormState extends State<MiscForm> {
     if (volSelect) formHobbies.add("Volunteering");
 
     widget.formData.hobbies = formHobbies;
+  }
+
+  void saveData() {
+    getRoommate();
+    getDistance();
+    getHobbies();
+    widget.formData.semester = int.parse(currentSemester);
+  }
+
+  _uploadUserData() {
+    if (validateInput()) {
+      saveData();
+      scKey.currentState
+          .showSnackBar(_loadingSnackBar("Uploading your info..."));
+      DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
+        scKey.currentState.hideCurrentSnackBar();
+        if (success) {
+          scKey.currentState.showSnackBar(
+            _successSnackBar("Grades uploaded successfully!"),
+          );
+          DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
+            if (innerSuccess) {
+              Router.push(context, '/home');
+            } else {
+              _buildErrorSnack("Something went wrong!");
+            }
+          });
+        } else {
+          scKey.currentState.showSnackBar(
+            _buildErrorSnack("Something went wrong!"),
+          );
+        }
+      });
+    }
+  }
+
+  SnackBar _successSnackBar(message) {
+    return SnackBar(
+      content: new Text(message),
+      duration: Duration(milliseconds: 1000),
+      backgroundColor: Colors.greenAccent,
+    );
+  }
+
+  SnackBar _loadingSnackBar(message) {
+    return SnackBar(
+      content: new Text(message),
+      duration: Duration(seconds: 100),
+      backgroundColor: Colors.blueAccent,
+    );
+  }
+
+  SnackBar _buildErrorSnack(String text) {
+    return SnackBar(
+      content: Text(text),
+      backgroundColor: Colors.redAccent,
+    );
   }
 }

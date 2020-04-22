@@ -12,6 +12,7 @@ import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
+import 'entities/user/FormData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/Teacher.dart';
@@ -88,8 +89,27 @@ class DataFetcher {
     return new List();
   }
 
-  static Future<bool> uploadGrades(String filePath) {
-    return Future.value(true); // TODO send to server
+  static uploadFormData(FormData data) async {
+    var res = await http.patch(_api + "user/profile",
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        },
+        body: jsonEncode(data));
+
+    return res.statusCode == 200;
+  }
+
+  static uploadGrades(String filePath) async {
+    var uri = Uri.parse(_api + "user/grades/pdf");
+    Map<String, String> headers = {
+      HttpHeaders.authorizationHeader: "Bearer $token"
+    };
+    var req = new http.MultipartRequest("PUT", uri);
+    req.headers.addAll(headers);
+    req.files.add(await http.MultipartFile.fromPath('grades', filePath));
+    var res = await req.send();
+    return res.statusCode == 201;
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {

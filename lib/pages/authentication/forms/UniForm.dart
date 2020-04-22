@@ -29,7 +29,7 @@ class UniFormState extends State<UniForm> {
       key: scKey,
       appBar: AppBar(
           centerTitle: true,
-          title: Text("Form 2 of 3"),
+          title: Text("Page 2/3"),
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -106,7 +106,7 @@ class UniFormState extends State<UniForm> {
 
   Column buildAttendanceTiles() {
     return Column(children: <Widget>[
-      Header("I attend"),
+      Header("I attend:"),
       Column(
         children: <Widget>[
           RadioListTile(
@@ -122,7 +122,7 @@ class UniFormState extends State<UniForm> {
             value: 1,
             groupValue: attendGroup,
             title: Text(
-              "More than half the lectures",
+              "More than half of the lectures",
               style: TextStyle(color: Colors.black),
             ),
             onChanged: (val) => setState(() => attendGroup = val),
@@ -140,7 +140,7 @@ class UniFormState extends State<UniForm> {
             value: 3,
             groupValue: attendGroup,
             title: Text(
-              "Less than half the lectures",
+              "Less than half of the lectures",
               style: TextStyle(color: Colors.black),
             ),
             onChanged: (val) => setState(() => attendGroup = val),
@@ -162,7 +162,7 @@ class UniFormState extends State<UniForm> {
   Column buildPrivateLessonTiles() {
     return Column(
       children: <Widget>[
-        Header("Attending private lessons: "),
+        Header("I am attending private lessons: "),
         Column(
           children: <Widget>[
             RadioListTile(
@@ -237,7 +237,7 @@ class UniFormState extends State<UniForm> {
             child: SizedBox(
               width: double.infinity,
               child: Text(
-                "NEXT",
+                "Next",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -285,13 +285,13 @@ class UniFormState extends State<UniForm> {
   void getStudyTime() {
     switch (studyGroup) {
       case 0:
-        widget.formData.studyTime = "0-2 hours";
+        widget.formData.studyTime = 0;
         break;
       case 1:
-        widget.formData.studyTime = "2-5 hours";
+        widget.formData.studyTime = 2;
         break;
       case 2:
-        widget.formData.studyTime = ">5 hours";
+        widget.formData.studyTime = 5;
         break;
     }
   }
@@ -326,13 +326,13 @@ class UniFormState extends State<UniForm> {
   void getPostGraduate() {
     switch (degreeGoal) {
       case 0:
-        widget.formData.postGraduate = "MSc degree";
+        widget.formData.postgraduate = "MSc degree";
         break;
       case 1:
-        widget.formData.postGraduate = "PhD degree";
+        widget.formData.postgraduate = "PhD degree";
         break;
       case 2:
-        widget.formData.postGraduate = "No further education";
+        widget.formData.postgraduate = "No further education";
         break;
     }
   }

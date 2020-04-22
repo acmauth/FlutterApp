@@ -5,6 +5,7 @@ import '../../../entities/user/FormData.dart';
 
 class PersonalForm extends StatefulWidget {
   PersonalForm({Key key}) : super(key: key);
+
   @override
   PersonalFormState createState() => new PersonalFormState();
 }
@@ -14,7 +15,7 @@ class PersonalFormState extends State<PersonalForm> {
 
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
-  final TextEditingController age = new TextEditingController();
+  final TextEditingController username = new TextEditingController();
 
   bool inputIsOk = false;
 
@@ -31,7 +32,7 @@ class PersonalFormState extends State<PersonalForm> {
       key: scKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Form 1 of 3"),
+        title: Text("Page 1/3"),
         backgroundColor: Colors.blue,
       ),
       body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
@@ -39,7 +40,7 @@ class PersonalFormState extends State<PersonalForm> {
           key: formKey,
           child: Column(
             children: <Widget>[
-              buildAgeField(),
+              buildNameField(),
               SizedBox(height: 20),
               buildGenderTiles(),
               SizedBox(height: 20),
@@ -56,7 +57,7 @@ class PersonalFormState extends State<PersonalForm> {
     ));
   }
 
-  Row Header(String title) {
+  Row header(String title) {
     return Row(children: <Widget>[
       Text(
         title,
@@ -65,14 +66,14 @@ class PersonalFormState extends State<PersonalForm> {
     ]);
   }
 
-  Column buildAgeField() {
+  Column buildNameField() {
     return Column(
       children: <Widget>[
-        Header("AGE"),
+        header("Name"),
         TextFormField(
-          controller: age,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(hintText: "Enter your age..."),
+          controller: username,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(hintText: "Enter your name..."),
         )
       ],
     );
@@ -81,7 +82,7 @@ class PersonalFormState extends State<PersonalForm> {
   Column buildGenderTiles() {
     return Column(
       children: <Widget>[
-        Header("Gender"),
+        header("Gender"),
         Column(
           children: <Widget>[
             RadioListTile(
@@ -110,7 +111,7 @@ class PersonalFormState extends State<PersonalForm> {
 
   Column buildSchoolTiles() {
     return Column(children: <Widget>[
-      Header("School Name"),
+      header("School/Department"),
       Column(
         children: <Widget>[
           RadioListTile(
@@ -148,14 +149,14 @@ class PersonalFormState extends State<PersonalForm> {
   Column buildReasonTiles() {
     return Column(
       children: <Widget>[
-        Header("I chosed this school because: "),
+        header("I have chosen this school because:"),
         Column(
           children: <Widget>[
             RadioListTile(
               value: 0,
               groupValue: prefGroup,
               title: Text(
-                "I'm intrested in computer Science",
+                "I'm intrested in Computer Science",
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (val) => setState(() => prefGroup = val),
@@ -202,7 +203,7 @@ class PersonalFormState extends State<PersonalForm> {
             child: SizedBox(
               width: double.infinity,
               child: Text(
-                "NEXT",
+                "Next",
                 style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
@@ -221,14 +222,14 @@ class PersonalFormState extends State<PersonalForm> {
   void validateInput() {
     final form = formKey.currentState;
     if (form.validate()) {
-      if (age.text.isEmpty)
-        showSnackBar("Please enter your age!");
+      if (username.text.isEmpty)
+        showSnackBar("Please enter your name!");
       else if (genderGroup < 0)
-        showSnackBar('Please select your gender');
+        showSnackBar('Please select your gender!');
       else if (schoolGroup < 0)
-        showSnackBar('Please select your school');
+        showSnackBar('Please select your school!');
       else if (prefGroup < 0)
-        showSnackBar('Please select your preference');
+        showSnackBar('Please select your preference!');
       else {
         inputIsOk = true;
         form.save();
@@ -237,6 +238,8 @@ class PersonalFormState extends State<PersonalForm> {
   }
 
   void saveData() {
+    getSchool();
+    formData.name = username.text;
     getReason();
   }
 
@@ -261,10 +264,24 @@ class PersonalFormState extends State<PersonalForm> {
     }
   }
 
+  void getSchool() {
+    switch (schoolGroup) {
+      case 0:
+        formData.school = "ComputerScience";
+        break;
+      case 1:
+        formData.school = "Electrical Engineering";
+        break;
+      case 2:
+        formData.school = "Other";
+        break;
+    }
+  }
+
   void showSnackBar(message) {
     final snackBar = new SnackBar(
       content: new Text(message),
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 2000),
     );
     scKey.currentState.showSnackBar(snackBar);
   }

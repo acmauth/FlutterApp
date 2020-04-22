@@ -13,7 +13,14 @@ class FileSelector extends StatefulWidget {
 class FileSelectorState extends State<FileSelector> {
   String _fileName = "No file selected.";
   File _selectedFile;
-  String get path => _selectedFile.path;
+
+  String get path {
+    if (_selectedFile != null) {
+      return _selectedFile.path;
+    } else {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +35,8 @@ class FileSelectorState extends State<FileSelector> {
   void _selectFile() async {
     Scaffold.of(context).hideCurrentSnackBar();
     String path = await FilePicker.getFilePath(
-      type: FileType.CUSTOM,
-      fileExtension: "pdf",
+      type: FileType.custom,
+      allowedExtensions: ["pdf"], // TODO Do we also accept .html and .htm?
     );
     if (path == null) {
       return;
@@ -46,7 +53,7 @@ class FileSelectorState extends State<FileSelector> {
       color: Theme.of(context).scaffoldBackgroundColor,
       textColor: Theme.of(context).accentColor,
       onPressed: () => _selectFile(),
-      child: Text('Select file'),
+      child: Text('Select file...'),
     );
   }
 }
