@@ -15,12 +15,14 @@ class SearchBar extends StatefulWidget {
     @required this.onTap,
     this.tileIcon = Icons.description,
     this.suggestions,
+    this.historySize = 5,
   }) : super(key: key);
 
   final Set<String> searchSet;
   final dynamic onTap;
   final IconData tileIcon;
   final List<String> suggestions;
+  final int historySize;
 
   @override
   _SearchBarState createState() => _SearchBarState();
@@ -136,7 +138,10 @@ class _SearchBarState extends State<SearchBar> {
   Widget _buildHistory() {
     if (widget.suggestions != null) {
       return Column(
-        children: widget.suggestions.map((str) => getTile(str)).toList(),
+        children: widget.suggestions
+            .sublist(0, widget.historySize)
+            .map((str) => getTile(str))
+            .toList(),
       );
     }
     return FutureBuilder(
@@ -196,29 +201,27 @@ class SearchTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlatButton(
       onPressed: onTap,
-      child: Container(
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: IconLabelPair(
-                icon: isHist ? Icons.history : tileIcon,
-                label: label,
+      child: Row(
+        children: <Widget>[
+          Flexible(
+            child: IconLabelPair(
+              icon: isHist ? Icons.history : tileIcon,
+              label: label,
+              flexi: true,
+            ),
+          ),
+          if (isHist && label != DEFAULT_LABEL)
+            GestureDetector(
+              onTap: () {
+                BlocProvider.of<SearchBloc>(context)
+                    .add(HistoryDeleteEvent(label));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Icon(Icons.close),
               ),
             ),
-            if (isHist && label != DEFAULT_LABEL)
-              GestureDetector(
-                onTap: () {
-                  BlocProvider.of<SearchBloc>(context)
-                      .add(HistoryDeleteEvent(label));
-                },
-                child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Icon(Icons.close),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
