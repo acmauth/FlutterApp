@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
 
-import '../../entities/course/QaCourseData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
 import '../fragments/StyledText.dart';
@@ -8,7 +8,7 @@ import '../fragments/StyledText.dart';
 class CoursePage extends AbstractPage {
   CoursePage({
     Key key,
-    @required this.data,
+    @required this.course,
   }) : super(
           key: key,
           appBarTitle: 'Course Page',
@@ -17,7 +17,7 @@ class CoursePage extends AbstractPage {
           navIcon: Icons.search,
         );
 
-  final QaCourseData data;
+  final Course course;
 
   _CoursePageState createState() => _CoursePageState();
 }
@@ -33,28 +33,28 @@ class _CoursePageState extends PageState<CoursePage> {
             Colors.lightBlue,
             <Widget>[
               StyledText(
-                widget.data.base.title,
+                widget.course.title,
                 size: 25,
                 weight: FontWeight.bold,
               ),
-              StyledText(widget.data.base.code),
+              StyledText(widget.course.code),
               BlankPadding(),
               _normalText(
-                "${_getSemester(widget.data.period)} Semester, Year ${widget.data.year}",
+                "${_getSemester(widget.course.period)} Semester, Year ${widget.course.courseClass.year}",
               ),
-              _normalText("Teachers: ${widget.data.teachers.join(', ')}"),
+              _normalText("Teachers: ${widget.course.courseClass.teachers.join(', ')}"),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: StyledText(
-                  widget.data.goal,
+                  widget.course.courseExtra.goal,
                   size: 20,
                 ),
               ),
               _headerText("Content:"),
-              _buildPadded(widget.data.content),
+              _buildPadded(widget.course.courseExtra.content),
               BlankPadding(),
               _normalText(
-                "This course is${widget.data.erasmus ? "" : " NOT"} available for Erasmus students.",
+                "This course is${widget.course.courseExtra.erasmus ? "" : " NOT"} available for Erasmus students.",
               ),
             ],
           ),
@@ -69,15 +69,15 @@ class _CoursePageState extends PageState<CoursePage> {
               ),
               Divider(height: 20),
               _normalText("Courses:"),
-              _buildPadded(widget.data.preCourses),
+              _buildPadded(widget.course.courseExtra.preCourses),
               BlankPadding(),
               _normalText("Knowledge:"),
-              _buildPadded(widget.data.preKnowledge),
+              _buildPadded(widget.course.courseExtra.preKnowledge),
               BlankPadding(),
-              _normalText(widget.data.assessDesc),
+              _normalText(widget.course.courseExtra.assessDesc),
               BlankPadding(),
               _normalText("Methods of assessment:"),
-              _buildPadded(widget.data.assessMethods),
+              _buildPadded(widget.course.courseExtra.assessMethods),
             ],
           ),
         ],
@@ -90,9 +90,9 @@ class _CoursePageState extends PageState<CoursePage> {
       case 1:
         return "${period}st";
       case 2:
-        return "{$period}nd";
+        return "${period}nd";
       case 3:
-        return "{$period}rd";
+        return "${period}rd";
       default:
         return "${period}th";
     }

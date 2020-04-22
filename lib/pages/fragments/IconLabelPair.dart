@@ -3,28 +3,32 @@ import 'package:flutter/material.dart';
 import 'BlankPadding.dart';
 import 'StyledText.dart';
 
-class IconLabelPair extends Row {
+class IconLabelPair extends Padding {
   IconLabelPair({
     Key key,
     @required String label,
     @required IconData icon,
-    Color color,
+    Color color: Colors.lightBlueAccent,
+    bool flexi: false,
   }) : super(
           key: key,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-              child: Row(
-                children: <Widget>[
-                  Icon(icon),
-                  const BlankPadding(),
-                  StyledText(
-                    label,
-                    color: color == null ? Colors.lightBlueAccent : color,
-                  ),
-                ],
-              ),
-            ),
-          ],
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+          child: Row(
+            children: <Widget>[
+              Icon(icon),
+              const BlankPadding(),
+              flexi
+                  ? Flexible(
+                      child: StyledText(
+                        label,
+                        color: color,
+                      ),
+                    )
+                  : StyledText(
+                      label,
+                      color: color,
+                    ),
+            ],
+          ),
         );
 }

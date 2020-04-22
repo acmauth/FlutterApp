@@ -1,5 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
 import '../../Router.dart';
 import '../../entities/user/UserData.dart';
@@ -12,6 +16,8 @@ class EditProfile extends AbstractPage {
   EditProfile({
     Key key,
     @required this.data,
+    @required this.courses,
+    @required this.teachers,
   }) : super(
           key: key,
           appBarTitle: 'Edit Profile',
@@ -20,35 +26,18 @@ class EditProfile extends AbstractPage {
         );
 
   final UserData data;
+  final HashMap<String, Course> courses;
+  final HashMap<String, Teacher> teachers;
 
-  // TODO: make these sets dynamic
-
-  final courses = {
-    "Linear Algebra",
-    "Astronomy",
-    "Nuclear Reactions",
-    "Counting Sheep",
-  };
-
-  final subjects = {
-    "Linear Algebra",
-    "Astronomy",
-    "Nuclear Reactions",
-    "Counting Sheep",
-  };
-
-  final teachers = {
-    "Mr Bean",
-    "John Smith",
-    "Jon Snow",
-  };
+  final Set<String> courseOptions = {};
+  final Set<String> favSubjectOptions = {};
+  final Set<String> favTeacherOptions = {};
 
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends PageState<EditProfile> {
   TextEditingController nameController;
-
   Set<String> selectedCourses;
   Set<String> favSubjects;
   Set<String> favTeachers;
@@ -61,9 +50,20 @@ class _EditProfileState extends PageState<EditProfile> {
     favSubjects = widget.data.favSubjects.toSet();
     favTeachers = widget.data.favTeachers.toSet();
 
-    widget.courses.removeAll(selectedCourses);
-    widget.subjects.removeAll(favSubjects);
-    widget.teachers.removeAll(favTeachers);
+    widget.courses.values.forEach((course) {
+      var name = course.title;
+      widget.courseOptions.add(name);
+      if (!favSubjects.contains(name)) {
+        widget.favSubjectOptions.add(name);
+      }
+    });
+
+    widget.teachers.values.forEach((teacher) {
+      var name = teacher.name;
+      if (!favTeachers.contains(name)) {
+        widget.favTeacherOptions.add(name);
+      }
+    });
   }
 
   @override
@@ -87,7 +87,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.bookmark,
       emptyIcon: Icons.bookmark_border,
       selection: selectedCourses,
-      options: widget.courses,
+      options: widget.courseOptions,
     );
   }
 
@@ -98,7 +98,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.favorite,
       emptyIcon: Icons.favorite_border,
       selection: favSubjects,
-      options: widget.subjects,
+      options: widget.favSubjectOptions,
     );
   }
 
@@ -109,7 +109,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.person,
       emptyIcon: Icons.person_outline,
       selection: favTeachers,
-      options: widget.teachers,
+      options: widget.favTeacherOptions,
     );
   }
 
@@ -154,6 +154,8 @@ class _EditProfileState extends PageState<EditProfile> {
           return;
         }
         widget.data.name = name;
+
+        // TODO: do something with selected courses
 
         widget.data.favSubjects.clear();
         widget.data.favSubjects.addAll(favSubjects);

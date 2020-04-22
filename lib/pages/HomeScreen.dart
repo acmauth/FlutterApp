@@ -1,4 +1,9 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/DataFetcher.dart';
+import 'package:grade_plus_plus/entities/course/Course.dart';
+import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
 import '../LocalKeyValuePersistence.dart';
 import '../entities/course/PredictedCourse.dart';
@@ -26,48 +31,62 @@ class _HomeScreenState extends State<HomeScreen> {
   static Future<List<SuggestedCourseData>> suggestedCourses;
   static Future<List<PredictedCourse>> predictedCourses;
   static List<AbstractPage> pages;
+  static Future<HashMap<String, Course>> courses;
+  static Future<HashMap<String, Teacher>> teachers;
 
   @override
   void initState() {
     super.initState();
-    // When then data is loaded from disk needs to be determined after we complete communication with server.
-    // This actually needs to be reversed
-    _loadLocalData();
+//
+
+    courses = DataFetcher.fetchCourses();
+    teachers = DataFetcher.fetchTeachers();
+    predictedCourses = DataFetcher.fetchPredictedCourses();
+
+    _loadLocalData(); // See the to-do below
   }
 
   _loadLocalData() {
+    // TODO: We can implement this inside their call in data fetcher as the DataFetcher.fetchCourses is implemented
     Future<UserData> ud = LocalKeyValuePersistence.getUserData();
     Future<List<dynamic>> sc =
         LocalKeyValuePersistence.getListSuggestedCourses();
-    Future<List<dynamic>> pc =
-        LocalKeyValuePersistence.getListPredictedCourses();
+
     setState(() {
       userData = ud;
       suggestedCourses = sc;
-      predictedCourses = pc;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Future.wait([userData, suggestedCourses, predictedCourses]).then(
+      future: Future.wait(
+              [userData, suggestedCourses, predictedCourses, courses, teachers])
+          .then(
         (response) => new Merged(
             userData: response[0],
             suggestedCourses: response[1],
-            predictedCourses: response[2]),
+            predictedCourses: response[2],
+            courses: response[3],
+            teachers: response[4]),
       ),
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
           pages = <AbstractPage>[
-            GradePredict(gradeData: snapshot.data.predictedCourses),
+            GradePredict(
+                predictedCourses: snapshot.data.predictedCourses,
+                courses: snapshot.data.courses),
             CourseSuggest(
               userData: snapshot.data.userData,
               suggestedCourses: snapshot.data.suggestedCourses,
             ),
-            Search(),
-            UserProfile(userData: snapshot.data.userData),
+            Search(courses: snapshot.data.courses),
+            UserProfile(
+                userData: snapshot.data.userData,
+                courses: snapshot.data.courses,
+                teachers: snapshot.data.teachers),
             Settings(),
           ];
 
@@ -77,6 +96,8 @@ class _HomeScreenState extends State<HomeScreen> {
               snapshot.data.predictedCourses);
           LocalKeyValuePersistence.setListSuggestedCourses(
               snapshot.data.suggestedCourses);
+          LocalKeyValuePersistence.setMapCourses(snapshot.data.courses);
+          LocalKeyValuePersistence.setMapTeachers(snapshot.data.teachers);
 
           return DefaultTabController(
             length: pages.length,
@@ -131,6 +152,13 @@ class Merged {
   final UserData userData;
   final List<SuggestedCourseData> suggestedCourses;
   final List<PredictedCourse> predictedCourses;
+  final HashMap<String, Course> courses;
+  final HashMap<String, Teacher> teachers;
 
-  Merged({this.userData, this.suggestedCourses, this.predictedCourses});
+  Merged(
+      {this.userData,
+      this.suggestedCourses,
+      this.predictedCourses,
+      this.courses,
+      this.teachers});
 }

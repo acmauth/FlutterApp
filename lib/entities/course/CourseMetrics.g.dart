@@ -1,29 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'BaseCourseData.dart';
+part of 'CourseMetrics.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-BaseCourseData _$BaseCourseDataFromJson(Map<String, dynamic> json) {
-  return BaseCourseData(
-    title: json['title'] as String,
-    code: json['code'] as String,
-    teacher: json['teacher'] as String,
-    averageGrade: (json['averageGrade'] as num)?.toDouble(),
+CourseMetrics _$CourseMetricsFromJson(Map<String, dynamic> json) {
+  return CourseMetrics(
     difficulty:
         _$enumDecodeNullable(_$CourseDifficultyEnumMap, json['difficulty']),
+    average: (json['average'] as num)?.toDouble(),
+    enrolled: json['enrolled'] as int,
+    histogram: (json['histogram'] as List)?.map((e) => e as int)?.toList(),
   );
 }
 
-Map<String, dynamic> _$BaseCourseDataToJson(BaseCourseData instance) =>
+Map<String, dynamic> _$CourseMetricsToJson(CourseMetrics instance) =>
     <String, dynamic>{
-      'title': instance.title,
-      'code': instance.code,
-      'teacher': instance.teacher,
-      'averageGrade': instance.averageGrade,
+      'average': instance.average,
+      'enrolled': instance.enrolled,
       'difficulty': _$CourseDifficultyEnumMap[instance.difficulty],
+      'histogram': instance.histogram,
     };
 
 T _$enumDecode<T>(
@@ -62,5 +60,5 @@ const _$CourseDifficultyEnumMap = {
   CourseDifficulty.EASY: 'EASY',
   CourseDifficulty.MEDIUM: 'MEDIUM',
   CourseDifficulty.HARD: 'HARD',
-  CourseDifficulty.VERY_HARD: 'VERY_HARD',
+  CourseDifficulty.VERY_HARD: 'VERY HARD',
 };

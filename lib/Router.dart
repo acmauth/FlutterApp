@@ -49,15 +49,19 @@ class Router {
         );
       case '/course':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => CoursePage(data: args),
+          builder: (_) => CoursePage(course: args),
         );
       case '/change_password':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => ChangePassword(),
         );
       case '/edit_profile':
+        Map<String, dynamic> map = args;
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => EditProfile(data: args),
+          builder: (_) => EditProfile(
+              data: map['data'],
+              courses: map['courses'],
+              teachers: map['teachers']),
         );
       case '/update_grades':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(

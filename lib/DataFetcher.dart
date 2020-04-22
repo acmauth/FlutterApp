@@ -1,15 +1,20 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
+import 'entities/course/Course.dart';
 import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
+import 'entities/user/Teacher.dart';
 import 'entities/user/UserData.dart';
 
 class DataFetcher {
@@ -17,6 +22,10 @@ class DataFetcher {
 
   static String token = '';
   static String refresh = '';
+  HashMap<String, Course> course = new HashMap();
+
+//  static HashMap<String, Course> courses = new HashMap();
+//  static Map<String, String> searchMap = new Map();
 
   static Future<bool> doAuth(
     String email,
@@ -52,9 +61,16 @@ class DataFetcher {
     return false;
   }
 
-  static List<PredictedCourse> fetchPredictedCourses() {
-    // To be implemented for data fetching
-    return new List();
+  static Future<List<PredictedCourse>> fetchPredictedCourses() async {
+    var res = await http.get(
+      _api + "course/predict/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    if (res.statusCode == 200) {
+      return compute(_parsePredictedCourses, res.body);
+    } else {
+      return LocalKeyValuePersistence.getListPredictedCourses();
+    }
   }
 
   static UserData fetchUserData() {
@@ -79,41 +95,9 @@ class DataFetcher {
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
     return <PredictedCourse>[
       PredictedCourse(
-          courseCode: "NC0-01-01",
-          courseName: "Introduction to Computer Science",
-          courseTeacher: "Thrasivoulos Tsiatsos",
-          gradePrediction: 10,
-          difficulty: CourseDifficulty.EASY,
-          gradePercentage: 20,
-          enrolledStudents: 150,
-          box1: 20,
-          box2: 20,
-          box3: 20,
-          box4: 20,
-          box5: 50,
-          box6: 20,
-          box7: 20,
-          box8: 20,
-          box9: 20,
-          box10: 20),
+          courseID: '600000307', gradePrediction: 10, distribution: 20),
       PredictedCourse(
-          courseCode: "NC0-01-02",
-          courseName: "Linear Algebra",
-          courseTeacher: "Konstantinos Draziotis",
-          gradePrediction: 10,
-          difficulty: CourseDifficulty.EASY,
-          gradePercentage: 40,
-          enrolledStudents: 150,
-          box1: 20,
-          box2: 20,
-          box3: 20,
-          box4: 20,
-          box5: 50,
-          box6: 20,
-          box7: 20,
-          box8: 20,
-          box9: 20,
-          box10: 20)
+          courseID: '40002963', gradePrediction: 10, distribution: 20)
     ];
   }
 
@@ -217,6 +201,57 @@ class DataFetcher {
         match: 55,
       ),
     ];
+  }
+
+  static Future<HashMap<String, Course>> fetchCourses() async {
+    var res = await http.get(
+      _api + "list/courses/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    if (res.statusCode == 200) {
+      return compute(_parseCourses, res.body);
+    } else {
+      return LocalKeyValuePersistence.getMapCourses();
+    }
+  }
+
+  static HashMap<String, Course> _parseCourses(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    HashMap<String, Course> instanceCourses = new HashMap();
+    parsed.forEach((json) =>
+        instanceCourses.putIfAbsent(json['_id'], () => Course.fromJson(json)));
+    return instanceCourses;
+  }
+
+  static Future<HashMap<String, Teacher>> fetchTeachers() async {
+    var res = await http.get(
+      _api + "list/teachers/",
+      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
+    );
+    if (res.statusCode == 200) {
+      return compute(_parseTeachers, res.body);
+    } else {
+      return LocalKeyValuePersistence.getMapTeachers();
+    }
+  }
+
+  static HashMap<String, Teacher> _parseTeachers(String responseBody) {
+    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+    HashMap<String, Teacher> instanceCourses = new HashMap();
+    parsed.forEach((json) =>
+        instanceCourses.putIfAbsent(json['_id'], () => Teacher.fromJson(json)));
+    return instanceCourses;
+  }
+
+  static List<PredictedCourse> _parsePredictedCourses(String responseBody) {
+    final Map<String, dynamic> parsed = jsonDecode(responseBody);
+    List<PredictedCourse> instancePredictedCourses = new List();
+    for (MapEntry entry in parsed.entries) {
+      Map<String, dynamic> value = entry.value;
+      value.putIfAbsent('id', () => entry.key);
+      instancePredictedCourses.add(PredictedCourse.fromJson(value));
+    }
+    return instancePredictedCourses;
   }
 
   static Future<bool> changePassword(
