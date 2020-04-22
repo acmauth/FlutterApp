@@ -29,6 +29,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+    - assets/warning.png
 
 # Run 'flutter pub run flutter_launcher_icons:main'
 flutter_icons:

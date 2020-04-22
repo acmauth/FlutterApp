@@ -31,13 +31,37 @@ class _CourseSuggestState extends PageState<CourseSuggest> {
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
       children: <Widget>[
-        _buildSchoolInfo(widget.userData.schoolData),
-        _buildSuggestionList(widget.suggestedCourses),
+        buildMessage(),
+       // _buildSchoolInfo(widget.userData.schoolData),
+       // _buildSuggestionList(widget.suggestedCourses),
       ],
     );
   }
 }
 
+Container buildMessage(){
+  return Container(
+    padding: EdgeInsets.only(top: 100),
+    child: Column(
+      children: <Widget>[
+        BlankPadding(),
+        Image.asset(
+          'assets/warning.png',
+          height: 150,
+          width: 150,
+        ),
+        BlankPadding(),
+        StyledText(
+          "Under Construction",
+          size: 18,
+        )
+      ],
+    ),
+  );
+}
+
+
+/*
 Column _buildSchoolInfo(SchoolData data) {
   return Column(
     children: <Widget>[
@@ -159,3 +183,4 @@ Color _getDifficultyColor(CourseDifficulty difficulty) {
       return Colors.black;
   }
 }
+*/
