@@ -13,12 +13,12 @@ import '../fragments/SelectionMenu.dart';
 import '../fragments/StyledText.dart';
 
 class EditProfile extends AbstractPage {
-  EditProfile(
-      {Key key,
-      @required this.data,
-      @required this.courses,
-      @required this.teachers})
-      : super(
+  EditProfile({
+    Key key,
+    @required this.data,
+    @required this.courses,
+    @required this.teachers,
+  }) : super(
           key: key,
           appBarTitle: 'Edit Profile',
           appBarColorBg: Colors.blue,
@@ -29,27 +29,9 @@ class EditProfile extends AbstractPage {
   final HashMap<String, Course> courses;
   final HashMap<String, Teacher> teachers;
 
-  // TODO: make these sets dynamic
-
-  final myCourses = {
-    "Linear Algebra",
-    "Astronomy",
-    "Nuclear Reactions",
-    "Counting Sheep",
-  };
-
-  final subjects = {
-    "Linear Algebra",
-    "Astronomy",
-    "Nuclear Reactions",
-    "Counting Sheep",
-  };
-
-  final myTeachers = {
-    "Mr Bean",
-    "John Smith",
-    "Jon Snow",
-  };
+  final Set<String> courseOptions = {};
+  final Set<String> favSubjectOptions = {};
+  final Set<String> favTeacherOptions = {};
 
   _EditProfileState createState() => _EditProfileState();
 }
@@ -68,9 +50,20 @@ class _EditProfileState extends PageState<EditProfile> {
     favSubjects = widget.data.favSubjects.toSet();
     favTeachers = widget.data.favTeachers.toSet();
 
-    widget.myCourses.removeAll(selectedCourses);
-    widget.subjects.removeAll(favSubjects);
-    widget.myTeachers.removeAll(favTeachers);
+    widget.courses.values.forEach((course) {
+      var name = course.title;
+      widget.courseOptions.add(name);
+      if (!favSubjects.contains(name)) {
+        widget.favSubjectOptions.add(name);
+      }
+    });
+
+    widget.teachers.values.forEach((teacher) {
+      var name = teacher.name;
+      if (!favTeachers.contains(name)) {
+        widget.favTeacherOptions.add(name);
+      }
+    });
   }
 
   @override
@@ -94,7 +87,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.bookmark,
       emptyIcon: Icons.bookmark_border,
       selection: selectedCourses,
-      options: widget.myCourses,
+      options: widget.courseOptions,
     );
   }
 
@@ -105,7 +98,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.favorite,
       emptyIcon: Icons.favorite_border,
       selection: favSubjects,
-      options: widget.subjects,
+      options: widget.favSubjectOptions,
     );
   }
 
@@ -116,7 +109,7 @@ class _EditProfileState extends PageState<EditProfile> {
       fullIcon: Icons.person,
       emptyIcon: Icons.person_outline,
       selection: favTeachers,
-      options: widget.myTeachers,
+      options: widget.favTeacherOptions,
     );
   }
 
@@ -161,6 +154,8 @@ class _EditProfileState extends PageState<EditProfile> {
           return;
         }
         widget.data.name = name;
+
+        // TODO: do something with selected courses
 
         widget.data.favSubjects.clear();
         widget.data.favSubjects.addAll(favSubjects);
