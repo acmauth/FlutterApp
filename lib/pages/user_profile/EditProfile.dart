@@ -39,6 +39,11 @@ class EditProfile extends AbstractPage {
 
 class _EditProfileState extends PageState<EditProfile> {
   TextEditingController nameController;
+  GlobalKey<FormFieldState> nameKey;
+
+  HashMap<String, String> coursesToIds;
+  HashMap<String, String> teachersToIds;
+
   Set<String> selectedCourses;
   Set<String> favSubjects;
   Set<String> favTeachers;
@@ -47,6 +52,11 @@ class _EditProfileState extends PageState<EditProfile> {
   void initState() {
     super.initState();
     nameController = TextEditingController(text: widget.data.name);
+    nameKey = GlobalKey<FormFieldState<dynamic>>();
+
+    coursesToIds = HashMap();
+    teachersToIds = HashMap();
+
     selectedCourses = {};
     favSubjects = widget.data.favSubjects.toSet();
     favTeachers = widget.data.favTeachers.toSet();
@@ -54,6 +64,7 @@ class _EditProfileState extends PageState<EditProfile> {
     widget.courses.values.forEach((course) {
       var name = course.title;
       widget.courseOptions.add(name);
+      coursesToIds[name] = course.id;
       if (!favSubjects.contains(name)) {
         widget.favSubjectOptions.add(name);
       }
@@ -61,6 +72,7 @@ class _EditProfileState extends PageState<EditProfile> {
 
     widget.teachers.values.forEach((teacher) {
       var name = teacher.name;
+      teachersToIds[name] = teacher.id;
       if (!favTeachers.contains(name)) {
         widget.favTeacherOptions.add(name);
       }
@@ -75,7 +87,7 @@ class _EditProfileState extends PageState<EditProfile> {
         _buildSelectFavSubjects(),
         _buildSelectFavTeachers(),
         _buildChangeName(),
-        _buildSaveButton(),
+        _buildSaveButton(scfKey),
         BlankPadding(),
       ],
     );
@@ -131,11 +143,13 @@ class _EditProfileState extends PageState<EditProfile> {
               borderRadius: BorderRadius.circular(10),
               color: Colors.lightBlueAccent.withOpacity(0.1),
             ),
-            child: TextField(
+            child: TextFormField(
+              key: nameKey,
               controller: nameController,
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
+              validator: (v) => v.trim() == "" ? "Please fill your name" : null,
             ),
           ),
         ],
@@ -143,38 +157,89 @@ class _EditProfileState extends PageState<EditProfile> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(GlobalKey<ScaffoldState> scfKey) {
     return MaterialButton(
       child: Text("SAVE"),
       textColor: Colors.white,
       color: Colors.blueAccent,
-      onPressed: () {
-        String name = nameController.value.text;
-        if (name.isEmpty) {
-          // handle error
-          return;
+      onPressed: () async {
+        if (nameKey.currentState.validate()) {
+          String name = nameController.value.text;
+          bool updateName = name != widget.data.name;
+          widget.data.name = name;
+
+          // TODO: do something with selected courses
+
+          widget.data.favSubjects.clear();
+          widget.data.favSubjects.addAll(favSubjects);
+
+          widget.data.favTeachers.clear();
+          widget.data.favTeachers.addAll(favTeachers);
+
+          LocalKeyValuePersistence.setUserData(widget.data);
+
+          var nameSuccess = true;
+          var subjectSuccess = true;
+          var teacherSuccess = true;
+          if (updateName) {
+            nameSuccess = await DataFetcher.updateName(name);
+          }
+
+          subjectSuccess =
+              await DataFetcher.updateSubjects(mapCourses(favSubjects));
+          teacherSuccess =
+              await DataFetcher.updateTeachers(mapTeachers(favTeachers));
+
+          if ((updateName && nameSuccess) || subjectSuccess || teacherSuccess) {
+            // partial success so far.
+            if (nameSuccess && subjectSuccess && teacherSuccess) {
+              // full success
+              showSnack(scfKey, "Success!", Colors.lightGreen, 1);
+            } else {
+              // at least 1 failure
+              var failed = [];
+              if (updateName && !nameSuccess) {
+                failed.add("Name");
+              }
+              if (!subjectSuccess) {
+                failed.add("Favorite Subjects");
+              }
+              if (!teacherSuccess) {
+                failed.add("Favorite Teachers");
+              }
+              showSnack(
+                scfKey,
+                "The following fields failed to save:\n${failed.join(", ")}",
+                Colors.orange,
+                5,
+              );
+            }
+          }
         }
-        widget.data.name = name;
-
-        // TODO: do something with selected courses
-
-        widget.data.favSubjects.clear();
-        widget.data.favSubjects.addAll(favSubjects);
-
-        widget.data.favTeachers.clear();
-        widget.data.favTeachers.addAll(favTeachers);
-
-        LocalKeyValuePersistence.setUserData(widget.data);
-
-        // TODO: what happens with selectedCourses?
-
-        DataFetcher.updateName(name);
-        DataFetcher.updateSubjects(favSubjects);
-        DataFetcher.updateTeachers(favTeachers);
-        // TODO: check if success
-
-        Router.pop(context);
       },
     );
+  }
+
+  Set<String> mapCourses(Set<String> names) {
+    return names.map((n) => coursesToIds[n]).toSet();
+  }
+
+  Set<String> mapTeachers(Set<String> names) {
+    return names.map((n) => teachersToIds[n]).toSet();
+  }
+
+  void showSnack(
+    GlobalKey<ScaffoldState> scfKey,
+    String txt,
+    Color color,
+    int duration,
+  ) {
+    scfKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text(txt),
+        backgroundColor: color,
+      ),
+    );
+    Future.delayed(Duration(seconds: duration), () => Router.pop(context));
   }
 }
