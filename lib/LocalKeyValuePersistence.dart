@@ -216,4 +216,9 @@ class LocalKeyValuePersistence {
       prefs.setStringList(_searchHistory, history);
     }
   }
+
+  static deleteLocalStorage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+  }
 }
