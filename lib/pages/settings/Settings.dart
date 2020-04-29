@@ -146,7 +146,7 @@ class _SettingsState extends PageState<Settings> {
           icon: Icons.exit_to_app,
           color: Colors.red.shade500,
           onTap: () {
-            LocalKeyValuePersistence.deleteTokens();
+            LocalKeyValuePersistence.deleteLocalStorage();
             BlocProvider.of<AuthBloc>(context).add(LogOut());
           },
         ),
