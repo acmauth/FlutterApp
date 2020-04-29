@@ -89,7 +89,11 @@ class DataFetcher {
       _api + "user/profile/",
       headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
     );
-    return UserData.fromJson(jsonDecode(res.body));
+    if (res.statusCode == 200) {
+      return UserData.fromJson(jsonDecode(res.body));
+    } else {
+      return LocalKeyValuePersistence.getUserData();
+    }
   }
 
   static List<SuggestedCourseData> fetchSuggestedCourses() {

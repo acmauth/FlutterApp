@@ -42,18 +42,17 @@ class _HomeScreenState extends State<HomeScreen> {
     courses = DataFetcher.fetchCourses();
     teachers = DataFetcher.fetchTeachers();
     predictedCourses = DataFetcher.fetchPredictedCourses();
+    userData = DataFetcher.fetchUserData();
 
     _loadLocalData(); // See the to-do below
   }
 
   _loadLocalData() {
     // TODO: We can implement this inside their call in data fetcher as the DataFetcher.fetchCourses is implemented
-    Future<UserData> ud = LocalKeyValuePersistence.getUserData();
     Future<List<dynamic>> sc =
         LocalKeyValuePersistence.getListSuggestedCourses();
 
     setState(() {
-      userData = ud;
       suggestedCourses = sc;
     });
   }
