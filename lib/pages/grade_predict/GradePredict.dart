@@ -32,30 +32,84 @@ class _GradePredictState extends PageState<GradePredict> {
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
-    if (_shownCourse == null) {
-      _shownCourse = widget.predictedCourses[0];
+    if (widget.predictedCourses.length > 0) {
+      if (_shownCourse == null) {
+        _shownCourse = widget.predictedCourses[0];
+      }
+      LocalKeyValuePersistence.setListPredictedCourses(widget.predictedCourses);
+      Course course = widget.courses[_shownCourse.courseID];
+      return Column(
+        children: <Widget>[
+          DropdownButton(
+            value: _shownCourse,
+            onChanged: (newValue) {
+              setState(() {
+                _shownCourse = newValue;
+              });
+            },
+            items: widget.predictedCourses.map((predictedCourse) {
+              return DropdownMenuItem(
+                child: new Text(widget.courses[predictedCourse.courseID].title),
+                value: predictedCourse,
+              );
+            }).toList(),
+          ),
+          _buildGradePredictionPage(_shownCourse, course),
+        ],
+      );
+    } else {
+      return Column(children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 5,bottom: 5),
+          child: Column(
+            children: <Widget>[
+              BlankPadding(),
+              Image.asset(
+                'assets/fireworks.png',
+                height: 200,
+                width: 200,
+              ),
+              BlankPadding(),
+              StyledText(
+                "Aren't you amazing?",
+                size: 18,
+                weight: FontWeight.bold,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: StyledText(
+                  "You seem to be an excellent student! You have succeeded in all "
+                  "the courses we provide predictions for.",
+                  size: 14,
+                  align: TextAlign.justify,
+                ),
+              ),
+              BlankPadding(),
+              Image.asset(
+                'assets/clock.png',
+                height: 100,
+                width: 100,
+              ),
+              BlankPadding(),
+              StyledText(
+                "Come back later!",
+                size: 18,
+                weight: FontWeight.bold,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: StyledText(
+                  "We are constantly updating our prediction models and your "
+                  "remaining courses will appear here.",
+                  size: 14,
+                  align: TextAlign.justify,
+                ),
+              )
+            ],
+          ),
+        )
+      ]);
     }
-    LocalKeyValuePersistence.setListPredictedCourses(widget.predictedCourses);
-    Course course = widget.courses[_shownCourse.courseID];
-    return Column(
-      children: <Widget>[
-        DropdownButton(
-          value: _shownCourse,
-          onChanged: (newValue) {
-            setState(() {
-              _shownCourse = newValue;
-            });
-          },
-          items: widget.predictedCourses.map((predictedCourse) {
-            return DropdownMenuItem(
-              child: new Text(widget.courses[predictedCourse.courseID].title),
-              value: predictedCourse,
-            );
-          }).toList(),
-        ),
-        _buildGradePredictionPage(_shownCourse, course),
-      ],
-    );
   }
 
   Widget _buildGradePredictionPage(
