@@ -110,7 +110,6 @@ class _UserProfileState extends PageState<UserProfile> {
   }
 
   Container _buildFavSubjects() {
-    print(widget.userData.favSubjects);
     return ItemContainer(
       title: "Favorite Subjects",
       color: Colors.lightBlue.withOpacity(0.1),

@@ -3,9 +3,6 @@ import 'package:meta/meta.dart';
 
 import 'SchoolData.dart';
 
-//@JsonSerializable(explicitToJson: true)
-//// If you make changes to this calss & there are any errors please check
-//// https://flutter.dev/docs/development/data-and-backend/json#serializing-json-using-code-generation-libraries
 
 class UserData {
   UserData({
