@@ -116,7 +116,7 @@ class DataFetcher {
       var fd = new FormData.fromMap(
         {"grades": await MultipartFile.fromFile(filePath)},
       );
-      await dio.put("/info", data: fd);
+      await dio.put("user/grades/pdf", data: fd);
       return true;
     } on DioError catch (_) {
       return false;
