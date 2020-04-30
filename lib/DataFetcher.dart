@@ -2,8 +2,8 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -269,9 +269,11 @@ class DataFetcher {
   static List<PredictedCourse> _parsePredictedCourses(dynamic data) {
     List<PredictedCourse> instancePredictedCourses = new List();
     for (MapEntry entry in data.entries) {
-      Map<String, dynamic> value = entry.value;
-      value.putIfAbsent('id', () => entry.key);
-      instancePredictedCourses.add(PredictedCourse.fromJson(value));
+      if (entry.key != 'version') {
+        Map<String, dynamic> value = entry.value;
+        value.putIfAbsent('id', () => entry.key);
+        instancePredictedCourses.add(PredictedCourse.fromJson(value));
+      }
     }
     return instancePredictedCourses;
   }
