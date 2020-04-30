@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
@@ -12,64 +12,74 @@ import 'entities/course/CourseDifficulty.dart';
 import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
-import 'entities/user/FormData.dart';
+import 'entities/user/FormData.dart' as UserFD;
 import 'entities/user/SchoolData.dart';
 import 'entities/user/SemesterData.dart';
 import 'entities/user/Teacher.dart';
 import 'entities/user/UserData.dart';
 
 class DataFetcher {
-  static String _api = 'http://snf-872013.vm.okeanos.grnet.gr:3000/';
-
   static String token = '';
   static String refresh = '';
-  HashMap<String, Course> course = new HashMap();
 
-//  static HashMap<String, Course> courses = new HashMap();
-//  static Map<String, String> searchMap = new Map();
+  static Dio dio = new Dio(new BaseOptions(
+    baseUrl: "http://snf-872013.vm.okeanos.grnet.gr:3000/",
+    connectTimeout: 5000,
+    receiveTimeout: 3000,
+  ));
+
+  static void _setTokens(String tokenV, String refreshV) {
+    token = tokenV;
+    refresh = refreshV;
+    dio.options.headers = {HttpHeaders.authorizationHeader: "Bearer $token"};
+  }
 
   static Future<bool> doAuth(
     String email,
     String pwd,
     bool isLogin,
   ) async {
-    var res = await http.post(
-      _api + (isLogin ? "auth/login/" : "auth/signup/"),
-      body: {'email': email, 'password': pwd},
-    );
-    if (res.statusCode != 200 && res.statusCode != 201) {
+    try {
+      var res = await dio.post(
+        isLogin ? "auth/login/" : "auth/signup/",
+        data: {'email': email, 'password': pwd},
+      );
+      if (res.statusCode != 200 && res.statusCode != 201) {
+        return false;
+      }
+      var json = res.data;
+      _setTokens(json["token"], json["refreshToken"]);
+      LocalKeyValuePersistence.setUserToken(token);
+      LocalKeyValuePersistence.setRefreshToken(refresh);
+      return true;
+    } on DioError catch (_) {
       return false;
     }
-    var json = jsonDecode(res.body);
-    token = json["token"];
-    refresh = json["refreshToken"];
-    LocalKeyValuePersistence.setUserToken(token);
-    LocalKeyValuePersistence.setRefreshToken(refresh);
-    return true;
   }
 
   static Future<bool> localAuth(lToken, lRefresh) async {
     token = lToken;
     refresh = lRefresh;
+    _setTokens(lToken, lRefresh);
     if (token != null && refresh != null) {
-      var res = await http.get(_api + "user/profile",
-          headers: {HttpHeaders.authorizationHeader: "Bearer $token"});
-      if (res.statusCode != 200 && res.statusCode != 201) {
+      try {
+        var res = await dio.get("user/profile");
+        if (res.statusCode != 200 && res.statusCode != 201) {
+          return false;
+        }
+        return true;
+      } on DioError catch (_) {
         return false;
       }
-      return true;
     }
     return false;
   }
 
   static Future<List<PredictedCourse>> fetchPredictedCourses() async {
-    var res = await http.get(
-      _api + "course/predict/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-    );
-    if (res.statusCode == 200) {
-      return compute(_parsePredictedCourses, res.body);
-    } else {
+    try {
+      var res = await dio.get("course/predict/");
+      return compute(_parsePredictedCourses, res.data);
+    } on DioError catch (_) {
       return LocalKeyValuePersistence.getListPredictedCourses();
     }
   }
@@ -89,27 +99,28 @@ class DataFetcher {
     return new List();
   }
 
-  static uploadFormData(FormData data) async {
-    var res = await http.patch(_api + "user/profile",
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: "Bearer $token"
-        },
-        body: jsonEncode(data));
-
-    return res.statusCode == 200;
+  static uploadFormData(UserFD.FormData data) async {
+    try {
+      await dio.patch(
+        "user/profile",
+        data: jsonEncode(data),
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
   }
 
   static uploadGrades(String filePath) async {
-    var uri = Uri.parse(_api + "user/grades/pdf");
-    Map<String, String> headers = {
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    };
-    var req = new http.MultipartRequest("PUT", uri);
-    req.headers.addAll(headers);
-    req.files.add(await http.MultipartFile.fromPath('grades', filePath));
-    var res = await req.send();
-    return res.statusCode == 201;
+    try {
+      var fd = new FormData.fromMap(
+        {"grades": await MultipartFile.fromFile(filePath)},
+      );
+      await dio.put("/info", data: fd);
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
@@ -224,49 +235,40 @@ class DataFetcher {
   }
 
   static Future<HashMap<String, Course>> fetchCourses() async {
-    var res = await http.get(
-      _api + "list/courses/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-    );
-    if (res.statusCode == 200) {
-      return compute(_parseCourses, res.body);
-    } else {
+    try {
+      var res = await dio.get("list/courses/");
+      return compute(_parseCourses, res.data);
+    } on DioError catch (_) {
       return LocalKeyValuePersistence.getMapCourses();
     }
   }
 
-  static HashMap<String, Course> _parseCourses(String responseBody) {
-    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  static HashMap<String, Course> _parseCourses(dynamic data) {
     HashMap<String, Course> instanceCourses = new HashMap();
-    parsed.forEach((json) =>
+    data.forEach((json) =>
         instanceCourses.putIfAbsent(json['_id'], () => Course.fromJson(json)));
     return instanceCourses;
   }
 
   static Future<HashMap<String, Teacher>> fetchTeachers() async {
-    var res = await http.get(
-      _api + "list/teachers/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-    );
-    if (res.statusCode == 200) {
-      return compute(_parseTeachers, res.body);
-    } else {
+    try {
+      var res = await dio.get("list/teachers/");
+      return compute(_parseTeachers, res.data);
+    } on DioError catch (_) {
       return LocalKeyValuePersistence.getMapTeachers();
     }
   }
 
-  static HashMap<String, Teacher> _parseTeachers(String responseBody) {
-    final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+  static HashMap<String, Teacher> _parseTeachers(dynamic data) {
     HashMap<String, Teacher> instanceCourses = new HashMap();
-    parsed.forEach((json) =>
+    data.forEach((json) =>
         instanceCourses.putIfAbsent(json['_id'], () => Teacher.fromJson(json)));
     return instanceCourses;
   }
 
-  static List<PredictedCourse> _parsePredictedCourses(String responseBody) {
-    final Map<String, dynamic> parsed = jsonDecode(responseBody);
+  static List<PredictedCourse> _parsePredictedCourses(dynamic data) {
     List<PredictedCourse> instancePredictedCourses = new List();
-    for (MapEntry entry in parsed.entries) {
+    for (MapEntry entry in data.entries) {
       Map<String, dynamic> value = entry.value;
       value.putIfAbsent('id', () => entry.key);
       instancePredictedCourses.add(PredictedCourse.fromJson(value));
@@ -278,12 +280,14 @@ class DataFetcher {
     String prevPassword,
     String newPassword,
   ) async {
-    var res = await http.patch(
-      _api + "user/change_password/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-      body: {'previousPassword': prevPassword, 'newPassword': newPassword},
-    );
-
-    return res.statusCode == 200;
+    try {
+      await dio.patch(
+        "user/change_password/",
+        data: {'previousPassword': prevPassword, 'newPassword': newPassword},
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
   }
 }
