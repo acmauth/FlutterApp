@@ -1,37 +1,57 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:grade_plus_plus/entities/course/PassedCourse.dart';
 import 'package:meta/meta.dart';
 
 import 'SchoolData.dart';
-import 'SemesterData.dart';
-import 'UserCredentials.dart';
 
-part 'UserData.g.dart';
-
-@JsonSerializable(explicitToJson: true)
-// If you make changes to this calss & there are any errors please check
-// https://flutter.dev/docs/development/data-and-backend/json#serializing-json-using-code-generation-libraries
+//@JsonSerializable(explicitToJson: true)
+//// If you make changes to this calss & there are any errors please check
+//// https://flutter.dev/docs/development/data-and-backend/json#serializing-json-using-code-generation-libraries
 
 class UserData {
   UserData({
-    this.userCreds,
     this.name,
-    @required this.estYear,
+    this.semester,
     @required this.schoolData,
     @required this.favSubjects,
     @required this.favTeachers,
-    @required this.semesterDataList,
+    @required this.passedCourses,
   });
 
   String name;
-  UserCredentials userCreds;
-  final int estYear;
+  int semester;
   final SchoolData schoolData;
   final List<String> favSubjects;
   final List<String> favTeachers;
-  final List<SemesterData> semesterDataList;
+  final List<PassedCourse> passedCourses;
 
-  factory UserData.fromJson(Map<String, dynamic> json) =>
-      _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> bio = json['bio'];
 
-  Map<String, dynamic> toJson() => _$UserDataToJson(this);
+    return UserData(
+      name: bio['name'] as String,
+      semester: bio['semester'] as int,
+      schoolData:
+          bio == null ? null : SchoolData.fromJson(bio as Map<String, dynamic>),
+      favSubjects: (json['favorite_subjects'] as List)
+          ?.map((e) => e as String)
+          ?.toList(),
+      favTeachers: (json['favorite_teachers'] as List)
+          ?.map((e) => e as String)
+          ?.toList(),
+      passedCourses: (json['grades'] as List)
+          ?.map((e) => PassedCourse.fromJson(e))
+          ?.toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'bio': <String, dynamic>{
+          'name': name,
+          'semester': semester,
+          'school': schoolData?.toJson()
+        },
+        'favorite_subjects': favSubjects,
+        'favorite_teachers': favTeachers,
+        'grades': passedCourses
+      };
 }

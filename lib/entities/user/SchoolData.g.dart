@@ -8,13 +8,11 @@ part of 'SchoolData.dart';
 
 SchoolData _$SchoolDataFromJson(Map<String, dynamic> json) {
   return SchoolData(
-    department: json['department'] as String,
-    semester: json['semester'] as int,
+    school: json['school'] as String,
   );
 }
 
 Map<String, dynamic> _$SchoolDataToJson(SchoolData instance) =>
     <String, dynamic>{
-      'department': instance.department,
-      'semester': instance.semester,
+      'school': instance.school,
     };

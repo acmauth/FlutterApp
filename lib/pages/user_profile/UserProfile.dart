@@ -5,12 +5,9 @@ import 'package:grade_plus_plus/Router.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
-import '../../entities/course/PassedCourseData.dart';
-import '../../entities/user/SemesterData.dart';
 import '../../entities/user/UserData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
-import '../fragments/ExpandableSection.dart';
 import '../fragments/ItemContainer.dart';
 import '../fragments/StyledText.dart';
 
@@ -63,7 +60,7 @@ class _UserProfileState extends PageState<UserProfile> {
           weight: FontWeight.bold,
         ),
         StyledText(
-          "${widget.userData.schoolData.department} Department",
+          "${widget.userData.schoolData.school} Department",
           size: 12,
         ),
         BlankPadding(),
@@ -75,7 +72,7 @@ class _UserProfileState extends PageState<UserProfile> {
               weight: FontWeight.bold,
             ),
             StyledText(
-              "${widget.userData.schoolData.semester}",
+              "${widget.userData.semester}",
             ),
           ],
         ),
@@ -87,7 +84,7 @@ class _UserProfileState extends PageState<UserProfile> {
               weight: FontWeight.bold,
             ),
             StyledText(
-              "${widget.userData.estYear}",
+              "${"Some time in the future"}", // This is changed since is not supported from the app yet
             ),
           ],
         ),
@@ -113,6 +110,7 @@ class _UserProfileState extends PageState<UserProfile> {
   }
 
   Container _buildFavSubjects() {
+    print(widget.userData.favSubjects);
     return ItemContainer(
       title: "Favorite Subjects",
       color: Colors.lightBlue.withOpacity(0.1),
@@ -148,49 +146,50 @@ class _UserProfileState extends PageState<UserProfile> {
   }
 
   Column _buildGradeList() {
-    return Column(
-      children: widget.userData.semesterDataList
-          .map((SemesterData semester) => Column(
-                children: <Widget>[
-                  ExpandableSection(
-                    title: "Semester #${semester.id}",
-                    barColor: Colors.lightBlue
-                        .withOpacity(semester.id % 2 == 0 ? 0.08 : 0.12),
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    fillContentBg: false,
-                    content: Column(
-                      children: semester.courseDataList
-                          .map((PassedCourseData course) => Container(
-                                margin: EdgeInsets.only(top: 20),
-                                padding: EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.withOpacity(0.05),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    Text(
-                                      course.baseData.title,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(course.baseData.teacher),
-                                    BlankPadding(),
-                                    Text("Grade: ${course.grade}"),
-                                    Text("Year: ${course.year}"),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                  BlankPadding(),
-                ],
-              ))
-          .toList(),
-    );
+    return Column();
+//    return Column(
+//      children: widget.userData.semesterDataList
+//          .map((SemesterData semester) => Column(
+//                children: <Widget>[
+//                  ExpandableSection(
+//                    title: "Semester #${semester.id}",
+//                    barColor: Colors.lightBlue
+//                        .withOpacity(semester.id % 2 == 0 ? 0.08 : 0.12),
+//                    padding: EdgeInsets.symmetric(horizontal: 30),
+//                    fillContentBg: false,
+//                    content: Column(
+//                      children: semester.courseDataList
+//                          .map((PassedCourseData course) => Container(
+//                                margin: EdgeInsets.only(top: 20),
+//                                padding: EdgeInsets.all(20),
+//                                decoration: BoxDecoration(
+//                                  color: Colors.grey.withOpacity(0.05),
+//                                  borderRadius:
+//                                      BorderRadius.all(Radius.circular(5)),
+//                                ),
+//                                child: Column(
+//                                  crossAxisAlignment:
+//                                      CrossAxisAlignment.stretch,
+//                                  children: <Widget>[
+//                                    Text(
+//                                      course.baseData.title,
+//                                      style: TextStyle(
+//                                          fontWeight: FontWeight.bold),
+//                                    ),
+//                                    Text(course.baseData.teacher),
+//                                    BlankPadding(),
+//                                    Text("Grade: ${course.grade}"),
+//                                    Text("Year: ${course.year}"),
+//                                  ],
+//                                ),
+//                              ))
+//                          .toList(),
+//                    ),
+//                  ),
+//                  BlankPadding(),
+//                ],
+//              ))
+//          .toList(),
+//    );
   }
 }
