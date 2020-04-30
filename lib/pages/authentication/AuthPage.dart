@@ -75,17 +75,11 @@ class _AuthPageState extends PageState<AuthPage> {
                   children: <Widget>[
                     _buildContinueButton(),
                     const BlankPadding(),
-                    Center(child: const Text('- OR -')),
+                    /*Center(child: const Text('- OR -')),
                     const BlankPadding(),
-                    _buildSsoButton(),
+                    _buildSsoButton(),*/
                     const BlankPadding(),
                     _buildSwitchPageButton(),
-                    if (widget.isLogIn)
-                      FlatButton(
-                        onPressed: () => BlocProvider.of<AuthBloc>(context)
-                            .add(AuthSuccess()),
-                        child: Text('Skip (dev only)'),
-                      ),
                   ],
                 ),
               ),
