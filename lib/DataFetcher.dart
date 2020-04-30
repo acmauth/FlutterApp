@@ -85,13 +85,10 @@ class DataFetcher {
   }
 
   static Future<UserData> fetchUserData() async {
-    var res = await http.get(
-      _api + "user/profile/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-    );
-    if (res.statusCode == 200) {
-      return UserData.fromJson(jsonDecode(res.body));
-    } else {
+    try {
+      var res = await dio.get("user/profile/");
+      return UserData.fromJson(jsonDecode(res.data));
+    } on DioError catch (_) {
       return LocalKeyValuePersistence.getUserData();
     }
   }
@@ -126,12 +123,15 @@ class DataFetcher {
   }
 
   static Future<bool> updateName(String name) async {
-    var res = await http.patch(
-      _api + "user/profile/",
-      headers: {HttpHeaders.authorizationHeader: "Bearer $token"},
-      body: {"name": name},
-    );
-    return res.statusCode == 200;
+    try {
+      await dio.patch(
+        "user/profile/",
+        data: {"name": name},
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
   }
 
   static Future<bool> updateSubjects(Set<String> subj) async {
@@ -146,15 +146,15 @@ class DataFetcher {
     String name,
     Set<String> collection,
   ) async {
-    var res = await http.patch(
-      _api + "user/favorites/$name/",
-      headers: {
-        HttpHeaders.authorizationHeader: "Bearer $token",
-        HttpHeaders.contentTypeHeader: "application/json",
-      },
-      body: json.encode({"${name}s": collection.toList()}),
-    );
-    return res.statusCode == 204;
+    try {
+      await dio.patch(
+        "user/favorites/$name/",
+        data: json.encode({"${name}s": collection.toList()}),
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
   }
 
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
