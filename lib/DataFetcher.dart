@@ -134,11 +134,11 @@ class DataFetcher {
   }
 
   static Future<bool> updateSubjects(Set<String> subj) async {
-    return _updateFavorite("course", subj);
+    return _updateFavorite("courses", subj);
   }
 
   static Future<bool> updateTeachers(Set<String> teach) async {
-    return _updateFavorite("teacher", teach);
+    return _updateFavorite("teachers", teach);
   }
 
   static Future<bool> _updateFavorite(
@@ -146,10 +146,13 @@ class DataFetcher {
     Set<String> collection,
   ) async {
     try {
-      await dio.patch(
-        "user/favorites/$name/",
-        data: json.encode({"${name}s": collection.toList()}),
+      var res = await dio.post(
+        "user/favorites",
+        data: json.encode({"$name": collection.toList()}),
       );
+      if (res.statusCode != 204) {
+        return false;
+      }
       return true;
     } on DioError catch (_) {
       return false;
