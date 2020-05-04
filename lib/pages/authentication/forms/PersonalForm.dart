@@ -267,7 +267,7 @@ class PersonalFormState extends State<PersonalForm> {
   void getSchool() {
     switch (schoolGroup) {
       case 0:
-        formData.school = "ComputerScience";
+        formData.school = "Computer Science";
         break;
       case 1:
         formData.school = "Electrical Engineering";

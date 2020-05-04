@@ -28,7 +28,7 @@ class UserData {
       name: bio['name'] as String,
       semester: bio['semester'] as int,
       schoolData:
-          bio == null ? null : SchoolData.fromJson(bio as Map<String, dynamic>),
+          bio == null ? null : SchoolData.fromJson(bio),
       favSubjects: (json['favorite_subjects'] as List)
           ?.map((e) => e as String)
           ?.toList(),

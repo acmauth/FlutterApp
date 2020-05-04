@@ -63,12 +63,11 @@ class _UserProfileState extends PageState<UserProfile> {
           "${widget.userData.schoolData.school} Department",
           size: 12,
         ),
-        BlankPadding(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             StyledText(
-              "Current Semester: ",
+              "Semester: ",
               weight: FontWeight.bold,
             ),
             StyledText(
@@ -76,18 +75,7 @@ class _UserProfileState extends PageState<UserProfile> {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            StyledText(
-              'Est. year of graduation: ',
-              weight: FontWeight.bold,
-            ),
-            StyledText(
-              "${"Some time in the future"}", // This is changed since is not supported from the app yet
-            ),
-          ],
-        ),
+        BlankPadding(),
         RaisedButton(
           shape: RoundedRectangleBorder(
             side: BorderSide(
