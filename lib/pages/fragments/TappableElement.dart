@@ -8,6 +8,7 @@ class TappableElement extends FlatButton {
     @required String label,
     @required IconData icon,
     Color color,
+    bool flexi = false,
     @required dynamic onTap,
   }) : super(
           key: key,
@@ -16,6 +17,7 @@ class TappableElement extends FlatButton {
             label: label,
             icon: icon,
             color: color,
+            flexi: flexi,
           ),
         );
 }
