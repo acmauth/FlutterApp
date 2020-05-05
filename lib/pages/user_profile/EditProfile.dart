@@ -83,10 +83,10 @@ class _EditProfileState extends PageState<EditProfile> {
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
       children: <Widget>[
+        _buildChangeName(),
         _buildSelectCourses(),
         _buildSelectFavSubjects(),
         _buildSelectFavTeachers(),
-        _buildChangeName(),
         _buildSaveButton(scfKey),
         BlankPadding(),
       ],
