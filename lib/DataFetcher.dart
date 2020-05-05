@@ -133,26 +133,18 @@ class DataFetcher {
     }
   }
 
-  static Future<bool> updateSubjects(Set<String> subj) async {
-    return _updateFavorite("courses", subj);
-  }
-
-  static Future<bool> updateTeachers(Set<String> teach) async {
-    return _updateFavorite("teachers", teach);
-  }
-
-  static Future<bool> _updateFavorite(
-    String name,
-    Set<String> collection,
+  static Future<bool> updateFavorites(
+    Set<String> courses,
+    Set<String> teachers,
   ) async {
     try {
-      var res = await dio.post(
+      await dio.post(
         "user/favorites",
-        data: json.encode({"$name": collection.toList()}),
+        data: json.encode({
+          "courses": courses.toList(),
+          "teachers": teachers.toList(),
+        }),
       );
-      if (res.statusCode != 204) {
-        return false;
-      }
       return true;
     } on DioError catch (_) {
       return false;

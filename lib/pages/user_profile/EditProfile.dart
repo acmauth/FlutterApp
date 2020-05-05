@@ -179,20 +179,19 @@ class _EditProfileState extends PageState<EditProfile> {
           LocalKeyValuePersistence.setUserData(widget.data);
 
           var nameSuccess = true;
-          var subjectSuccess = true;
-          var teacherSuccess = true;
+          var favSuccess = true;
           if (updateName) {
             nameSuccess = await DataFetcher.updateName(name);
           }
 
-          subjectSuccess =
-              await DataFetcher.updateSubjects(mapCourses(favSubjects));
-          teacherSuccess =
-              await DataFetcher.updateTeachers(mapTeachers(favTeachers));
+          favSuccess = await DataFetcher.updateFavorites(
+            mapCourses(favSubjects),
+            mapTeachers(favTeachers),
+          );
 
-          if ((updateName && nameSuccess) || subjectSuccess || teacherSuccess) {
+          if ((updateName && nameSuccess) || favSuccess) {
             // partial success so far.
-            if (nameSuccess && subjectSuccess && teacherSuccess) {
+            if (nameSuccess && favSuccess) {
               // full success
               showSnack(scfKey, "Success!", Colors.lightGreen, 1);
             } else {
@@ -201,11 +200,8 @@ class _EditProfileState extends PageState<EditProfile> {
               if (updateName && !nameSuccess) {
                 failed.add("Name");
               }
-              if (!subjectSuccess) {
-                failed.add("Favorite Subjects");
-              }
-              if (!teacherSuccess) {
-                failed.add("Favorite Teachers");
+              if (!favSuccess) {
+                failed.add("Favorite Subjects & Teachers");
               }
               showSnack(
                 scfKey,
