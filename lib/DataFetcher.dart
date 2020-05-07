@@ -4,17 +4,16 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:grade_plus_plus/entities/course/PassedCourse.dart';
 
 import 'LocalKeyValuePersistence.dart';
 import 'entities/course/BaseCourseData.dart';
 import 'entities/course/Course.dart';
 import 'entities/course/CourseDifficulty.dart';
-import 'entities/course/PassedCourseData.dart';
 import 'entities/course/PredictedCourse.dart';
 import 'entities/course/SuggestedCourseData.dart';
 import 'entities/user/FormData.dart' as UserFD;
 import 'entities/user/SchoolData.dart';
-import 'entities/user/SemesterData.dart';
 import 'entities/user/Teacher.dart';
 import 'entities/user/UserData.dart';
 
@@ -84,14 +83,13 @@ class DataFetcher {
     }
   }
 
-  static UserData fetchUserData() {
-    // To be implemented for data fetching
-    return new UserData(
-        estYear: null,
-        schoolData: null,
-        favSubjects: null,
-        favTeachers: null,
-        semesterDataList: null);
+  static Future<UserData> fetchUserData() async {
+    try {
+      var res = await dio.get("user/profile/");
+      return UserData.fromJson(res.data);
+    } on DioError catch (_) {
+      return LocalKeyValuePersistence.getUserData();
+    }
   }
 
   static List<SuggestedCourseData> fetchSuggestedCourses() {
@@ -123,6 +121,36 @@ class DataFetcher {
     }
   }
 
+  static Future<bool> updateName(String name) async {
+    try {
+      await dio.patch(
+        "user/profile/",
+        data: {"name": name},
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
+  }
+
+  static Future<bool> updateFavorites(
+    Set<String> courses,
+    Set<String> teachers,
+  ) async {
+    try {
+      await dio.post(
+        "user/favorites",
+        data: json.encode({
+          "courses": courses.toList(),
+          "teachers": teachers.toList(),
+        }),
+      );
+      return true;
+    } on DioError catch (_) {
+      return false;
+    }
+  }
+
   static List<PredictedCourse> fetchDefaultPredictedCourses() {
     return <PredictedCourse>[
       PredictedCourse(
@@ -136,10 +164,8 @@ class DataFetcher {
     return UserData(
       name: 'Test Subject',
       schoolData: SchoolData(
-        department: 'Computer Science',
-        semester: 5,
+        school: 'Computer Science',
       ),
-      estYear: 2021,
       favSubjects: <String>[
         "astronomy",
         "object oriented programming",
@@ -150,49 +176,16 @@ class DataFetcher {
         "mr bean",
         "the janitor",
       ],
-      semesterDataList: <SemesterData>[
-        SemesterData(
-          id: 1,
-          courseDataList: <PassedCourseData>[
-            PassedCourseData(
-              baseData: BaseCourseData(
-                title: 'My course title',
-                code: 'ABC-01-234',
-                teacher: 'John Smith',
-                averageGrade: 9.9,
-                difficulty: CourseDifficulty.EASY,
-              ),
-              grade: 9,
-              year: '2013-2014',
-            ),
-            PassedCourseData(
-              baseData: BaseCourseData(
-                title: 'Some subject',
-                code: 'ABC-91-114',
-                teacher: 'Dr Jeff',
-                averageGrade: 7.5,
-                difficulty: CourseDifficulty.MEDIUM,
-              ),
-              grade: 10,
-              year: '2013-2014',
-            ),
-          ],
+      passedCourses: <PassedCourse>[
+        PassedCourse(
+          courseID: "40002935",
+          grade: 9,
+          year: '2013-2014',
         ),
-        SemesterData(
-          id: 2,
-          courseDataList: <PassedCourseData>[
-            PassedCourseData(
-              baseData: BaseCourseData(
-                title: 'My new course title',
-                code: 'XYZ-01-234',
-                teacher: 'Hello World',
-                averageGrade: 4.5,
-                difficulty: CourseDifficulty.HARD,
-              ),
-              grade: 2,
-              year: '2013-2014',
-            ),
-          ],
+        PassedCourse(
+          courseID: "40002933",
+          grade: 10,
+          year: '2013-2014',
         ),
       ],
     );

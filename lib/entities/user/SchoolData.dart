@@ -4,15 +4,12 @@ import 'package:meta/meta.dart';
 part 'SchoolData.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-
 class SchoolData {
   const SchoolData({
-    @required this.department,
-    @required this.semester,
+    @required this.school,
   });
 
-  final String department;
-  final int semester;
+  final String school;
 
   factory SchoolData.fromJson(Map<String, dynamic> json) =>
       _$SchoolDataFromJson(json);

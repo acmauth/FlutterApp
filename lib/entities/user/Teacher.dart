@@ -1,9 +1,5 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-part 'Teacher.g.dart';
-
-@JsonSerializable(explicitToJson: true)
 class Teacher {
   Teacher({@required this.id, @required this.name, @required this.courses});
 
@@ -11,8 +7,17 @@ class Teacher {
   final String name;
   final List<String> courses;
 
-  factory Teacher.fromJson(Map<String, dynamic> json) =>
-      _$TeacherFromJson(json);
+  factory Teacher.fromJson(Map<String, dynamic> json) {
+    return Teacher(
+      id: json['_id'] as String,
+      name: json['name'] as String,
+      courses: (json['courses'] as List)?.map((e) => e as String)?.toList(),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$TeacherToJson(this);
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'id': id,
+        'name': name,
+        'courses': courses,
+      };
 }

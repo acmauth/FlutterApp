@@ -45,6 +45,7 @@ class _SelectionMenuState extends State<SelectionMenu> {
                     (str) => TappableElement(
                       label: str,
                       icon: widget.fullIcon,
+                      flexi: true,
                       onTap: () {
                         setState(() {
                           widget.options.add(str);
