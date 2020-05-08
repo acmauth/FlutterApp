@@ -31,6 +31,8 @@ class UserProfile extends AbstractPage {
 }
 
 class _UserProfileState extends PageState<UserProfile> {
+  List<Container> _none = [Container(child: Text("None."))];
+
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     return Column(
@@ -98,37 +100,44 @@ class _UserProfileState extends PageState<UserProfile> {
   }
 
   Container _buildFavSubjects() {
+    var subjects = widget.userData.favSubjects.isEmpty
+        ? _none
+        : widget.userData.favSubjects
+            .map((String subj) => Container(
+                  child: StyledText(subj),
+                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                ))
+            .toList();
+
     return ItemContainer(
       title: "Favorite Subjects",
       color: Colors.lightBlue.withOpacity(0.1),
-      items: widget.userData.favSubjects
-          .map((String subj) => Container(
-                child: StyledText(subj),
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-              ))
-          .toList(),
+      items: subjects,
     );
   }
 
   Container _buildFavTeachers() {
+    var teachers = widget.userData.favTeachers.isEmpty
+        ? _none
+        : widget.userData.favTeachers
+            .map((String subj) => Container(
+                  child: StyledText(subj),
+                  padding: EdgeInsets.all(5),
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                ))
+            .toList();
     return ItemContainer(
       title: "Favorite Teachers",
-      items: widget.userData.favTeachers
-          .map((String subj) => Container(
-                child: StyledText(subj),
-                padding: EdgeInsets.all(5),
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-              ))
-          .toList(),
+      items: teachers,
     );
   }
 

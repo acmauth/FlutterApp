@@ -23,7 +23,7 @@ class DataFetcher {
 
   static Dio dio = new Dio(new BaseOptions(
     baseUrl: "http://snf-872013.vm.okeanos.grnet.gr:3000/",
-    connectTimeout: 5000,
+    connectTimeout: 10000,
     receiveTimeout: 3000,
   ));
 
