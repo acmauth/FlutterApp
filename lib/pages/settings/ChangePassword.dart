@@ -3,13 +3,20 @@ import 'package:flutter/material.dart';
 import '../../Router.dart';
 import '../../entities/user/UserCredentials.dart';
 import '../../DataFetcher.dart';
+import '../AbstractPage.dart';
 
-class ChangePassword extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => ChangePasswordState();
+class ChangePassword extends AbstractPage {
+  ChangePassword({Key key})
+      : super(
+    key: key,
+    appBarTitle: 'ChangePassowrd',
+    navIcon: Icons.settings,
+  );
+
+  ChangePasswordState createState() => ChangePasswordState();
 }
 
-class ChangePasswordState extends State<ChangePassword> {
+class ChangePasswordState extends PageState<ChangePassword> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
@@ -27,38 +34,24 @@ class ChangePasswordState extends State<ChangePassword> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-        home: Scaffold(
-      key: scKey,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text("Edit Profile"),
-        backgroundColor: Colors.blue,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Router.pop(context);
-          },
+  Widget body(GlobalKey<ScaffoldState> scfKey) {
+    return Container(
+      padding: EdgeInsets.all(25),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: <Widget>[
+            curPassField(),
+            SizedBox(height: 20),
+            newPassField(),
+            SizedBox(height: 20),
+            verPassField(),
+            SizedBox(height: 20),
+            SaveButton()
+          ],
         ),
       ),
-      body: Form(
-        key: formKey,
-        child: ListView(padding: EdgeInsets.all(30), children: <Widget>[
-          Column(
-            children: <Widget>[
-              curPassField(),
-              SizedBox(height: 20),
-              newPassField(),
-              SizedBox(height: 20),
-              verPassField(),
-              SizedBox(height: 20),
-              SaveButton()
-            ],
-          ),
-        ]),
-      ),
-    ));
+    );
   }
 
   Container curPassField() {
@@ -174,4 +167,7 @@ class ChangePasswordState extends State<ChangePassword> {
   Future<bool> _changePassword(oldPass, newPass) async {
     return DataFetcher.changePassword(oldPass, newPass);
   }
+
+
+
 }
