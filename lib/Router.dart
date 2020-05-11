@@ -82,6 +82,10 @@ class Router {
     Navigator.of(context).pop();
   }
 
+  static void formComplete(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/login'));
+  }
+
   static void replaceAll(BuildContext context, String route, {Object args}) {
     Navigator.of(context).pushNamedAndRemoveUntil(
         route, (Route<dynamic> route) => false,

@@ -384,7 +384,7 @@ class MiscFormState extends State<MiscForm> {
           );
           DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
             if (innerSuccess) {
-              Router.push(context, '/home');
+              Router.formComplete(context);
             } else {
               _buildErrorSnack("Something went wrong!");
             }
