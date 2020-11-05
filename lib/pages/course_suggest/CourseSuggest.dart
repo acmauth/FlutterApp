@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/entities/user/UserData.dart';
 
@@ -17,6 +18,8 @@ class CourseSuggest extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Course Suggestion',
+          appBarColorBg: Colors.lightBlue,
+          appBarColorTxt: Colors.white,
           navIcon: Icons.event_note,
         );
 
@@ -54,6 +57,12 @@ Container buildMessage(){
         StyledText(
           "Under Construction",
           size: 18,
+        ),
+        BlankPadding(),
+        StyledText(
+          "This is a new exciting feature that is coming soon...",
+          align: TextAlign.center,
+          size: 14,
         )
       ],
     ),

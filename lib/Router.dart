@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 import 'pages/LandingPage.dart';
-import 'pages/UnknownPage.dart';
+import 'pages/general/UnknownPage.dart';
 import 'pages/authentication/AuthPage.dart';
 import 'pages/authentication/SsoScreen.dart';
 import 'pages/authentication/forms/MiscForm.dart';
@@ -67,10 +67,24 @@ class Router {
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
           builder: (_) => UploadGrades(),
         );
+      case '/download_data':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => UnknownPage(appBarTitle: "Download Data",
+            message: "Soon you'll be able to automatically download all your data, "
+                "stored by us, in accordance to GDPR legislation.",)
+        );
+      case '/request_deletion':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+            builder: (_) => UnknownPage(appBarTitle: "Request Deletion",
+              message: "Soon you'll be able to automatically request deletion of all your data, "
+                  "stored by us, in accordance to GDPR legislation.",)
+        );
     }
 
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
-      builder: (_) => UnknownPage(),
+      builder: (_) => UnknownPage(appBarTitle: "Unknown",
+        message: "You came here by mistake. If you want to help us solve this "
+            "incident please contact usj at gradepluplus@auth.acm.org",),
     );
   }
 
