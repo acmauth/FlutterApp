@@ -38,23 +38,23 @@ class _CoursePageState extends PageState<CoursePage> {
                 weight: FontWeight.bold,
               ),
               StyledText(widget.course.code),
-              BlankPadding(),
               _normalText(
                 "${_getSemester(widget.course.period)} Semester, Year ${widget.course.courseClass.year}",
               ),
+              BlankPadding(),
               _normalText("Teachers: ${widget.course.courseClass.teachers.join(', ')}"),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: StyledText(
                   widget.course.courseExtra.goal,
-                  size: 20,
+                  size: 14,
                 ),
               ),
               _headerText("Content:"),
               _buildPadded(widget.course.courseExtra.content),
               BlankPadding(),
               _normalText(
-                "This course is${widget.course.courseExtra.erasmus ? "" : " NOT"} available for Erasmus students.",
+                "ERASMUS: ${widget.course.courseExtra.erasmus ? " AVAILABLE" : " NOT AVAILABLE"}",size: 14
               ),
             ],
           ),
@@ -102,8 +102,8 @@ class _CoursePageState extends PageState<CoursePage> {
     return StyledText(str, size: 18);
   }
 
-  StyledText _normalText(String str) {
-    return StyledText(str, size: 16);
+  StyledText _normalText(String str, {double size=14}) {
+    return StyledText(str, size: size, align: TextAlign.left);
   }
 
   Widget _buildPadded(List<String> content) {
@@ -111,7 +111,7 @@ class _CoursePageState extends PageState<CoursePage> {
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: content.map((str) => _normalText("- $str")).toList(),
+        children: content.map((str) => _normalText("- $str",size:14)).toList(),
       ),
     );
   }
