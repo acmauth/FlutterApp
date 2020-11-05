@@ -123,7 +123,7 @@ class _SearchBarState extends State<SearchBar> {
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          hintText: 'Search',
+          hintText: 'Search by course name',
           icon: Icon(Icons.search),
         ),
         controller: controller,
