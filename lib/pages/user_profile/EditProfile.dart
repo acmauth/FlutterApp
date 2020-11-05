@@ -6,7 +6,7 @@ import 'package:grade_plus_plus/LocalKeyValuePersistence.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
-import '../../Router.dart';
+import '../../Router.dart' as nav;
 import '../../entities/user/UserData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
@@ -235,6 +235,6 @@ class _EditProfileState extends PageState<EditProfile> {
         backgroundColor: color,
       ),
     );
-    Future.delayed(Duration(seconds: duration), () => Router.pop(context));
+    Future.delayed(Duration(seconds: duration), () => nav.Router.pop(context));
   }
 }

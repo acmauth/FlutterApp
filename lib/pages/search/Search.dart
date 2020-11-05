@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 
-import '../../Router.dart';
+import '../../Router.dart' as nav;
 import '../../bloc/search/exports.dart';
 import '../AbstractPage.dart';
 import '../fragments/SearchBar.dart';
@@ -11,7 +11,7 @@ class Search extends AbstractPage {
   Search({Key key, @required this.courses})
       : super(
           key: key,
-    appBarTitle: "Search",
+          appBarTitle: "Search",
           navIcon: Icons.search,
         );
 
@@ -30,7 +30,8 @@ class _SearchState extends PageState<Search> {
       searchSet: searchMap.keys.toSet(),
       onTap: (str) {
         BlocProvider.of<SearchBloc>(context).add(CourseTapEvent(str, true));
-        Router.push(context, '/course', args: widget.courses[searchMap[str]]);
+        nav.Router.push(context, '/course',
+            args: widget.courses[searchMap[str]]);
       },
     );
   }

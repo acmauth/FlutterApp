@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../LocalKeyValuePersistence.dart';
-import '../../Router.dart';
+import '../../Router.dart' as nav;
 import '../../bloc/auth/exports.dart';
 import '../../bloc/notifications/exports.dart';
 import '../../bloc/theme/exports.dart';
@@ -54,23 +54,23 @@ class _SettingsState extends PageState<Settings> {
         TappableElement(
           label: 'Change Password',
           icon: Icons.lock,
-          onTap: () => Router.push(context, '/change_password'),
+          onTap: () => nav.Router.push(context, '/change_password'),
         ),
         TappableElement(
           label: 'Update Grades',
           icon: Icons.loop,
-          onTap: () => Router.push(context, '/update_grades'),
+          onTap: () => nav.Router.push(context, '/update_grades'),
         ),
         TappableElement(
           label: 'Download Data',
           icon: Icons.file_download,
-          onTap: () => Router.push(context, '/download_data'),
+          onTap: () => nav.Router.push(context, '/download_data'),
         ),
         TappableElement(
           label: 'Request Deletion',
           icon: Icons.delete,
           color: Colors.red.shade400,
-          onTap: () => Router.push(context, '/request_deletion'),
+          onTap: () => nav.Router.push(context, '/request_deletion'),
         ),
       ],
     );

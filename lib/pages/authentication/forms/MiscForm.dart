@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../DataFetcher.dart';
-import '../../../Router.dart';
+import '../../../Router.dart' as nav;
 import '../../../entities/user/FormData.dart';
 import '../../fragments/BlankPadding.dart';
 import '../../fragments/FileSelector.dart';
@@ -48,7 +48,7 @@ class MiscFormState extends State<MiscForm> {
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Router.pop(context),
+            onPressed: () => nav.Router.pop(context),
           )),
       body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
         Form(
@@ -399,7 +399,7 @@ class MiscFormState extends State<MiscForm> {
             );
             DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
               if (innerSuccess) {
-                Router.formComplete(context);
+                nav.Router.formComplete(context);
               } else {
                 _buildErrorSnack("Something went wrong!");
               }
@@ -414,7 +414,7 @@ class MiscFormState extends State<MiscForm> {
       else if(currentSemester == "1") {
         DataFetcher.uploadFormData(widget.formData).then((success) {
           if (success) {
-            Router.formComplete(context);
+            nav.Router.formComplete(context);
           } else {
             _buildErrorSnack("Something went wrong!");
           }

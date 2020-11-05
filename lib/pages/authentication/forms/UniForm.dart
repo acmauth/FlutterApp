@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../Router.dart';
+import '../../../Router.dart' as nav;
 import '../../../entities/user/FormData.dart';
 
 class UniForm extends StatefulWidget {
@@ -33,7 +33,7 @@ class UniFormState extends State<UniForm> {
           backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
-            onPressed: () => Router.pop(context),
+            onPressed: () => nav.Router.pop(context),
           )),
       body: ListView(padding: EdgeInsets.all(30), children: <Widget>[
         Form(
@@ -272,7 +272,7 @@ class UniFormState extends State<UniForm> {
   }
 
   void loadNext() {
-    Router.push(context, '/form/misc', args: widget.formData);
+    nav.Router.push(context, '/form/misc', args: widget.formData);
   }
 
   void saveData() {
