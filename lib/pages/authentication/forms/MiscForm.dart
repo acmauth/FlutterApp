@@ -20,6 +20,7 @@ class MiscFormState extends State<MiscForm> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final gradesKey = GlobalKey<FileSelectorState>();
+  final TextEditingController otherHobby = new TextEditingController();
 
   bool inputIsOk = false;
 
@@ -28,6 +29,7 @@ class MiscFormState extends State<MiscForm> {
   static bool langSelect = false;
   static bool movieSelect = false;
   static bool volSelect = false;
+  static bool otherSelect = false;
   String currentSemester = "1";
 
   int houseGroup = -1;
@@ -61,7 +63,7 @@ class MiscFormState extends State<MiscForm> {
               BlankPadding(),
               getSemester(),
               BlankPadding(),
-              getGrades(),
+              currentSemester != "1" ?  getGrades() : BlankPadding(),
               BlankPadding(),
               nextButton(),
             ],
@@ -219,7 +221,27 @@ class MiscFormState extends State<MiscForm> {
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (bool val) => setState(() => volSelect = val),
-            ), // TODO We need to add other-specify case here.
+            ),
+            CheckboxListTile(
+              value: otherSelect,
+              title: Text(
+                "Other",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (bool val) => setState(() => otherSelect = val),
+            ),
+
+            otherSelect ?
+                Padding(
+                    padding: EdgeInsets.only(left: 15, right: 20),
+                    child: TextFormField(
+                      controller: otherHobby,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(hintText: "Please specify"),
+                    )
+                ):
+
+            Text("")
           ],
         )
       ],
@@ -244,13 +266,14 @@ class MiscFormState extends State<MiscForm> {
             "5",
             "6",
             "7",
-            "8"
+            "8",
+            "9+"
           ] // TODO Greater values should also be available, maybe an int field.
               .map((String value) {
             return new DropdownMenuItem<String>(
                 value: value,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
+                  padding: EdgeInsets.only(left: 10),
                   child: Text(value),
                 ));
           }).toList(),
@@ -360,6 +383,7 @@ class MiscFormState extends State<MiscForm> {
     if (langSelect) formHobbies.add("Foreign Language");
     if (movieSelect) formHobbies.add("Movies / Series");
     if (volSelect) formHobbies.add("Volunteering");
+    if (otherSelect) formHobbies.add(otherHobby.text);
 
     widget.formData.hobbies = formHobbies;
   }

@@ -261,7 +261,7 @@ class UniFormState extends State<UniForm> {
       else if (attendGroup < 0)
         showSnackBar('Please enter hours of attendance!');
       else if (privateGroup < 0)
-        showSnackBar('Please etner Private Lessons!');
+        showSnackBar('Please enter Private Lessons!');
       else if (degreeGoal < 0)
         showSnackBar('Please enter your degree goal!');
       else {

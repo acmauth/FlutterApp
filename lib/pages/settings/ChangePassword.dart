@@ -11,6 +11,8 @@ class ChangePassword extends AbstractPage {
     key: key,
     appBarTitle: 'ChangePassowrd',
     navIcon: Icons.settings,
+    appBarColorBg: Colors.lightBlue,
+    appBarColorTxt: Colors.white,
   );
 
   ChangePasswordState createState() => ChangePasswordState();
