@@ -12,8 +12,6 @@ class CoursePage extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Course Page',
-          appBarColorBg: Colors.blue,
-          appBarColorTxt: Colors.white,
           navIcon: Icons.search,
         );
 

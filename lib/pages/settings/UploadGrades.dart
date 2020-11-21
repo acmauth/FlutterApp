@@ -10,8 +10,6 @@ class UploadGrades extends AbstractPage {
       : super(
           key: key,
           appBarTitle: 'Upload Grades',
-          appBarColorBg: Colors.lightBlue,
-          appBarColorTxt: Colors.white,
         );
 
   _UploadGradesState createState() => _UploadGradesState();

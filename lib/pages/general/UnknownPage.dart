@@ -11,8 +11,6 @@ class UnknownPage extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: appBarTitle,
-          appBarColorBg: Colors.lightBlue,
-          appBarColorTxt: Colors.white,
         );
 
   final String message;

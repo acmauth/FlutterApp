@@ -2,12 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/entities/user/UserData.dart';
 
-import '../../entities/course/CourseDifficulty.dart';
 import '../../entities/course/SuggestedCourseData.dart';
-import '../../entities/user/SchoolData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
-import '../fragments/ExpandableSection.dart';
 import '../fragments/StyledText.dart';
 
 class CourseSuggest extends AbstractPage {
@@ -18,8 +15,6 @@ class CourseSuggest extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Course Suggestion',
-          appBarColorBg: Colors.lightBlue,
-          appBarColorTxt: Colors.white,
           navIcon: Icons.event_note,
         );
 
