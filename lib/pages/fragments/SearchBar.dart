@@ -108,7 +108,7 @@ class _SearchBarState extends State<SearchBar> {
         .replaceAll(new RegExp("Έ|Ε|έ"), 'ε')
         .replaceAll(new RegExp("Ή|Η|ή"), 'η')
         .replaceAll(new RegExp("Ί|Ϊ|Ι|ί|ΐ|ϊ"), 'ι')
-        .replaceAll(new RegExp("Ό|Ο|ό/"), 'ο')
+        .replaceAll(new RegExp("Ό|Ο|ό"), 'ο')
         .replaceAll(new RegExp("Ύ|Ϋ|Υ|ύ|ΰ|ϋ"), 'υ')
         .replaceAll(new RegExp("Ώ|Ω|ώ"), 'ω')
         .replaceAll(new RegExp("Σ|ς"), 'σ');
