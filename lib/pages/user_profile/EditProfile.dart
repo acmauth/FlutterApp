@@ -22,8 +22,6 @@ class EditProfile extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Edit Profile',
-          appBarColorBg: Colors.blue,
-          appBarColorTxt: Colors.white,
         );
 
   final UserData data;

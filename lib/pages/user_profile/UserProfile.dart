@@ -79,13 +79,8 @@ class _UserProfileState extends PageState<UserProfile> {
         ),
         BlankPadding(),
         RaisedButton(
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: Colors.blue.withOpacity(0.5),
-            ),
-          ),
-          color: Theme.of(context).cardColor,
-          textColor: Colors.blue,
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
           child: Text('Edit Profile'),
           onPressed: () {
             Router.push(context, '/edit_profile', args: {
