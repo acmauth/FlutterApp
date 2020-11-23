@@ -47,10 +47,10 @@ class _AuthPageState extends PageState<AuthPage> {
   final FocusNode _pwdNode = FocusNode();
   final FocusNode _pwdConfirmNode = FocusNode();
 
-  final SnackBar error = SnackBar(
-    content: const Text('Invalid Credentials!'),
-    backgroundColor: Colors.redAccent,
-  );
+  SnackBar error(String str) => SnackBar(
+        content: Text(str),
+        backgroundColor: Colors.redAccent,
+      );
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
@@ -123,7 +123,11 @@ class _AuthPageState extends PageState<AuthPage> {
           }
         } else {
           _scfKey.currentState.hideCurrentSnackBar();
-          _scfKey.currentState.showSnackBar(error);
+          _scfKey.currentState.showSnackBar(
+            error(widget.isLogIn
+                ? 'Invalid Credentials!'
+                : 'Email already exists!'),
+          );
         }
       });
     }
