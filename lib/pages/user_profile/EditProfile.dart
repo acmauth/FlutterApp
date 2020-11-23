@@ -133,6 +133,7 @@ class _EditProfileState extends PageState<EditProfile> {
           StyledText(
             "Change your name:",
             size: 18,
+            color:Theme.of(context).textTheme.body1.color,
           ),
           BlankPadding(),
           Container(

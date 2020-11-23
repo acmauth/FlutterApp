@@ -31,7 +31,7 @@ class _SelectionMenuState extends State<SelectionMenu> {
   Widget build(BuildContext context) {
     return ExpandableSection(
       title: widget.sectionTitle,
-      barColor: Colors.lightBlueAccent.withOpacity(0.1),
+      barColor: Theme.of(context).appBarTheme.color.withOpacity(0.1),
       extras: Icon(widget.sectionIcon),
       fillContentBg: false,
       padding: null,

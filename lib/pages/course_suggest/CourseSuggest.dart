@@ -35,34 +35,38 @@ class _CourseSuggestState extends PageState<CourseSuggest> {
       ],
     );
   }
+
+  Container buildMessage(){
+    return Container(
+      padding: EdgeInsets.only(top: 100),
+      child: Column(
+        children: <Widget>[
+          BlankPadding(),
+          Image.asset(
+            'assets/warning.png',
+            height: 150,
+            width: 150,
+          ),
+          BlankPadding(),
+          StyledText(
+            "Under Construction",
+            size: 18,
+            color: Theme.of(context).textTheme.title.color
+          ),
+          BlankPadding(),
+          StyledText(
+              "This is a new exciting feature that is coming soon...",
+              align: TextAlign.center,
+              size: 14,
+              color: Theme.of(context).textTheme.body1.color
+          )
+        ],
+      ),
+    );
+  }
 }
 
-Container buildMessage(){
-  return Container(
-    padding: EdgeInsets.only(top: 100),
-    child: Column(
-      children: <Widget>[
-        BlankPadding(),
-        Image.asset(
-          'assets/warning.png',
-          height: 150,
-          width: 150,
-        ),
-        BlankPadding(),
-        StyledText(
-          "Under Construction",
-          size: 18,
-        ),
-        BlankPadding(),
-        StyledText(
-          "This is a new exciting feature that is coming soon...",
-          align: TextAlign.center,
-          size: 14,
-        )
-      ],
-    ),
-  );
-}
+
 
 
 /*

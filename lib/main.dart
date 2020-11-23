@@ -72,9 +72,22 @@ class _MyAppState extends State<MyApp> {
       ),
     ),
     backgroundColor: Colors.white,
+    cardColor: Colors.lightBlue[50],
     bottomAppBarColor: Colors.lightBlue.shade600,
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
+    textTheme: TextTheme(
+      title: TextStyle(
+        color: Colors.blue.shade600
+      ),
+      subtitle: TextStyle(
+        color: Colors.blue.shade600
+      ),
+      body1: TextStyle(
+       color: Colors.blue.shade600
+      )
+
+    )
   );
   final ThemeData darkTheme = ThemeData(
     accentColor: Colors.lightBlue,

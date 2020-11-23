@@ -28,14 +28,15 @@ class _CoursePageState extends PageState<CoursePage> {
       child: Column(
         children: <Widget>[
           _buildBox(
-            Colors.lightBlue,
+            Theme.of(context).cardColor,
             <Widget>[
               StyledText(
                 widget.course.title,
                 size: 25,
                 weight: FontWeight.bold,
+                color: Theme.of(context).textTheme.title.color,
               ),
-              StyledText(widget.course.code),
+              StyledText(widget.course.code,color: Theme.of(context).textTheme.subtitle.color),
               _normalText(
                 "${_getSemester(widget.course.period)} Semester, Year ${widget.course.courseClass.year}",
               ),
@@ -46,6 +47,7 @@ class _CoursePageState extends PageState<CoursePage> {
                 child: StyledText(
                   widget.course.courseExtra.goal,
                   size: 14,
+                  color:Theme.of(context).textTheme.body1.color,
                 ),
               ),
               _headerText("Content:"),
@@ -58,12 +60,13 @@ class _CoursePageState extends PageState<CoursePage> {
           ),
           BlankPadding(),
           _buildBox(
-            Colors.grey,
+            Theme.of(context).cardColor,
             <Widget>[
               StyledText(
                 "Prerequisites and Assessment",
                 size: 20,
                 weight: FontWeight.bold,
+                color: Theme.of(context).textTheme.title.color,
               ),
               Divider(height: 20),
               _normalText("Courses:"),
@@ -97,11 +100,11 @@ class _CoursePageState extends PageState<CoursePage> {
   }
 
   StyledText _headerText(String str) {
-    return StyledText(str, size: 18);
+    return StyledText(str, size: 18, color: Theme.of(context).textTheme.title.color);
   }
 
   StyledText _normalText(String str, {double size=14}) {
-    return StyledText(str, size: size, align: TextAlign.left);
+    return StyledText(str, size: size, align: TextAlign.left, color: Theme.of(context).textTheme.body1.color,);
   }
 
   Widget _buildPadded(List<String> content) {
@@ -119,7 +122,7 @@ class _CoursePageState extends PageState<CoursePage> {
       padding: EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color,
         borderRadius: BorderRadius.circular(10),
         border: null,
       ),

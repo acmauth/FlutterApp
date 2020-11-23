@@ -48,6 +48,8 @@ class _SettingsState extends PageState<Settings> {
         SectionHeader(
           title: 'Profile Information',
           extras: Icon(Icons.person_outline),
+          barColor: Theme.of(context).appBarTheme.color.withOpacity(0.20),
+          textColor: Theme.of(context).textTheme.body1.color,
         ),
         TappableElement(
           label: 'Change Password',
@@ -83,6 +85,8 @@ class _SettingsState extends PageState<Settings> {
         SectionHeader(
           title: 'App Options',
           extras: Icon(Icons.build),
+          barColor: Theme.of(context).appBarTheme.color.withOpacity(0.20),
+          textColor: Theme.of(context).textTheme.body1.color,
         ),
         BlocBuilder<ThemeBloc, ThemeState>(
           bloc: themeBloc,

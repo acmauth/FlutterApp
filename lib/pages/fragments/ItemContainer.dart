@@ -6,12 +6,13 @@ import 'StyledText.dart';
 class ItemContainer extends Container {
   ItemContainer({
     Key key,
-    Color color,
+    Color bgColor,
+    Color textColor,
     @required String title,
     @required List<Container> items,
   }) : super(
           key: key,
-          color: color,
+          color: bgColor,
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -20,6 +21,7 @@ class ItemContainer extends Container {
                 title.toUpperCase(),
                 weight: FontWeight.bold,
                 size: 16,
+                color: textColor,
               ),
               BlankPadding(),
               Wrap(children: items),
