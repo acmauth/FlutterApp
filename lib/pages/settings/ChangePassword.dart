@@ -1,161 +1,142 @@
 import 'package:flutter/material.dart';
+import 'package:grade_plus_plus/pages/AbstractPage.dart';
+import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
+import 'package:grade_plus_plus/pages/fragments/PasswordField.dart';
 
+import '../../DataFetcher.dart';
 import '../../Router.dart';
 import '../../entities/user/UserCredentials.dart';
-import '../../DataFetcher.dart';
 import '../AbstractPage.dart';
 
 class ChangePassword extends AbstractPage {
   ChangePassword({Key key})
       : super(
-    key: key,
-    appBarTitle: 'ChangePassowrd',
-    navIcon: Icons.settings,
-    appBarColorBg: Colors.lightBlue,
-    appBarColorTxt: Colors.white,
-  );
+          key: key,
+          appBarTitle: 'Change Password',
+          appBarColorBg: Colors.blue,
+          appBarColorTxt: Colors.white,
+        );
 
-  ChangePasswordState createState() => ChangePasswordState();
+  _ChangePasswordState createState() => _ChangePasswordState();
 }
 
-class ChangePasswordState extends PageState<ChangePassword> {
-  final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
+class _ChangePasswordState extends PageState<ChangePassword> {
+  GlobalKey<ScaffoldState> _scfKey;
   static GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
-  final TextEditingController newPass = new TextEditingController();
-  final TextEditingController oldPass = new TextEditingController();
+  final GlobalKey<FormFieldState<dynamic>> curPassKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> newPassKey =
+      GlobalKey<FormFieldState<dynamic>>();
+  final GlobalKey<FormFieldState<dynamic>> verPassKey =
+      GlobalKey<FormFieldState<dynamic>>();
 
+  static String _currPass, _newPass, _verPass;
+
+  final FocusNode currPassNode = FocusNode();
   final FocusNode newPassNode = FocusNode();
   final FocusNode verPassNode = FocusNode();
 
   //For Testing
 
   UserCredentials userCred = new UserCredentials();
-  ChangePasswordState() {
+
+  _ChangePasswordState() {
     userCred.password = "qwerty";
   }
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
+    _scfKey = scfKey;
     return Container(
-      padding: EdgeInsets.all(25),
+      padding: const EdgeInsets.all(30),
       child: Form(
         key: formKey,
         child: Column(
           children: <Widget>[
-            curPassField(),
+            _buildPasswordFields(),
             SizedBox(height: 20),
-            newPassField(),
-            SizedBox(height: 20),
-            verPassField(),
-            SizedBox(height: 20),
-            SaveButton()
+            _saveButton()
           ],
         ),
       ),
     );
   }
 
-  Container curPassField() {
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      child: TextFormField(
-        controller: oldPass,
-        textInputAction: TextInputAction.next,
-        obscureText: true,
-        autofocus: true,
-        onFieldSubmitted: (_) {
-          newPassNode.requestFocus();
-        },
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          hintText: "Current password",
-          //border: InputBorder.none
+  Widget _buildPasswordFields() {
+    return Column(
+      children: <Widget>[
+        PasswordField(
+          key: curPassKey,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: () => newPassNode.requestFocus(),
+          hintText: "Current Password",
+          focusNode: currPassNode,
+          validator: _doCheckPassword,
+          onSaved: (String value) => _currPass = value,
         ),
-      ),
-    );
-  }
-
-  Container newPassField() {
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      child: TextFormField(
-        controller: newPass,
-        focusNode: newPassNode,
-        textInputAction: TextInputAction.next,
-        validator: checkPass,
-        obscureText: true,
-        onFieldSubmitted: (val) {
-          verPassNode.requestFocus();
-        },
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          hintText: "New password",
-          //border: InputBorder.none
+        BlankPadding(),
+        PasswordField(
+          key: newPassKey,
+          textInputAction: TextInputAction.next,
+          onSaved: (String value) => _newPass = value,
+          onFieldSubmitted: () => verPassNode.requestFocus(),
+          hintText: "New Password",
+          focusNode: newPassNode,
+          validator: _doCheckPassword,
         ),
-      ),
-    );
-  }
-
-  Container verPassField() {
-    return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
-      child: TextFormField(
-        focusNode: verPassNode,
-        textInputAction: TextInputAction.done,
-        obscureText: true,
-        validator: checkMatch,
-        decoration: new InputDecoration(
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          hintText: "New password, again",
-          //border: InputBorder.none
+        BlankPadding(),
+        PasswordField(
+          key: verPassKey,
+          textInputAction: TextInputAction.done,
+          onFieldSubmitted: _doValidate,
+          hintText: "Confirm New Password",
+          focusNode: verPassNode,
+          validator: (String value) => _verPass != _newPass
+              ? "The passwords you entered don't match!"
+              : null,
+          onSaved: (String value) => _verPass = value,
         ),
-      ),
+      ],
     );
   }
 
-  Padding SaveButton() {
-    return Padding(
-      padding: EdgeInsets.only(top: 30, left: 60, right: 60),
-      child: Container(
-        color: Colors.blue,
-        child: FlatButton(
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                "SAVE CHANGES",
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            onPressed: () {
-              if (formKey.currentState.validate()) {
-                formKey.currentState.save();
-                _changePassword(oldPass.text, newPass.text).then((succ) {
-                  if (succ) {
-                    showSnackBar("Password successfully changed!");
-                    Future.delayed(Duration(seconds: 2), () {
-                      Router.pop(context);
-                    });
-                  } else {
-                    showSnackBar("Old password not correct! Please retry.");
-                  }
-                });
-              }
-            }),
-      ),
+  FlatButton _saveButton() {
+    return FlatButton(
+      color: Theme.of(context).accentColor,
+      textColor: Colors.white,
+      onPressed: () => _doValidate(),
+      child: const Text('Save'),
     );
   }
 
-  String checkPass(String val) {
-    return val.length < 5 ? "Password can't be less than 5 characters!" : null;
+  String _doCheckPassword(String password) {
+    return password.length < 5
+        ? 'Please enter a password longer than 5 characters!'
+        : null;
   }
 
-  String checkMatch(String val) {
-    return val != newPass.text ? "Passwords don't match!" : null;
+  void _doValidate() {
+    _unfocus();
+    if (formKey.currentState.validate()) {
+      formKey.currentState.save();
+      _changePassword(_currPass, _newPass).then((succ) {
+        if (succ) {
+          showSnackBar("Password successfully changed!");
+          Future.delayed(Duration(seconds: 2), () {
+            Router.pop(context);
+          });
+        } else {
+          showSnackBar("Old password not correct! Please retry.");
+        }
+      });
+    }
+  }
+
+  void _unfocus() {
+    currPassNode.unfocus();
+    newPassNode.unfocus();
+    verPassNode.unfocus();
   }
 
   void showSnackBar(message) {
@@ -163,13 +144,10 @@ class ChangePasswordState extends PageState<ChangePassword> {
       content: new Text(message),
       duration: Duration(milliseconds: 1000),
     );
-    scKey.currentState.showSnackBar(snackBar);
+    _scfKey.currentState.showSnackBar(snackBar);
   }
 
   Future<bool> _changePassword(oldPass, newPass) async {
     return DataFetcher.changePassword(oldPass, newPass);
   }
-
-
-
 }
