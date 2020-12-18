@@ -21,6 +21,7 @@ class MiscFormState extends State<MiscForm> {
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final gradesKey = GlobalKey<FileSelectorState>();
   final TextEditingController otherHobby = new TextEditingController();
+  final TextEditingController semester = new TextEditingController();
 
   bool inputIsOk = false;
 
@@ -257,32 +258,13 @@ class MiscFormState extends State<MiscForm> {
       )),
       Container(
         width: 60,
-        child: DropdownButton<String>(
-          items: <String>[
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9+"
-          ] // TODO Greater values should also be available, maybe an int field.
-              .map((String value) {
-            return new DropdownMenuItem<String>(
-                value: value,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Text(value),
-                ));
-          }).toList(),
-          value: currentSemester,
-          onChanged: (String val) {
-            setState(() {
-              currentSemester = val;
-            });
-          },
+        child: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 5),
+                  child: TextFormField(
+                  controller: semester,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(hintText: "1")
+              )
         ),
       )
     ]);
@@ -327,6 +309,8 @@ class MiscFormState extends State<MiscForm> {
         showSnackBar('Please enter your school distance!');
       else if (gradesKey.currentState.path == null)
         showSnackBar('Please select your grades file!');
+      else if(int.parse(semester.text) < 0 || int.parse(semester.text) > 100)
+        showSnackBar('Enter a valid semester value!');
       else {
         form.save();
         return true;
@@ -400,25 +384,37 @@ class MiscFormState extends State<MiscForm> {
       saveData();
       scKey.currentState
           .showSnackBar(_loadingSnackBar("Uploading your info..."));
-      DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
-        scKey.currentState.hideCurrentSnackBar();
-        if (success) {
-          scKey.currentState.showSnackBar(
-            _successSnackBar("Grades uploaded successfully!"),
-          );
-          DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
-            if (innerSuccess) {
-              Router.formComplete(context);
-            } else {
-              _buildErrorSnack("Something went wrong!");
-            }
-          });
-        } else {
-          scKey.currentState.showSnackBar(
-            _buildErrorSnack("Something went wrong!"),
-          );
-        }
-      });
+
+      if(currentSemester != "1"){
+        DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
+          scKey.currentState.hideCurrentSnackBar();
+          if (success) {
+            scKey.currentState.showSnackBar(
+              _successSnackBar("Grades uploaded successfully!"),
+            );
+            DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
+              if (innerSuccess) {
+                Router.formComplete(context);
+              } else {
+                _buildErrorSnack("Something went wrong!");
+              }
+            });
+          } else {
+            scKey.currentState.showSnackBar(
+              _buildErrorSnack("Something went wrong!"),
+            );
+          }
+        });
+      } else {
+        DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
+          if (innerSuccess) {
+            Router.formComplete(context);
+          } else {
+            _buildErrorSnack("Something went wrong!");
+          }
+        });
+      }
+
     }
   }
 
