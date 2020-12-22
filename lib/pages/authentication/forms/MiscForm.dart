@@ -63,7 +63,7 @@ class MiscFormState extends State<MiscForm> {
               BlankPadding(),
               getSemester(),
               BlankPadding(),
-              currentSemester != "1" ?  getGrades() : BlankPadding(),
+              currentSemester != "1" && currentSemester != "" ?  getGrades() : BlankPadding(),
               BlankPadding(),
               nextButton(),
             ],
@@ -261,7 +261,7 @@ class MiscFormState extends State<MiscForm> {
                   padding: EdgeInsets.only(left: 15, right: 5),
                   child: TextField(
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(hintText: "1"),
+                  decoration: InputDecoration(hintText: "1-99"),
                   onChanged: (val) => setState(() => currentSemester = val),
               )
         ),
@@ -311,6 +311,10 @@ class MiscFormState extends State<MiscForm> {
       else if(currentSemester != "1"){
         if (gradesKey.currentState.path == null)
           showSnackBar('Please select your grades file!');
+        else{
+          form.save();
+          return true;
+        }
       }
       else {
         form.save();
@@ -385,7 +389,6 @@ class MiscFormState extends State<MiscForm> {
       saveData();
       scKey.currentState
           .showSnackBar(_loadingSnackBar("Uploading your info..."));
-
 
       if(currentSemester != "1"){
         DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
