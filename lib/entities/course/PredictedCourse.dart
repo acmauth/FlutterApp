@@ -14,9 +14,14 @@ class PredictedCourse {
   final double distribution;
 
   factory PredictedCourse.fromJson(Map<String, dynamic> json) {
+    double gradePredictionValue = -1;
+    if(json.containsKey('gradePrediction')){
+      gradePredictionValue =  double.parse(json['gradePrediction'].toString());
+    }
+
     return PredictedCourse(
         courseID: json['id'],
-        gradePrediction: double.parse(json['gradePrediction'].toString()),
+        gradePrediction: gradePredictionValue,
         distribution: double.parse(json['distribution'].toString()));
   }
 

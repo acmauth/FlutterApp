@@ -41,8 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     courses = DataFetcher.fetchCourses();
     teachers = DataFetcher.fetchTeachers();
-    predictedCourses = DataFetcher.fetchPredictedCourses();
     userData = DataFetcher.fetchUserData();
+    predictedCourses = DataFetcher.fetchPredictedCourses();
+
 
     _loadLocalData(); // See the to-do below
   }

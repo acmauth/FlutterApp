@@ -16,10 +16,10 @@ class GradePredict extends AbstractPage {
   GradePredict(
       {Key key, @required this.predictedCourses, @required this.courses})
       : super(
-          key: key,
-          appBarTitle: 'Grade Prediction',
-          navIcon: Icons.equalizer,
-        );
+    key: key,
+    appBarTitle: 'Grade Prediction',
+    navIcon: Icons.equalizer,
+  );
 
   final HashMap<String, Course> courses;
   final List<PredictedCourse> predictedCourses;
@@ -33,34 +33,90 @@ class _GradePredictState extends PageState<GradePredict> {
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
     if (widget.predictedCourses.length > 0) {
-      if (_shownCourse == null) {
-        _shownCourse = widget.predictedCourses[0];
+      if (widget.predictedCourses.first.gradePrediction == -1) {
+        return Column(children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top: 5, bottom: 5),
+            child: Column(
+              children: <Widget>[
+                BlankPadding(),
+                Image.asset(
+                  'assets/baby.png',
+                  height: 200,
+                  width: 200,
+                ),
+                BlankPadding(),
+                StyledText(
+                  "Oh no! You are a bit young!",
+                  size: 18,
+                  weight: FontWeight.bold,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: StyledText(
+                    "Since you are still in the 1st semester of your studies we "
+                        "currently do not have enough information for you.",
+                    size: 14,
+                    align: TextAlign.justify,
+                  ),
+                ),
+                BlankPadding(),
+                Image.asset(
+                  'assets/clock.png',
+                  height: 100,
+                  width: 100,
+                ),
+                BlankPadding(),
+                StyledText(
+                  "Come back later!",
+                  size: 18,
+                  weight: FontWeight.bold,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: StyledText(
+                    "We are constantly updating our prediction models and soon "
+                        "1st semester students will be included.",
+                    size: 14,
+                    align: TextAlign.justify,
+                  ),
+                )
+              ],
+            ),
+          )
+        ]);
+      } else {
+        if (_shownCourse == null) {
+          _shownCourse = widget.predictedCourses[0];
+        }
+        LocalKeyValuePersistence.setListPredictedCourses(
+            widget.predictedCourses);
+        Course course = widget.courses[_shownCourse.courseID];
+        return Column(
+          children: <Widget>[
+            DropdownButton(
+              value: _shownCourse,
+              onChanged: (newValue) {
+                setState(() {
+                  _shownCourse = newValue;
+                });
+              },
+              items: widget.predictedCourses.map((predictedCourse) {
+                return DropdownMenuItem(
+                  child: new Text(
+                      widget.courses[predictedCourse.courseID].title),
+                  value: predictedCourse,
+                );
+              }).toList(),
+            ),
+            _buildGradePredictionPage(_shownCourse, course),
+          ],
+        );
       }
-      LocalKeyValuePersistence.setListPredictedCourses(widget.predictedCourses);
-      Course course = widget.courses[_shownCourse.courseID];
-      return Column(
-        children: <Widget>[
-          DropdownButton(
-            value: _shownCourse,
-            onChanged: (newValue) {
-              setState(() {
-                _shownCourse = newValue;
-              });
-            },
-            items: widget.predictedCourses.map((predictedCourse) {
-              return DropdownMenuItem(
-                child: new Text(widget.courses[predictedCourse.courseID].title),
-                value: predictedCourse,
-              );
-            }).toList(),
-          ),
-          _buildGradePredictionPage(_shownCourse, course),
-        ],
-      );
     } else {
       return Column(children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: 5,bottom: 5),
+          padding: EdgeInsets.only(top: 5, bottom: 5),
           child: Column(
             children: <Widget>[
               BlankPadding(),
@@ -79,7 +135,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 padding: const EdgeInsets.all(20),
                 child: StyledText(
                   "You seem to be an excellent student! You have succeeded in all "
-                  "the courses we provide predictions for.",
+                      "the courses we provide predictions for.",
                   size: 14,
                   align: TextAlign.justify,
                 ),
@@ -100,7 +156,7 @@ class _GradePredictState extends PageState<GradePredict> {
                 padding: const EdgeInsets.all(20),
                 child: StyledText(
                   "We are constantly updating our prediction models and your "
-                  "remaining courses will appear here.",
+                      "remaining courses will appear here.",
                   size: 14,
                   align: TextAlign.justify,
                 ),
@@ -112,104 +168,153 @@ class _GradePredictState extends PageState<GradePredict> {
     }
   }
 
-  Widget _buildGradePredictionPage(
-      PredictedCourse predictedCourse, Course course) {
-    List<int> histogram = course.courseMetrics.histogram;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        children: <Widget>[
-          Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Theme.of(context).cardColor,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text("${course.code}",
-                      style: TextStyle(fontSize: 25, color: Theme.of(context).textTheme.subtitle.color)),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Text("${course.title}",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Theme.of(context).textTheme.title.color,
-                          fontWeight: FontWeight.bold)),
-                  SizedBox(
-                    height: 2.0,
-                  ),
-                  Text("${course.teacher}",
-                      style: TextStyle(fontSize: 13, color: Theme.of(context).textTheme.subtitle.color)),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text("Grade Prediction: ${predictedCourse.gradePrediction}",
-                      style: TextStyle(fontSize: 17, color: Theme.of(context).textTheme.body1.color)),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  StyledText("Difficulty: ",color: Theme.of(context).textTheme.body1.color),
-                  StyledText(
-                    _getDifficultyText(course.courseMetrics.difficulty),
-                    color: _getDifficultyColor(course.courseMetrics.difficulty),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                      "This grade is above ${(predictedCourse.distribution).toStringAsFixed(2)}% of all students!",
-                      style: TextStyle(fontSize: 17, color: Theme.of(context).textTheme.body1.color))
-                ],
-              )),
-          BlankPadding(),
-          StyledText(
-            "Grade Destribution",
-            size: 20,
-            weight: FontWeight.bold,
-            color: Theme.of(context).textTheme.body1.color,
-          ),
-          StyledText(
-              "Based on ${course.courseMetrics.enrolled} students so far", color: Theme.of(context).textTheme.body1.color,),
-          BlankPadding(),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              ChartBar(height: 10 * histogram[0].toDouble()),
-              ChartBar(height: 10 * histogram[1].toDouble()),
-              ChartBar(height: 10 * histogram[2].toDouble()),
-              ChartBar(height: 10 * histogram[3].toDouble()),
-              ChartBar(height: 10 * histogram[4].toDouble()),
-              ChartBar(height: 10 * histogram[5].toDouble()),
-              ChartBar(height: 10 * histogram[6].toDouble()),
-              ChartBar(height: 10 * histogram[7].toDouble()),
-              ChartBar(height: 10 * histogram[8].toDouble()),
-              ChartBar(height: 10 * histogram[9].toDouble()),
-            ],
-          ),
-          Row(
+
+Widget _buildGradePredictionPage(PredictedCourse predictedCourse,
+    Course course) {
+  List<int> histogram = course.courseMetrics.histogram;
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20),
+    child: Column(
+      children: <Widget>[
+        Container(
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Theme
+                  .of(context)
+                  .cardColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("${course.code}",
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle
+                            .color)),
+                SizedBox(
+                  height: 5.0,
+                ),
+                Text("${course.title}",
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .title
+                            .color,
+                        fontWeight: FontWeight.bold)),
+                SizedBox(
+                  height: 2.0,
+                ),
+                Text("${course.teacher}",
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle
+                            .color)),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text("Grade Prediction: ${predictedCourse.gradePrediction}",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .body1
+                            .color)),
+                SizedBox(
+                  height: 5.0,
+                ),
+                StyledText("Difficulty: ",
+                    color: Theme
+                        .of(context)
+                        .textTheme
+                        .body1
+                        .color),
+                StyledText(
+                  _getDifficultyText(course.courseMetrics.difficulty),
+                  color: _getDifficultyColor(course.courseMetrics.difficulty),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                    "This grade is above ${(predictedCourse.distribution)
+                        .toStringAsFixed(2)}% of all students!",
+                    style: TextStyle(
+                        fontSize: 17,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .body1
+                            .color))
+              ],
+            )),
+        BlankPadding(),
+        StyledText(
+          "Grade Destribution",
+          size: 20,
+          weight: FontWeight.bold,
+          color: Theme
+              .of(context)
+              .textTheme
+              .body1
+              .color,
+        ),
+        StyledText(
+          "Based on ${course.courseMetrics.enrolled} students so far",
+          color: Theme
+              .of(context)
+              .textTheme
+              .body1
+              .color,
+        ),
+        BlankPadding(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: <Widget>[
+            ChartBar(height: 10 * histogram[0].toDouble()),
+            ChartBar(height: 10 * histogram[1].toDouble()),
+            ChartBar(height: 10 * histogram[2].toDouble()),
+            ChartBar(height: 10 * histogram[3].toDouble()),
+            ChartBar(height: 10 * histogram[4].toDouble()),
+            ChartBar(height: 10 * histogram[5].toDouble()),
+            ChartBar(height: 10 * histogram[6].toDouble()),
+            ChartBar(height: 10 * histogram[7].toDouble()),
+            ChartBar(height: 10 * histogram[8].toDouble()),
+            ChartBar(height: 10 * histogram[9].toDouble()),
+          ],
+        ),
+        Row(
 //          mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              ChartLabel("1"),
-              ChartLabel("2"),
-              ChartLabel("3"),
-              ChartLabel("4"),
-              ChartLabel("5"),
-              ChartLabel("6"),
-              ChartLabel("7"),
-              ChartLabel("8"),
-              ChartLabel("9"),
-              ChartLabel("10"),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+          children: <Widget>[
+            ChartLabel("1"),
+            ChartLabel("2"),
+            ChartLabel("3"),
+            ChartLabel("4"),
+            ChartLabel("5"),
+            ChartLabel("6"),
+            ChartLabel("7"),
+            ChartLabel("8"),
+            ChartLabel("9"),
+            ChartLabel("10"),
+          ],
+        ),
+      ],
+    ),
+  );
+}}
 
 String _getDifficultyText(CourseDifficulty difficulty) {
   switch (difficulty) {
