@@ -20,6 +20,7 @@ class MiscFormState extends State<MiscForm> {
   final GlobalKey<ScaffoldState> scKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
   final gradesKey = GlobalKey<FileSelectorState>();
+  final TextEditingController otherHobby = new TextEditingController();
 
   bool inputIsOk = false;
 
@@ -28,10 +29,11 @@ class MiscFormState extends State<MiscForm> {
   static bool langSelect = false;
   static bool movieSelect = false;
   static bool volSelect = false;
-  String currentSemester = "1";
+  static bool otherSelect = false;
 
   int houseGroup = -1;
   int distanceGroup = -1;
+  String currentSemester = "";
 
   List<String> formHobbies = new List();
 
@@ -61,7 +63,7 @@ class MiscFormState extends State<MiscForm> {
               BlankPadding(),
               getSemester(),
               BlankPadding(),
-              getGrades(),
+              currentSemester != "1" && currentSemester != "" ?  getGrades() : BlankPadding(),
               BlankPadding(),
               nextButton(),
             ],
@@ -219,7 +221,27 @@ class MiscFormState extends State<MiscForm> {
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (bool val) => setState(() => volSelect = val),
-            ), // TODO We need to add other-specify case here.
+            ),
+            CheckboxListTile(
+              value: otherSelect,
+              title: Text(
+                "Other",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (bool val) => setState(() => otherSelect = val),
+            ),
+
+            otherSelect ?
+                Padding(
+                    padding: EdgeInsets.only(left: 15, right: 20),
+                    child: TextFormField(
+                      controller: otherHobby,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(hintText: "Please specify"),
+                    )
+                ):
+
+            Text("")
           ],
         )
       ],
@@ -235,31 +257,13 @@ class MiscFormState extends State<MiscForm> {
       )),
       Container(
         width: 60,
-        child: DropdownButton<String>(
-          items: <String>[
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8"
-          ] // TODO Greater values should also be available, maybe an int field.
-              .map((String value) {
-            return new DropdownMenuItem<String>(
-                value: value,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10, right: 10),
-                  child: Text(value),
-                ));
-          }).toList(),
-          value: currentSemester,
-          onChanged: (String val) {
-            setState(() {
-              currentSemester = val;
-            });
-          },
+        child: Padding(
+                  padding: EdgeInsets.only(left: 15, right: 5),
+                  child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(hintText: "1-99"),
+                  onChanged: (val) => setState(() => currentSemester = val),
+              )
         ),
       )
     ]);
@@ -302,8 +306,16 @@ class MiscFormState extends State<MiscForm> {
         showSnackBar("Please enter house option!");
       else if (distanceGroup < 0)
         showSnackBar('Please enter your school distance!');
-      else if (gradesKey.currentState.path == null)
-        showSnackBar('Please select your grades file!');
+      else if(int.parse(currentSemester) < 0 || int.parse(currentSemester) > 100)
+        showSnackBar('Enter a valid semester value!');
+      else if(currentSemester != "1"){
+        if (gradesKey.currentState.path == null)
+          showSnackBar('Please select your grades file!');
+        else{
+          form.save();
+          return true;
+        }
+      }
       else {
         form.save();
         return true;
@@ -360,6 +372,7 @@ class MiscFormState extends State<MiscForm> {
     if (langSelect) formHobbies.add("Foreign Language");
     if (movieSelect) formHobbies.add("Movies / Series");
     if (volSelect) formHobbies.add("Volunteering");
+    if (otherSelect) formHobbies.add(otherHobby.text);
 
     widget.formData.hobbies = formHobbies;
   }
@@ -376,25 +389,38 @@ class MiscFormState extends State<MiscForm> {
       saveData();
       scKey.currentState
           .showSnackBar(_loadingSnackBar("Uploading your info..."));
-      DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
-        scKey.currentState.hideCurrentSnackBar();
-        if (success) {
-          scKey.currentState.showSnackBar(
-            _successSnackBar("Grades uploaded successfully!"),
-          );
-          DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
-            if (innerSuccess) {
-              Router.push(context, '/home');
-            } else {
-              _buildErrorSnack("Something went wrong!");
-            }
-          });
-        } else {
-          scKey.currentState.showSnackBar(
-            _buildErrorSnack("Something went wrong!"),
-          );
-        }
-      });
+
+      if(currentSemester != "1"){
+        DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
+          scKey.currentState.hideCurrentSnackBar();
+          if (success) {
+            scKey.currentState.showSnackBar(
+              _successSnackBar("Grades uploaded successfully!"),
+            );
+            DataFetcher.uploadFormData(widget.formData).then((innerSuccess) {
+              if (innerSuccess) {
+                Router.formComplete(context);
+              } else {
+                _buildErrorSnack("Something went wrong!");
+              }
+            });
+          } else {
+            scKey.currentState.showSnackBar(
+              _buildErrorSnack("Something went wrong!"),
+            );
+          }
+        });
+      }
+      else if(currentSemester == "1") {
+        DataFetcher.uploadFormData(widget.formData).then((success) {
+          if (success) {
+            Router.formComplete(context);
+          } else {
+            _buildErrorSnack("Something went wrong!");
+          }
+        });
+      }
+
     }
   }
 

@@ -20,6 +20,7 @@ class PasswordField extends TextFormField {
           decoration: InputDecoration(
             hintText: hintText,
             icon: Icon(Icons.lock),
+            errorMaxLines: 2,
           ),
           onFieldSubmitted: (_) {
             final FormFieldState<dynamic> state = key.currentState;

@@ -103,6 +103,15 @@ class PersonalFormState extends State<PersonalForm> {
               ),
               onChanged: (val) => setState(() => genderGroup = val),
             ),
+            RadioListTile(
+              value: 2,
+              groupValue: genderGroup,
+              title: Text(
+                "Other",
+                style: TextStyle(color: Colors.black),
+              ),
+              onChanged: (val) => setState(() => genderGroup = val),
+            ),
           ],
         )
       ],
@@ -119,24 +128,6 @@ class PersonalFormState extends State<PersonalForm> {
             groupValue: schoolGroup,
             title: Text(
               "Computer Science",
-              style: TextStyle(color: Colors.black),
-            ),
-            onChanged: (val) => setState(() => schoolGroup = val),
-          ),
-          RadioListTile(
-            value: 1,
-            groupValue: schoolGroup,
-            title: Text(
-              "Electrical Engineering",
-              style: TextStyle(color: Colors.black),
-            ),
-            onChanged: (val) => setState(() => schoolGroup = val),
-          ),
-          RadioListTile(
-            value: 2,
-            groupValue: schoolGroup,
-            title: Text(
-              "Other",
               style: TextStyle(color: Colors.black),
             ),
             onChanged: (val) => setState(() => schoolGroup = val),

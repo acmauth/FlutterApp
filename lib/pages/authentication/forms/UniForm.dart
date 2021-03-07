@@ -208,7 +208,7 @@ class UniFormState extends State<UniForm> {
               value: 1,
               groupValue: degreeGoal,
               title: Text(
-                "Phd degree",
+                "PhD degree",
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (val) => setState(() => degreeGoal = val),
@@ -261,7 +261,7 @@ class UniFormState extends State<UniForm> {
       else if (attendGroup < 0)
         showSnackBar('Please enter hours of attendance!');
       else if (privateGroup < 0)
-        showSnackBar('Please etner Private Lessons!');
+        showSnackBar('Please enter Private Lessons!');
       else if (degreeGoal < 0)
         showSnackBar('Please enter your degree goal!');
       else {
