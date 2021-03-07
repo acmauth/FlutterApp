@@ -208,7 +208,7 @@ class UniFormState extends State<UniForm> {
               value: 1,
               groupValue: degreeGoal,
               title: Text(
-                "Phd degree",
+                "PhD degree",
                 style: TextStyle(color: Colors.black),
               ),
               onChanged: (val) => setState(() => degreeGoal = val),
