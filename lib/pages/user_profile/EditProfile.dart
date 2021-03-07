@@ -22,8 +22,6 @@ class EditProfile extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Edit Profile',
-          appBarColorBg: Colors.blue,
-          appBarColorTxt: Colors.white,
         );
 
   final UserData data;
@@ -135,6 +133,7 @@ class _EditProfileState extends PageState<EditProfile> {
           StyledText(
             "Change your name:",
             size: 18,
+            color:Theme.of(context).textTheme.body1.color,
           ),
           BlankPadding(),
           Container(

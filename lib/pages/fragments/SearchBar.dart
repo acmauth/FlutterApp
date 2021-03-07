@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../LocalKeyValuePersistence.dart';
 import '../../bloc/search/exports.dart';
 import 'IconLabelPair.dart';
@@ -88,6 +87,8 @@ class _SearchBarState extends State<SearchBar> {
   void _listen() {
     controller.addListener(() {
       String input = controller.text.trim().toLowerCase();
+      input = _normalizeGreek(input);
+
       if (input.isNotEmpty) {
         results.clear();
         Set<String> match = Set<String>();
@@ -100,6 +101,18 @@ class _SearchBarState extends State<SearchBar> {
         showHist = input.isEmpty;
       });
     });
+  }
+
+  String _normalizeGreek(String text){
+    text = text.replaceAll(new RegExp("Ά|Α|ά"), 'α')
+        .replaceAll(new RegExp("Έ|Ε|έ"), 'ε')
+        .replaceAll(new RegExp("Ή|Η|ή"), 'η')
+        .replaceAll(new RegExp("Ί|Ϊ|Ι|ί|ΐ|ϊ"), 'ι')
+        .replaceAll(new RegExp("Ό|Ο|ό"), 'ο')
+        .replaceAll(new RegExp("Ύ|Ϋ|Υ|ύ|ΰ|ϋ"), 'υ')
+        .replaceAll(new RegExp("Ώ|Ω|ώ"), 'ω')
+        .replaceAll(new RegExp("Σ|ς"), 'σ');
+    return text;
   }
 
   void _loadHistory() {
@@ -123,7 +136,7 @@ class _SearchBarState extends State<SearchBar> {
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-          hintText: 'Search',
+          hintText: 'Search by course name',
           icon: Icon(Icons.search),
         ),
         controller: controller,

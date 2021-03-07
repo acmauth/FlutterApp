@@ -1,12 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/entities/user/UserData.dart';
 
-import '../../entities/course/CourseDifficulty.dart';
 import '../../entities/course/SuggestedCourseData.dart';
-import '../../entities/user/SchoolData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
-import '../fragments/ExpandableSection.dart';
 import '../fragments/StyledText.dart';
 
 class CourseSuggest extends AbstractPage {
@@ -37,28 +35,38 @@ class _CourseSuggestState extends PageState<CourseSuggest> {
       ],
     );
   }
+
+  Container buildMessage(){
+    return Container(
+      padding: EdgeInsets.only(top: 100),
+      child: Column(
+        children: <Widget>[
+          BlankPadding(),
+          Image.asset(
+            'assets/warning.png',
+            height: 150,
+            width: 150,
+          ),
+          BlankPadding(),
+          StyledText(
+            "Under Construction",
+            size: 18,
+            color: Theme.of(context).textTheme.title.color
+          ),
+          BlankPadding(),
+          StyledText(
+              "This is a new exciting feature that is coming soon...",
+              align: TextAlign.center,
+              size: 14,
+              color: Theme.of(context).textTheme.body1.color
+          )
+        ],
+      ),
+    );
+  }
 }
 
-Container buildMessage(){
-  return Container(
-    padding: EdgeInsets.only(top: 100),
-    child: Column(
-      children: <Widget>[
-        BlankPadding(),
-        Image.asset(
-          'assets/warning.png',
-          height: 150,
-          width: 150,
-        ),
-        BlankPadding(),
-        StyledText(
-          "Under Construction",
-          size: 18,
-        )
-      ],
-    ),
-  );
-}
+
 
 
 /*

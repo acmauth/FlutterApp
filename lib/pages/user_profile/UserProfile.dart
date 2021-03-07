@@ -60,32 +60,24 @@ class _UserProfileState extends PageState<UserProfile> {
         StyledText(
           widget.userData.name,
           weight: FontWeight.bold,
+          color: Theme.of(context).textTheme.body1.color,
         ),
-        StyledText(
-          "${widget.userData.schoolData.school} Department",
-          size: 12,
-        ),
+        StyledText("${widget.userData.schoolData.school} Department",
+            size: 12, color: Theme.of(context).textTheme.body1.color),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            StyledText(
-              "Semester: ",
-              weight: FontWeight.bold,
-            ),
-            StyledText(
-              "${widget.userData.semester}",
-            ),
+            StyledText("Semester: ",
+                weight: FontWeight.bold,
+                color: Theme.of(context).textTheme.body1.color),
+            StyledText("${widget.userData.semester}",
+                color: Theme.of(context).textTheme.body1.color),
           ],
         ),
         BlankPadding(),
         RaisedButton(
-          shape: RoundedRectangleBorder(
-            side: BorderSide(
-              color: Colors.blue.withOpacity(0.5),
-            ),
-          ),
-          color: Theme.of(context).cardColor,
-          textColor: Colors.blue,
+          color: Theme.of(context).accentColor,
+          textColor: Colors.white,
           child: Text('Edit Profile'),
           onPressed: () {
             Router.push(context, '/edit_profile', args: {
@@ -104,11 +96,11 @@ class _UserProfileState extends PageState<UserProfile> {
         ? _none
         : widget.userData.favSubjects
             .map((String subj) => Container(
-                  child: StyledText(subj),
+                  child: StyledText(subj,color: Theme.of(context).textTheme.body1.color),
                   padding: EdgeInsets.all(5),
                   margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
+                    border: Border.all(color:Theme.of(context).textTheme.body1.color),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                 ))
@@ -116,7 +108,9 @@ class _UserProfileState extends PageState<UserProfile> {
 
     return ItemContainer(
       title: "Favorite Subjects",
-      color: Colors.lightBlue.withOpacity(0.1),
+      bgColor: Theme.of(context).cardColor,
+      textColor: Theme.of(context).textTheme.body1.color,
+
       items: subjects,
     );
   }
@@ -126,18 +120,19 @@ class _UserProfileState extends PageState<UserProfile> {
         ? _none
         : widget.userData.favTeachers
             .map((String subj) => Container(
-                  child: StyledText(subj),
+                  child: StyledText(subj, color:Theme.of(context).textTheme.body1.color),
                   padding: EdgeInsets.all(5),
                   margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Theme.of(context).textTheme.body1.color),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                 ))
             .toList();
     return ItemContainer(
-      title: "Favorite Teachers",
-      items: teachers,
+        title: "Favorite Teachers",
+        items: teachers,
+        textColor: Theme.of(context).textTheme.body1.color,
     );
   }
 

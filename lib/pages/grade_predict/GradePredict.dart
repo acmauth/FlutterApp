@@ -124,35 +124,35 @@ class _GradePredictState extends PageState<GradePredict> {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0),
-                color: Colors.lightBlue[50],
+                color: Theme.of(context).cardColor,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text("${course.code}",
-                      style: TextStyle(fontSize: 25, color: Colors.blue[600])),
+                      style: TextStyle(fontSize: 25, color: Theme.of(context).textTheme.subtitle.color)),
                   SizedBox(
                     height: 5.0,
                   ),
                   Text("${course.title}",
                       style: TextStyle(
                           fontSize: 25,
-                          color: Colors.blue[600],
+                          color: Theme.of(context).textTheme.title.color,
                           fontWeight: FontWeight.bold)),
                   SizedBox(
                     height: 2.0,
                   ),
                   Text("${course.teacher}",
-                      style: TextStyle(fontSize: 13, color: Colors.blue[600])),
+                      style: TextStyle(fontSize: 13, color: Theme.of(context).textTheme.subtitle.color)),
                   SizedBox(
                     height: 20.0,
                   ),
                   Text("Grade Prediction: ${predictedCourse.gradePrediction}",
-                      style: TextStyle(fontSize: 17, color: Colors.blue[600])),
+                      style: TextStyle(fontSize: 17, color: Theme.of(context).textTheme.body1.color)),
                   SizedBox(
                     height: 5.0,
                   ),
-                  StyledText("Difficulty: "),
+                  StyledText("Difficulty: ",color: Theme.of(context).textTheme.body1.color),
                   StyledText(
                     _getDifficultyText(course.courseMetrics.difficulty),
                     color: _getDifficultyColor(course.courseMetrics.difficulty),
@@ -162,7 +162,7 @@ class _GradePredictState extends PageState<GradePredict> {
                   ),
                   Text(
                       "This grade is above ${(predictedCourse.distribution).toStringAsFixed(2)}% of all students!",
-                      style: TextStyle(fontSize: 17, color: Colors.blue[600]))
+                      style: TextStyle(fontSize: 17, color: Theme.of(context).textTheme.body1.color))
                 ],
               )),
           BlankPadding(),
@@ -170,9 +170,10 @@ class _GradePredictState extends PageState<GradePredict> {
             "Grade Destribution",
             size: 20,
             weight: FontWeight.bold,
+            color: Theme.of(context).textTheme.body1.color,
           ),
           StyledText(
-              "Based on ${course.courseMetrics.enrolled} students so far"),
+              "Based on ${course.courseMetrics.enrolled} students so far", color: Theme.of(context).textTheme.body1.color,),
           BlankPadding(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,

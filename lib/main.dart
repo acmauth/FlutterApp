@@ -61,20 +61,33 @@ class _MyAppState extends State<MyApp> {
   final ThemeData lightTheme = ThemeData(
     accentColor: Colors.lightBlue,
     appBarTheme: AppBarTheme(
-      color: Colors.white.withOpacity(0.95),
-      elevation: 0.15,
+      color: Colors.lightBlue.shade600,
+      elevation: 0.20,
       textTheme: TextTheme(
         title: TextStyle(
-          color: Colors.blue,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 20,
         ),
       ),
     ),
     backgroundColor: Colors.white,
+    cardColor: Colors.lightBlue[50],
     bottomAppBarColor: Colors.lightBlue.shade600,
     brightness: Brightness.light,
     primarySwatch: Colors.blue,
+    textTheme: TextTheme(
+      title: TextStyle(
+        color: Colors.blue.shade600
+      ),
+      subtitle: TextStyle(
+        color: Colors.blue.shade600
+      ),
+      body1: TextStyle(
+       color: Colors.blue.shade600
+      )
+
+    )
   );
   final ThemeData darkTheme = ThemeData(
     accentColor: Colors.lightBlue,

@@ -12,8 +12,6 @@ class CoursePage extends AbstractPage {
   }) : super(
           key: key,
           appBarTitle: 'Course Page',
-          appBarColorBg: Colors.blue,
-          appBarColorTxt: Colors.white,
           navIcon: Icons.search,
         );
 
@@ -30,42 +28,45 @@ class _CoursePageState extends PageState<CoursePage> {
       child: Column(
         children: <Widget>[
           _buildBox(
-            Colors.lightBlue,
+            Theme.of(context).cardColor,
             <Widget>[
               StyledText(
                 widget.course.title,
                 size: 25,
                 weight: FontWeight.bold,
+                color: Theme.of(context).textTheme.title.color,
               ),
-              StyledText(widget.course.code),
-              BlankPadding(),
+              StyledText(widget.course.code,color: Theme.of(context).textTheme.subtitle.color),
               _normalText(
                 "${_getSemester(widget.course.period)} Semester, Year ${widget.course.courseClass.year}",
               ),
+              BlankPadding(),
               _normalText("Teachers: ${widget.course.courseClass.teachers.join(', ')}"),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: StyledText(
                   widget.course.courseExtra.goal,
-                  size: 20,
+                  size: 14,
+                  color:Theme.of(context).textTheme.body1.color,
                 ),
               ),
               _headerText("Content:"),
               _buildPadded(widget.course.courseExtra.content),
               BlankPadding(),
               _normalText(
-                "This course is${widget.course.courseExtra.erasmus ? "" : " NOT"} available for Erasmus students.",
+                "ERASMUS: ${widget.course.courseExtra.erasmus ? " AVAILABLE" : " NOT AVAILABLE"}",size: 14
               ),
             ],
           ),
           BlankPadding(),
           _buildBox(
-            Colors.grey,
+            Theme.of(context).cardColor,
             <Widget>[
               StyledText(
                 "Prerequisites and Assessment",
                 size: 20,
                 weight: FontWeight.bold,
+                color: Theme.of(context).textTheme.title.color,
               ),
               Divider(height: 20),
               _normalText("Courses:"),
@@ -99,11 +100,11 @@ class _CoursePageState extends PageState<CoursePage> {
   }
 
   StyledText _headerText(String str) {
-    return StyledText(str, size: 18);
+    return StyledText(str, size: 18, color: Theme.of(context).textTheme.title.color);
   }
 
-  StyledText _normalText(String str) {
-    return StyledText(str, size: 16);
+  StyledText _normalText(String str, {double size=14}) {
+    return StyledText(str, size: size, align: TextAlign.left, color: Theme.of(context).textTheme.body1.color,);
   }
 
   Widget _buildPadded(List<String> content) {
@@ -111,7 +112,7 @@ class _CoursePageState extends PageState<CoursePage> {
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: content.map((str) => _normalText("- $str")).toList(),
+        children: content.map((str) => _normalText("- $str",size:14)).toList(),
       ),
     );
   }
@@ -121,7 +122,7 @@ class _CoursePageState extends PageState<CoursePage> {
       padding: EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color,
         borderRadius: BorderRadius.circular(10),
         border: null,
       ),
