@@ -84,7 +84,7 @@ class _UserProfileState extends PageState<UserProfile> {
               'data': widget.userData,
               'courses': widget.courses,
               'teachers': widget.teachers
-            });
+            }).then((value) => {this.setState(() {})}); // refresh page
           },
         )
       ],
