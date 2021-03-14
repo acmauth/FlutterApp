@@ -25,4 +25,4 @@ jobs:
       with:
         artifacts: "build/app/outputs/apk/release/*.apk"
         allowUpdates: true
-        token: ${{ secrets.TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
