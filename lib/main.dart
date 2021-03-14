@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'DataFetcher.dart';
 import 'LocalKeyValuePersistence.dart';
-import 'Router.dart';
+import 'Router.dart' as nav;
 import 'bloc/auth/exports.dart';
 import 'bloc/notifications/exports.dart';
 import 'bloc/search/search_bloc.dart';
@@ -116,16 +116,16 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: <BlocProvider<Bloc<dynamic, dynamic>>>[
         BlocProvider<ThemeBloc>(
-          create: (BuildContext context) => ThemeBloc(initialThemeState),
+          create: (context) => ThemeBloc(initialThemeState),
         ),
         BlocProvider<NotifBloc>(
-          create: (BuildContext context) => NotifBloc(initialNotifState),
+          create: (context) => NotifBloc(initialNotifState),
         ),
         BlocProvider<AuthBloc>(
-          create: (BuildContext context) => AuthBloc(token, refresh),
+          create: (context) => AuthBloc(token, refresh),
         ),
         BlocProvider<SearchBloc>(
-          create: (BuildContext context) => SearchBloc(),
+          create: (context) => SearchBloc(),
         ),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
@@ -133,7 +133,7 @@ class _MyAppState extends State<MyApp> {
           return MaterialApp(
             title: 'Grade++',
             theme: themeSate is LightTheme ? lightTheme : darkTheme,
-            onGenerateRoute: Router.generateRoute,
+            onGenerateRoute: nav.Router.generateRoute,
             builder: (BuildContext context, Widget child) {
               return ScrollConfiguration(
                 behavior: Scroller(),

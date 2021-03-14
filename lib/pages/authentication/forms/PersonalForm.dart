@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../Router.dart';
+import '../../../Router.dart' as nav;
 import '../../../entities/user/FormData.dart';
 
 class PersonalForm extends StatefulWidget {
@@ -235,7 +235,7 @@ class PersonalFormState extends State<PersonalForm> {
   }
 
   void loadNext() {
-    Router.push(context, '/form/uni', args: formData);
+    nav.Router.push(context, '/form/uni', args: formData);
   }
 
   void getReason() {

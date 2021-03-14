@@ -88,8 +88,8 @@ class Router {
     );
   }
 
-  static void push(BuildContext context, String route, {Object args}) {
-    Navigator.of(context).pushNamed(route, arguments: args);
+  static Future push(BuildContext context, String route, {Object args}) {
+    return Navigator.of(context).pushNamed(route, arguments: args);
   }
 
   static void pop(BuildContext context) {

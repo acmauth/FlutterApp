@@ -1,10 +1,10 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:grade_plus_plus/Router.dart';
-import 'package:grade_plus_plus/entities/course/Course.dart';
-import 'package:grade_plus_plus/entities/user/Teacher.dart';
 
+import '../../Router.dart' as nav;
+import '../../entities/course/Course.dart';
+import '../../entities/user/Teacher.dart';
 import '../../entities/user/UserData.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
@@ -80,11 +80,11 @@ class _UserProfileState extends PageState<UserProfile> {
           textColor: Colors.white,
           child: Text('Edit Profile'),
           onPressed: () {
-            Router.push(context, '/edit_profile', args: {
+            nav.Router.push(context, '/edit_profile', args: {
               'data': widget.userData,
               'courses': widget.courses,
               'teachers': widget.teachers
-            });
+            }).then((value) => {this.setState(() {})}); // refresh page
           },
         )
       ],

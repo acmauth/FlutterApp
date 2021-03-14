@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../DataFetcher.dart';
-import '../../Router.dart';
+import '../../Router.dart' as nav;
 import '../../bloc/auth/exports.dart';
 import '../AbstractPage.dart';
 import '../fragments/BlankPadding.dart';
@@ -119,7 +119,7 @@ class _AuthPageState extends PageState<AuthPage> {
         if (succ) {
           BlocProvider.of<AuthBloc>(context).add(AuthSuccess());
           if (!widget.isLogIn) {
-            Router.push(context, "/form/personal");
+            nav.Router.push(context, "/form/personal");
           }
         } else {
           _scfKey.currentState.hideCurrentSnackBar();
@@ -221,7 +221,7 @@ class _AuthPageState extends PageState<AuthPage> {
       textColor: Theme.of(context).accentColor,
       onPressed: () {
         _formKey.currentState.reset();
-        Router.push(context, '/sso');
+        nav.Router.push(context, '/sso');
       },
       child: Text('${widget.appBarTitle} with university account'),
     );
@@ -232,9 +232,9 @@ class _AuthPageState extends PageState<AuthPage> {
       onPressed: () {
         if (widget.isLogIn) {
           _formKey.currentState.reset();
-          Router.push(context, '/signup');
+          nav.Router.push(context, '/signup');
         } else {
-          Router.pop(context);
+          nav.Router.pop(context);
         }
       },
       child: Text(

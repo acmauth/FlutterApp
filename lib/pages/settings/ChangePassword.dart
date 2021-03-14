@@ -4,7 +4,7 @@ import 'package:grade_plus_plus/pages/fragments/BlankPadding.dart';
 import 'package:grade_plus_plus/pages/fragments/PasswordField.dart';
 
 import '../../DataFetcher.dart';
-import '../../Router.dart';
+import '../../Router.dart' as nav;
 import '../../entities/user/UserCredentials.dart';
 import '../AbstractPage.dart';
 
@@ -124,7 +124,7 @@ class _ChangePasswordState extends PageState<ChangePassword> {
         if (succ) {
           showSnackBar("Password successfully changed!");
           Future.delayed(Duration(seconds: 2), () {
-            Router.pop(context);
+            nav.Router.pop(context);
           });
         } else {
           showSnackBar("Old password not correct! Please retry.");
