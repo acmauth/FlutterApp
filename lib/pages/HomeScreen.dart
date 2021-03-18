@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/DataFetcher.dart';
 import 'package:grade_plus_plus/entities/course/Course.dart';
 import 'package:grade_plus_plus/entities/user/Teacher.dart';
+import 'package:grade_plus_plus/pages/authentication/forms/PersonalForm.dart';
 
 import '../LocalKeyValuePersistence.dart';
 import '../entities/course/PredictedCourse.dart';
@@ -41,8 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     courses = DataFetcher.fetchCourses();
     teachers = DataFetcher.fetchTeachers();
-    predictedCourses = DataFetcher.fetchPredictedCourses();
     userData = DataFetcher.fetchUserData();
+    predictedCourses = DataFetcher.fetchPredictedCourses();
+
 
     _loadLocalData(); // See the to-do below
   }
@@ -73,6 +75,9 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
+          if (snapshot.data.userData.name == null){
+            return PersonalForm();
+          }
           pages = <AbstractPage>[
             GradePredict(
                 predictedCourses: snapshot.data.predictedCourses,
