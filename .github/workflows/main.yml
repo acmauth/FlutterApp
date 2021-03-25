@@ -12,6 +12,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - name: Get Tag
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
     - uses: actions/setup-java@v1
       with:
         java-version: '11.x'
@@ -19,7 +22,7 @@ jobs:
       with:
         channel: 'stable'
     - run: flutter pub get
-    - run: flutter build apk --split-per-abi
+    - run: flutter build apk --split-per-abi --build-name ${{ steps.vars.outputs.tag }}
     - name: Create a Release APK
       uses: ncipollo/release-action@v1
       with:
