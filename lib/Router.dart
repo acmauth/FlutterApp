@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:grade_plus_plus/pages/settings/ContactUs.dart';
 
 import 'pages/LandingPage.dart';
 import 'pages/general/UnknownPage.dart';
@@ -78,6 +79,10 @@ class Router {
             builder: (_) => UnknownPage(appBarTitle: "Request Deletion",
               message: "Soon you'll be able to automatically request deletion of all your data, "
                   "stored by us, in accordance to GDPR legislation.",)
+        );
+      case '/contact_page':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+            builder: (_) => ContactUs()
         );
     }
 

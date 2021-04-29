@@ -37,6 +37,7 @@ flutter:
     - assets/clock.png
     - assets/fireworks.png
     - assets/baby.png
+    - assets/contact.png
 
 # Run 'flutter pub run flutter_launcher_icons:main'
 flutter_icons:

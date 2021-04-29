@@ -139,6 +139,12 @@ class _SettingsState extends PageState<Settings> {
         ),
         TappableElement(
           label:
+          'Contact us',
+          icon: Icons.message,
+          onTap: () => nav.Router.push(context, '/contact_page'),
+        ),
+        TappableElement(
+          label:
               'Rate us on ${Platform.isAndroid ? 'Google Play Store' : 'App Store'}',
           icon: Icons.thumb_up,
           onTap: () async => await launch(
