@@ -125,12 +125,12 @@ class _ContactUsState extends PageState<ContactUs> {
     String body = "";
 
     if(isIdea){
-      subject = "New idea suggestion!";
-      body = "►What is your idea? <br><br><br><br> ►How is it going to imrpove the app?";
+      subject = "- NEW SUGGESTION -";
+      body = "►What is your idea? <br><br><br><br> ►How is it going to improve the app?";
     }
     else{
-      subject = "Bug report!";
-      body = "►What is the bug? <br><br><br><br> ►On what page did the bug occur? <br><br><br><br> ►Please provide the steps to reproduce below";
+      subject = "- BUG REPORT -";
+      body = "►What is the bug? <br><br><br> ►On what page did the bug occur? <br><br><br> ►Please provide the steps to reproduce below";
     }
 
     String _url = "mailto:" + gradeMail + "?subject=" + subject + "&body=" + body;
