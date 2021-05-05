@@ -38,6 +38,12 @@ flutter:
     - assets/fireworks.png
     - assets/baby.png
     - assets/contact.png
+    - assets/signup_instructions1.png
+    - assets/signup_instructions2.png
+    - assets/signup_instructions3.png
+    - assets/signup_instructions4.png
+    - assets/signup_instructions5.png
+    - assets/signup_instructions6.png
 
 # Run 'flutter pub run flutter_launcher_icons:main'
 flutter_icons:

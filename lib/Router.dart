@@ -12,6 +12,7 @@ import 'pages/search/CoursePage.dart';
 import 'pages/settings/ChangePassword.dart';
 import 'pages/settings/UploadGrades.dart';
 import 'pages/user_profile/EditProfile.dart';
+import 'pages/general/SignUpInstructionsPage.dart';
 
 class Router {
   static Route<PageRoute<Object>> generateRoute(
@@ -70,15 +71,23 @@ class Router {
         );
       case '/download_data':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-          builder: (_) => UnknownPage(appBarTitle: "Download Data",
-            message: "Soon you'll be able to automatically download all your data, "
-                "stored by us, in accordance to GDPR legislation.",)
-        );
+            builder: (_) => UnknownPage(
+                  appBarTitle: "Download Data",
+                  message:
+                      "Soon you'll be able to automatically download all your data, "
+                      "stored by us, in accordance to GDPR legislation.",
+                ));
       case '/request_deletion':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
-            builder: (_) => UnknownPage(appBarTitle: "Request Deletion",
-              message: "Soon you'll be able to automatically request deletion of all your data, "
-                  "stored by us, in accordance to GDPR legislation.",)
+            builder: (_) => UnknownPage(
+                  appBarTitle: "Request Deletion",
+                  message:
+                      "Soon you'll be able to automatically request deletion of all your data, "
+                      "stored by us, in accordance to GDPR legislation.",
+                ));
+      case '/signup_instructions':
+        return CupertinoPageRoute<CupertinoPageRoute<void>>(
+          builder: (_) => SignUpInstructionsPage(),
         );
       case '/contact_page':
         return CupertinoPageRoute<CupertinoPageRoute<void>>(
@@ -87,9 +96,11 @@ class Router {
     }
 
     return CupertinoPageRoute<CupertinoPageRoute<void>>(
-      builder: (_) => UnknownPage(appBarTitle: "Unknown",
+      builder: (_) => UnknownPage(
+        appBarTitle: "Unknown",
         message: "You came here by mistake. If you want to help us solve this "
-            "incident please contact usj at gradepluplus@auth.acm.org",),
+            "incident please contact us at gradepluplus@auth.acm.org",
+      ),
     );
   }
 
@@ -102,7 +113,8 @@ class Router {
   }
 
   static void formComplete(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', ModalRoute.withName('/login'));
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil('/home', ModalRoute.withName('/login'));
   }
 
   static void replaceAll(BuildContext context, String route, {Object args}) {

@@ -83,6 +83,19 @@ class _AuthPageState extends PageState<AuthPage> {
                   ],
                 ),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: TextButton(
+                  child: StyledText(
+                    'Difficulties uploading your grades to our app? Here are some instructions to help you out!',
+                    size: 14,
+                    align: TextAlign.center,
+                    color: Colors.blue[400],
+                  ),
+                  onPressed: () =>
+                      nav.Router.push(context, '/signup_instructions'),
+                ),
+              ),
             ],
           ),
         ),
