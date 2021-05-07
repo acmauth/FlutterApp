@@ -87,7 +87,7 @@ class _AuthPageState extends PageState<AuthPage> {
                 alignment: Alignment.bottomCenter,
                 child: TextButton(
                   child: StyledText(
-                    'Difficulties uploading your grades to our app? Here are some instructions to help you out!',
+                    'Need help uploading your grades? Find more info here!',
                     size: 14,
                     align: TextAlign.center,
                     color: Colors.blue[400],

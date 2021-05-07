@@ -31,10 +31,10 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
   final List<String> descriptionsList = [
     'Visit https://sis.auth.gr/old and login with your academic account.',
     'Click on the top left menu button.',
-    'Click the second choice ( Βαθμολογία ) available on the menu.',
-    'Click again the second choice ( Αναλυτική ) available on the new menu that popped up.',
-    'On the page that was loaded click the first pdf icon ( Εκτύπωση αναλυτικής βαθμολογίας σε pdf ). A pdf file with your grades will be downloaded.',
-    'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process and let us help you improve your grades in the upcoming semesters!',
+    'Click the second choice "Βαθμολογία" available on the menu.',
+    'Click again the second choice "Αναλυτική" available on the new menu that popped up.',
+    'Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
+    'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process',
   ];
 
   @override
