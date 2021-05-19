@@ -1,7 +1,10 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grade_plus_plus/pages/AbstractPage.dart';
 import 'package:grade_plus_plus/pages/fragments/InstructionsStepDescription.dart';
 import 'package:grade_plus_plus/pages/fragments/DotsRow.dart';
+import 'package:grade_plus_plus/pages/fragments/StyledText.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // Represents the page that contains the instructions on how to get your grades from sis
 class SignUpInstructionsPage extends AbstractPage {
@@ -22,19 +25,11 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
   final List<String> imgList = [
     'assets/signup_instructions1.png',
     'assets/signup_instructions2.png',
-    'assets/signup_instructions3.png',
-    'assets/signup_instructions4.png',
-    'assets/signup_instructions5.png',
-    'assets/signup_instructions6.png',
   ];
 
   final List<String> descriptionsList = [
-    'Visit https://sis.auth.gr/old and login with your academic account.',
-    'Click on the top left menu button.',
-    'Click the second choice "Βαθμολογία" available on the menu.',
-    'Click again the second choice "Αναλυτική" available on the new menu that popped up.',
-    'Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
-    'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process',
+    'Visit https://sis.auth.gr/old and login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
+    'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process.',
   ];
 
   @override
@@ -90,7 +85,44 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
           ),
           InstructionsStepDescription(
             imgIndex: imgIndex,
-            description: descriptionsList[imgIndex],
+            descriptionWidget: (imgIndex != 0)
+                ? StyledText(
+                    descriptionsList[imgIndex],
+                    align: TextAlign.center,
+                    size: 18.0,
+                    weight: FontWeight.values[4],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          StyledText(
+                            'Visit ',
+                            size: 18.0,
+                            weight: FontWeight.values[4],
+                          ),
+                          InkWell(
+                              child:
+                                  Text('https://sis.auth.gr/old/el/all_grades.',
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.values[4],
+                                        color: Theme.of(context).accentColor,
+                                        decoration: TextDecoration.underline,
+                                      )),
+                              onTap: () => launch(
+                                  'https://sis.auth.gr/old/el/all_grades')),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      StyledText(
+                        'Then login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
+                        size: 18.0,
+                        weight: FontWeight.values[4],
+                      ),
+                    ],
+                  ),
           ),
           SizedBox(
             height: 15.0,

@@ -4,9 +4,9 @@ import 'package:grade_plus_plus/pages/fragments/StyledText.dart';
 // Represents the description of each step at Instructions Page
 class InstructionsStepDescription extends StatelessWidget {
   final int imgIndex;
-  final String description;
+  final Widget descriptionWidget;
 
-  InstructionsStepDescription({this.imgIndex, this.description});
+  InstructionsStepDescription({this.imgIndex, this.descriptionWidget});
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +25,11 @@ class InstructionsStepDescription extends StatelessWidget {
           ),
           // Description widget
           Padding(
-            padding: const EdgeInsets.only(
-              left: 35.0,
-              right: 35.0,
-            ),
-            child: StyledText(
-              description,
-              align: TextAlign.center,
-              size: 18.0,
-              weight: FontWeight.values[4],
-            ),
-          )
+              padding: const EdgeInsets.only(
+                left: 35.0,
+                right: 35.0,
+              ),
+              child: descriptionWidget)
         ],
       ),
     );
