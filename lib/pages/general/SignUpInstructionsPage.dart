@@ -1,5 +1,7 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import '../../Router.dart' as nav;
 import 'package:grade_plus_plus/pages/AbstractPage.dart';
 import 'package:grade_plus_plus/pages/fragments/InstructionsStepDescription.dart';
 import 'package:grade_plus_plus/pages/fragments/DotsRow.dart';
@@ -19,8 +21,10 @@ class SignUpInstructionsPage extends AbstractPage {
   _SignUpInstructionsPageState createState() => _SignUpInstructionsPageState();
 }
 
-class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
+class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
+    with TickerProviderStateMixin {
   int imgIndex = 0;
+  AnimationController _controller;
 
   final List<String> imgList = [
     'assets/signup_instructions1.png',
@@ -31,6 +35,25 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
     'Visit https://sis.auth.gr/old and login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
     'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process.',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _controller.repeat(
+      reverse: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    this._controller.dispose();
+  }
 
   @override
   Widget body(GlobalKey<ScaffoldState> scfKey) {
@@ -53,31 +76,34 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
             height: 10.0,
           ),
           Center(
-            // Image and dots row stack widget
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        imgList[imgIndex],
+            // Image carousel widget
+            child: CarouselSlider.builder(
+              itemCount: imgList.length,
+              itemBuilder: (context, index, realIndex) => Container(
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          imgList[imgIndex],
+                        ),
+                        fit: BoxFit.contain,
                       ),
-                      fit: BoxFit.contain,
                     ),
+                    height: 300.0,
+                    width: 250.0,
                   ),
-                  height: 300.0,
-                  width: 250.0,
                 ),
-                Positioned(
-                  top: 275.0,
-                  left: 15.0,
-                  right: 15.0,
-                  child: DotsRow(
-                    numberOfDots: imgList.length,
-                    imgIndex: imgIndex,
-                  ),
-                )
-              ],
+              ),
+              options: CarouselOptions(
+                  height: 300.0,
+                  reverse: true,
+                  onPageChanged: (index, reason) {
+                    if (index == imgIndex + 1)
+                      _nextImage();
+                    else
+                      _previousImage();
+                  }),
             ),
           ),
           SizedBox(
@@ -127,23 +153,27 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
           SizedBox(
             height: 15.0,
           ),
-          // Buttons row
-          Padding(
-            padding: const EdgeInsets.only(left: 47.5, right: 47.5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                if (imgIndex != 0)
-                  _buildTextButton('Prev', _previousImage)
-                else
-                  SizedBox(),
-                if (imgIndex != imgList.length - 1)
-                  _buildTextButton('Next', _nextImage)
-                else
-                  SizedBox(),
-              ],
-            ),
-          )
+          Center(
+              child: (imgIndex == imgList.length - 1)
+                  ? _buildTextButton('Ok', () {
+                      nav.Router.pop(context);
+                    })
+                  : ScaleTransition(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              'swipe.png',
+                            ),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        height: 32.0,
+                        width: 32.0,
+                      ),
+                      scale: Tween(begin: 0.5, end: 1.25).animate(
+                          CurvedAnimation(
+                              parent: _controller, curve: Curves.elasticOut)))),
         ],
       ),
     );
@@ -167,12 +197,12 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage> {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 25.0,
+          fontSize: 20.0,
           fontWeight: FontWeight.values[2],
           shadows: <Shadow>[
             Shadow(
               offset: Offset(0.0, 0.0),
-              blurRadius: 1.5,
+              blurRadius: 1.0,
               color: Color.fromARGB(200, 0, 0, 0),
             ),
           ],
