@@ -63,7 +63,9 @@ class MiscFormState extends State<MiscForm> {
               BlankPadding(),
               getSemester(),
               BlankPadding(),
-              currentSemester != "1" && currentSemester != "" ?  getGrades() : BlankPadding(),
+              currentSemester != "1" && currentSemester != ""
+                  ? getGrades()
+                  : BlankPadding(),
               BlankPadding(),
               nextButton(),
             ],
@@ -230,18 +232,15 @@ class MiscFormState extends State<MiscForm> {
               ),
               onChanged: (bool val) => setState(() => otherSelect = val),
             ),
-
-            otherSelect ?
-                Padding(
+            otherSelect
+                ? Padding(
                     padding: EdgeInsets.only(left: 15, right: 20),
                     child: TextFormField(
                       controller: otherHobby,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(hintText: "Please specify"),
-                    )
-                ):
-
-            Text("")
+                    ))
+                : Text("")
           ],
         )
       ],
@@ -258,13 +257,12 @@ class MiscFormState extends State<MiscForm> {
       Container(
         width: 60,
         child: Padding(
-                  padding: EdgeInsets.only(left: 15, right: 5),
-                  child: TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(hintText: "1-99"),
-                  onChanged: (val) => setState(() => currentSemester = val),
-              )
-        ),
+            padding: EdgeInsets.only(left: 15, right: 5),
+            child: TextField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(hintText: "1-99"),
+              onChanged: (val) => setState(() => currentSemester = val),
+            )),
       )
     ]);
   }
@@ -280,6 +278,17 @@ class MiscFormState extends State<MiscForm> {
           ),
         ),
         FileSelector(key: gradesKey),
+        Container(
+          alignment: Alignment.bottomCenter,
+          child: TextButton(
+            child: StyledText(
+              'Need help uploading your grades? Find more info here!',
+              size: 14,
+              align: TextAlign.center,
+            ),
+            onPressed: () => nav.Router.push(context, '/signup_instructions'),
+          ),
+        ),
       ],
     );
   }
@@ -306,17 +315,17 @@ class MiscFormState extends State<MiscForm> {
         showSnackBar("Please enter house option!");
       else if (distanceGroup < 0)
         showSnackBar('Please enter your school distance!');
-      else if(int.parse(currentSemester) < 0 || int.parse(currentSemester) > 100)
+      else if (int.parse(currentSemester) < 0 ||
+          int.parse(currentSemester) > 100)
         showSnackBar('Enter a valid semester value!');
-      else if(currentSemester != "1"){
+      else if (currentSemester != "1") {
         if (gradesKey.currentState.path == null)
           showSnackBar('Please select your grades file!');
-        else{
+        else {
           form.save();
           return true;
         }
-      }
-      else {
+      } else {
         form.save();
         return true;
       }
@@ -390,7 +399,7 @@ class MiscFormState extends State<MiscForm> {
       scKey.currentState
           .showSnackBar(_loadingSnackBar("Uploading your info..."));
 
-      if(currentSemester != "1"){
+      if (currentSemester != "1") {
         DataFetcher.uploadGrades(gradesKey.currentState.path).then((success) {
           scKey.currentState.hideCurrentSnackBar();
           if (success) {
@@ -410,8 +419,7 @@ class MiscFormState extends State<MiscForm> {
             );
           }
         });
-      }
-      else if(currentSemester == "1") {
+      } else if (currentSemester == "1") {
         DataFetcher.uploadFormData(widget.formData).then((success) {
           if (success) {
             nav.Router.formComplete(context);
@@ -420,7 +428,6 @@ class MiscFormState extends State<MiscForm> {
           }
         });
       }
-
     }
   }
 
