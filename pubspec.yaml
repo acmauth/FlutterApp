@@ -39,6 +39,7 @@ flutter:
     - assets/fireworks.png
     - assets/baby.png
     - assets/contact.png
+    - assets/user.png
     - assets/signup_instructions1.png
     - assets/signup_instructions2.png
     - assets/swipe.png
