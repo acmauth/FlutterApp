@@ -38,44 +38,30 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-//
 
     courses = DataFetcher.fetchCourses();
     teachers = DataFetcher.fetchTeachers();
     userData = DataFetcher.fetchUserData();
     predictedCourses = DataFetcher.fetchPredictedCourses();
-
-
-    _loadLocalData(); // See the to-do below
-  }
-
-  _loadLocalData() {
-    // TODO: We can implement this inside their call in data fetcher as the DataFetcher.fetchCourses is implemented
-    Future<List<dynamic>> sc =
-        LocalKeyValuePersistence.getListSuggestedCourses();
-
-    setState(() {
-      suggestedCourses = sc;
-    });
+    suggestedCourses = DataFetcher.fetchSuggestedCourses();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait(
-              [userData, suggestedCourses, predictedCourses, courses, teachers])
-          .then(
-        (response) => new Merged(
+        [userData, suggestedCourses, predictedCourses, courses, teachers],
+      ).then((response) => new Merged(
             userData: response[0],
             suggestedCourses: response[1],
             predictedCourses: response[2],
             courses: response[3],
-            teachers: response[4]),
-      ),
+            teachers: response[4],
+          )),
       builder: (BuildContext context, AsyncSnapshot<Merged> snapshot) {
         List<Widget> children;
         if (snapshot.hasData) {
-          if (snapshot.data.userData.name == null){
+          if (snapshot.data.userData.name == null) {
             return PersonalForm();
           }
           pages = <AbstractPage>[
@@ -159,10 +145,11 @@ class Merged {
   final HashMap<String, Course> courses;
   final HashMap<String, Teacher> teachers;
 
-  Merged(
-      {this.userData,
-      this.suggestedCourses,
-      this.predictedCourses,
-      this.courses,
-      this.teachers});
+  Merged({
+    this.userData,
+    this.suggestedCourses,
+    this.predictedCourses,
+    this.courses,
+    this.teachers,
+  });
 }

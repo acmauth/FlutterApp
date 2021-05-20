@@ -57,18 +57,32 @@ class DataFetcher {
   }
 
   static Future<bool> localAuth(lToken, lRefresh) async {
-    token = lToken;
-    refresh = lRefresh;
     _setTokens(lToken, lRefresh);
     if (token != null && refresh != null) {
       try {
-        var res = await dio.get("user/profile");
-        if (res.statusCode != 200 && res.statusCode != 201) {
-          return false;
-        }
+        await dio.get("user/profile");
         return true;
-      } on DioError catch (_) {
+      } on DioError catch (e) {
+        if (e.response != null && e.response.statusCode == 401) {
+          return await doRefresh();
+        }
         return false;
+      }
+    }
+    return false;
+  }
+
+  static Future<bool> doRefresh() async {
+    try {
+      var res = await dio.post("auth/token/", data: {"refreshToken": refresh});
+      var tokenRes = res.data["token"];
+      LocalKeyValuePersistence.setUserToken(tokenRes);
+      _setTokens(tokenRes, refresh);
+      return true;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        // server responded with error on refresh - our refresh token is invalid
+        _setTokens(null, null);
       }
     }
     return false;
@@ -92,9 +106,15 @@ class DataFetcher {
     }
   }
 
-  static List<SuggestedCourseData> fetchSuggestedCourses() {
-    // To be implemented for data fetching
-    return new List();
+  static Future<List<SuggestedCourseData>> fetchSuggestedCourses() async {
+    try {
+      // var res = await dio.get("course/suggest/");
+      // TODO: implement _parseSuggestedCourses
+      // return compute(_parseSuggestedCourses, res.data);
+      return LocalKeyValuePersistence.getListSuggestedCourses();
+    } on DioError catch (_) {
+      return LocalKeyValuePersistence.getListSuggestedCourses();
+    }
   }
 
   static uploadFormData(UserFD.FormData data) async {
