@@ -20,18 +20,13 @@ void main() async {
       .getNotifState(); // Getting the notification preferences
   String token = await LocalKeyValuePersistence.getUserToken();
   String refresh = await LocalKeyValuePersistence.getRefreshToken();
-  DataFetcher.localAuth(token, refresh).then((succ) {
-    if (!succ) {
-      token = null;
-      refresh = null;
-    }
-  });
-
+  await DataFetcher.localAuth(token, refresh);
   runApp(MyApp(
-      initialThemeState: initialThemeState,
-      initialNotifState: initialNotifState,
-      token: token,
-      refresh: refresh));
+    initialThemeState: initialThemeState,
+    initialNotifState: initialNotifState,
+    token: token,
+    refresh: refresh,
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -59,36 +54,28 @@ class _MyAppState extends State<MyApp> {
   final String token;
   final String refresh;
   final ThemeData lightTheme = ThemeData(
-    accentColor: Colors.lightBlue,
-    appBarTheme: AppBarTheme(
-      color: Colors.lightBlue.shade600,
-      elevation: 0.20,
-      textTheme: TextTheme(
-        title: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 20,
+      accentColor: Colors.lightBlue,
+      appBarTheme: AppBarTheme(
+        color: Colors.lightBlue.shade600,
+        elevation: 0.20,
+        textTheme: TextTheme(
+          title: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
       ),
-    ),
-    backgroundColor: Colors.white,
-    cardColor: Colors.lightBlue[50],
-    bottomAppBarColor: Colors.lightBlue.shade600,
-    brightness: Brightness.light,
-    primarySwatch: Colors.blue,
-    textTheme: TextTheme(
-      title: TextStyle(
-        color: Colors.blue.shade600
-      ),
-      subtitle: TextStyle(
-        color: Colors.blue.shade600
-      ),
-      body1: TextStyle(
-       color: Colors.blue.shade600
-      )
-
-    )
-  );
+      backgroundColor: Colors.white,
+      cardColor: Colors.lightBlue[50],
+      bottomAppBarColor: Colors.lightBlue.shade600,
+      brightness: Brightness.light,
+      primarySwatch: Colors.blue,
+      textTheme: TextTheme(
+        title: TextStyle(color: Colors.blue.shade600),
+        subtitle: TextStyle(color: Colors.blue.shade600),
+        body1: TextStyle(color: Colors.blue.shade600),
+      ));
   final ThemeData darkTheme = ThemeData(
     accentColor: Colors.lightBlue,
     appBarTheme: AppBarTheme(
