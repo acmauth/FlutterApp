@@ -121,24 +121,27 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      StyledText(
+                        'Visit ',
+                        size: 18.0,
+                        weight: FontWeight.values[4],
+                      ),
                       Row(
                         children: <Widget>[
-                          StyledText(
-                            'Visit ',
-                            size: 18.0,
-                            weight: FontWeight.values[4],
-                          ),
-                          InkWell(
-                              child:
-                                  Text('https://sis.auth.gr/old/el/all_grades.',
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.values[4],
-                                        color: Theme.of(context).accentColor,
-                                        decoration: TextDecoration.underline,
-                                      )),
-                              onTap: () => launch(
-                                  'https://sis.auth.gr/old/el/all_grades')),
+                          Flexible(
+                              child: Container(
+                            child: InkWell(
+                                child: Text(
+                                    'https://sis.auth.gr/old/el/all_grades',
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.values[4],
+                                      color: Theme.of(context).accentColor,
+                                      decoration: TextDecoration.underline,
+                                    )),
+                                onTap: () => launch(
+                                    'https://sis.auth.gr/old/el/all_grades')),
+                          )),
                         ],
                         mainAxisAlignment: MainAxisAlignment.center,
                       ),
