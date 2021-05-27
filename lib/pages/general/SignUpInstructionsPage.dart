@@ -115,7 +115,6 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                     // but description list contains only one element so reduece the index by 1
                     align: TextAlign.center,
                     size: 18.0,
-                    weight: FontWeight.values[4],
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -124,7 +123,6 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                         'Visit ',
                         size: 18.0,
                         align: TextAlign.center,
-                        weight: FontWeight.values[4],
                       ),
                       Row(
                         children: <Widget>[
@@ -135,7 +133,6 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                                   'https://sis.auth.gr/old/el/all_grades.',
                                   style: TextStyle(
                                     fontSize: 17.0,
-                                    fontWeight: FontWeight.values[4],
                                     color: Theme.of(context).accentColor,
                                     decoration: TextDecoration.underline,
                                   ),
@@ -152,7 +149,6 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                         'Then login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
                         size: 18.0,
                         align: TextAlign.center,
-                        weight: FontWeight.values[4],
                       ),
                     ],
                   ),
