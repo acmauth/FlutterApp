@@ -1,10 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import '../../Router.dart' as nav;
 import 'package:grade_plus_plus/pages/AbstractPage.dart';
 import 'package:grade_plus_plus/pages/fragments/InstructionsStepDescription.dart';
 import 'package:grade_plus_plus/pages/fragments/StyledText.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../Router.dart' as nav;
 
 // Represents the page that contains the instructions on how to get your grades from sis
 class SignUpInstructionsPage extends AbstractPage {
@@ -110,9 +111,9 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
             imgIndex: imgIndex,
             descriptionWidget: (imgIndex != 0)
                 ? StyledText(
-                    descriptionsList[imgIndex -
-                        1], // use the text from the description list only when the imgIndex is 1
-                    // but description list contains only one element so reduece the index by 1
+                    descriptionsList[imgIndex - 1],
+                    // use the text from the description list only when the imgIndex is 1
+                    // but description list contains only one element so reduce the index by 1
                     align: TextAlign.center,
                     size: 18.0,
                   )
