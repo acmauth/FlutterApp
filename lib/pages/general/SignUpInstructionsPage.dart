@@ -48,8 +48,8 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
 
   @override
   void dispose() {
-    super.dispose();
     this._controller.dispose();
+    super.dispose();
   }
 
   @override
