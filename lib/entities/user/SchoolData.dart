@@ -1,9 +1,6 @@
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-part 'SchoolData.g.dart';
 
-@JsonSerializable(explicitToJson: true)
 class SchoolData {
   const SchoolData({
     @required this.school,
@@ -11,8 +8,11 @@ class SchoolData {
 
   final String school;
 
-  factory SchoolData.fromJson(Map<String, dynamic> json) =>
-      _$SchoolDataFromJson(json);
+  factory SchoolData.fromJson(Map<String, dynamic> json) {
+    return SchoolData(school: json['school'] as String);
+  }
 
-  Map<String, dynamic> toJson() => _$SchoolDataToJson(this);
+  Map<String, dynamic> toJson() => <String,dynamic>{
+    'school': school
+  };
 }

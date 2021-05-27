@@ -52,8 +52,7 @@ class _UserProfileState extends PageState<UserProfile> {
         BlankPadding(),
         CircleAvatar(
           backgroundColor: Colors.lightBlue.shade100,
-          backgroundImage: NetworkImage(
-              'https://aux2.iconspalace.com/uploads/manager-icon-256.png'),
+          backgroundImage: Image.asset("assets/user.png").image,
           radius: 32,
         ),
         BlankPadding(),

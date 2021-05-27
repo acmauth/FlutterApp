@@ -45,7 +45,7 @@ class UserData {
         'bio': <String, dynamic>{
           'name': name,
           'semester': semester,
-          'school': schoolData?.toJson()
+          'school': schoolData.school
         },
         'favorite_subjects': favSubjects,
         'favorite_teachers': favTeachers,
