@@ -1,10 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../Router.dart' as nav;
 import 'package:grade_plus_plus/pages/AbstractPage.dart';
 import 'package:grade_plus_plus/pages/fragments/InstructionsStepDescription.dart';
-import 'package:grade_plus_plus/pages/fragments/DotsRow.dart';
 import 'package:grade_plus_plus/pages/fragments/StyledText.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,7 +30,6 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
   ];
 
   final List<String> descriptionsList = [
-    'Visit https://sis.auth.gr/old and login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
     'You are ready! You can now select the downloaded pdf file in the third stage of our app\'s signup process.',
   ];
 
@@ -64,7 +61,7 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
           end: Alignment.bottomCenter,
           colors: [
             Colors.blue,
-            Colors.white.withOpacity(0.20),
+            Theme.of(context).cardColor.withOpacity(0.05),
           ],
         ),
       ),
@@ -113,7 +110,9 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
             imgIndex: imgIndex,
             descriptionWidget: (imgIndex != 0)
                 ? StyledText(
-                    descriptionsList[imgIndex],
+                    descriptionsList[imgIndex -
+                        1], // use the text from the description list only when the imgIndex is 1
+                    // but description list contains only one element so reduece the index by 1
                     align: TextAlign.center,
                     size: 18.0,
                     weight: FontWeight.values[4],
@@ -124,6 +123,7 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                       StyledText(
                         'Visit ',
                         size: 18.0,
+                        align: TextAlign.center,
                         weight: FontWeight.values[4],
                       ),
                       Row(
@@ -132,29 +132,33 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                               child: Container(
                             child: InkWell(
                                 child: Text(
-                                    'https://sis.auth.gr/old/el/all_grades',
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.values[4],
-                                      color: Theme.of(context).accentColor,
-                                      decoration: TextDecoration.underline,
-                                    )),
+                                  'https://sis.auth.gr/old/el/all_grades.',
+                                  style: TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.values[4],
+                                    color: Theme.of(context).accentColor,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                                 onTap: () => launch(
                                     'https://sis.auth.gr/old/el/all_grades')),
                           )),
                         ],
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                       ),
                       StyledText(
                         'Then login with your academic account. Click the pdf icon "Εκτύπωση αναλυτικής βαθμολογίας σε pdf". A pdf file with your grades will be downloaded.',
                         size: 18.0,
+                        align: TextAlign.center,
                         weight: FontWeight.values[4],
                       ),
                     ],
                   ),
           ),
           SizedBox(
-            height: 15.0,
+            height: 8.0,
           ),
           Center(
               child: (imgIndex == imgList.length - 1)
@@ -162,11 +166,12 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                       nav.Router.pop(context);
                     })
                   : ScaleTransition(
+                      alignment: Alignment.center,
                       child: Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(
-                              'swipe.png',
+                              'assets/swipe.png',
                             ),
                             fit: BoxFit.contain,
                           ),
@@ -174,7 +179,7 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
                         height: 32.0,
                         width: 32.0,
                       ),
-                      scale: Tween(begin: 0.5, end: 1.25).animate(
+                      scale: Tween(begin: 0.0, end: 1.0).animate(
                           CurvedAnimation(
                               parent: _controller, curve: Curves.elasticOut)))),
         ],
@@ -200,15 +205,8 @@ class _SignUpInstructionsPageState extends PageState<SignUpInstructionsPage>
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.values[2],
-          shadows: <Shadow>[
-            Shadow(
-              offset: Offset(0.0, 0.0),
-              blurRadius: 1.0,
-              color: Color.fromARGB(200, 0, 0, 0),
-            ),
-          ],
+          fontSize: 28.0,
+          fontWeight: FontWeight.values[5],
         ),
       ),
       style: TextButton.styleFrom(
