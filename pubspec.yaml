@@ -18,7 +18,7 @@ dependencies:
   shared_preferences: ^0.5.6
   connectivity: ^0.4.6+1
   json_annotation: ^3.0.1
-  dio: ^3.0.9
+  dio: ^5.0.3
   carousel_slider: ^3.0.0
 
 dev_dependencies:
